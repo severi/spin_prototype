@@ -41,8 +41,9 @@ App.prototype.init = function(){
 	//SETUP SCENE AND CAMERA
 	self.scene = new THREE.Scene();
 	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(self.rows * 10 * self.cubeSize));
-	self.camera.position.z = self.rows*2;
+	self.camera.position.z = self.rows* 5 * self.cubeSize;
 	
+	self.projector = new THREE.Projector();
 	//INIT SUCCESSFUL
 	return true;
 }
@@ -55,7 +56,25 @@ App.prototype.addEventListener = function(){
 	if(self.center == null){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
 	}
-	self.controls.target.set( self.center.x, self.center.y, self.center.z )
+	self.controls.target.set( self.center.x, self.center.y, self.center.z );
+
+	//CLICK EVENT HANDLER BASED ON SEVERI
+	self.renderer.domElement.addEventListener( 'mousedown', function(event){
+		
+		event.preventDefault();
+		//CONVERT MOUSE POSITION TO CORRECT VECTOR
+		var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+		//TRANSLATES A 2D POINT FROM Normalized Device Coordinates TO RAYCASTER THAT CAN BE USED FOR PICKING
+		self.projector.unprojectVector( vector, self.camera );
+		//RAYCASTER IS NEEDED TO DETECT INTERACTION WITH CUBE SURFACE
+		var raycaster = new THREE.Raycaster( self.camera.position, vector.sub( self.camera.position ).normalize() );
+		var intersects = raycaster.intersectObjects( self.scene.children );
+		//CHANGE COLOR BASED ON INTERSECTION WITH ELEMENT
+		if ( intersects.length > 0 ) {
+			intersects[0].face.color.setHex(0x000000);
+			intersects[0].object.geometry.colorsNeedUpdate = true;
+		}
+	}, false );
 }
 
 App.prototype.addCube = function(position, color){
@@ -66,7 +85,7 @@ App.prototype.addCube = function(position, color){
 	}
 	//SETUP GEOMETRY AND CUBE SIZE FOR TESTING CUBE SIZE OF 1 is OK
 	var geometry = new THREE.BoxGeometry( self.cubeSize, self.cubeSize, self.cubeSize);
-	var material = new THREE.MeshBasicMaterial( {color: color } );
+	var material = new THREE.MeshBasicMaterial( {color: color, vertexColors: THREE.FaceColors } );
 	var cube = new ColorCube( geometry, material);
 	cube.position.set(position.x, position.y, position.z);
 	self.scene.add(cube); 
