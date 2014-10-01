@@ -42,6 +42,11 @@ App.prototype.init = function(){
 	self.scene = new THREE.Scene();
 	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(self.rows * 10 * self.cubeSize));
 	self.camera.position.z = self.rows* 5 * self.cubeSize;
+
+	if (settings.axes==true){
+		var axes = new THREE.AxisHelper( 20 );
+		self.scene.add(axes);
+	}
 	
 	self.projector = new THREE.Projector();
 	//INIT SUCCESSFUL
