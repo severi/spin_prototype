@@ -64,7 +64,7 @@ App.prototype.addEventListener = function(){
 	self.controls.target.set( self.center.x, self.center.y, self.center.z );
 
 	//CLICK EVENT HANDLER BASED ON SEVERI
-	self.renderer.domElement.addEventListener( 'mousedown', function(event){
+	self.renderer.domElement.addEventListener( 'click', function(event){
 		
 		event.preventDefault();
 		//CONVERT MOUSE POSITION TO CORRECT VECTOR
