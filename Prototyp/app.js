@@ -71,8 +71,21 @@ App.prototype.addEventListener = function(){
 		var intersects = raycaster.intersectObjects( self.scene.children );
 		//CHANGE COLOR BASED ON INTERSECTION WITH ELEMENT
 		if ( intersects.length > 0 ) {
-			intersects[0].face.color.setHex(0x000000);
-			intersects[0].object.geometry.colorsNeedUpdate = true;
+			//SELECTED OBJECT
+			var sObject = intersects[0];
+			var cColor = 0x000000
+			sObject.face.color.setHex(cColor);
+			sObject.object.geometry.colorsNeedUpdate = true;
+			normalValues = intersects[0].face.normal;
+
+			for(var i=0; i< sObject.object.geometry.faces.length; i++){
+				var face = sObject.object.geometry.faces[i];
+				var fNormals = face.normal;
+
+				if(normalValues.x == fNormals.x && normalValues.y == fNormals.y && normalValues.z == fNormals.z){
+					face.color.setHex(cColor);
+				}	
+			}
 		}
 	}, false );
 }
