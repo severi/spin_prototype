@@ -116,28 +116,37 @@ App.prototype.generateLevel = function(){
 	if(self.rows == null){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
 	}
-
-	var position = { x: 0, y:0, z:0 };
 	
-	for(var x=1; x<= self.rows; x++){
-		//ADD A NEW CUBE X-AXIS
-		self.addCube(position, 0xff0000);
+	/*
+	 * The correct size for a hollow cube is:
+	 * 		amount of boxes in a solid cube 
+	 * 			minus
+	 * 		amount of boxes in a smaller solid cube that precicely fits inside of the bigger cube
+	 *
+	 * Math:
+	 * if self.rows >= 3
+	 * 		amount: self.rows^3 - (self.rows-2)^3
+	 * else
+	 * 		amount: self.rows^3
+	 *
+	 * BTW this is where unit testing would be handy instead of putting  this inside of code ;)
+	 */
+	var position = { x: 0, y:0, z:0 };
+	var amount=0;
+	for (var x=0; x<self.rows; x++){
 		for(var y=0; y<self.rows; y++){
-			//ADD A NEW CUBE Y-AXIS
-			self.addCube( self.setOffset(position, 0, y*self.cubeSize), 0x00ff00  );
 			for(var z=0; z<self.rows; z++){
-				//ADD A NEW CUBE Z-AXIS
-				if(x == 1 || x == self.rows){
-					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), 0x0000ff );
-				}
-				else if(z == self.rows-1 || y == 0 || y == self.rows-1){
-					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), 0x0000ff );
+				if ((x==0 || x==self.rows-1) || (y==0 || y==self.rows-1) || (z==0 || z==self.rows-1)) {
+					amount++;
+					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), Math.random()*0xffffff );
 				}
 			}
 		}
 		//UPDATE THE POSITION OF X-AXIS BASED ON CUBE SIZE
 		position = self.setOffset(position, self.cubeSize, 0 , 0);
 	}
+	var minus = (self.rows>2)?Math.pow(self.rows-2,3):0;
+	console.log("amount: "+amount+ " - should be: "+( Math.pow(self.rows,3) - minus));
 }
 
 App.prototype.setOffset = function(curValue, x, y, z){
