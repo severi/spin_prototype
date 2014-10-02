@@ -117,6 +117,7 @@ App.prototype.generateLevel = function(){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
 	}
 	
+<<<<<<< HEAD
 	/*
 	 * The correct size for a hollow cube is:
 	 * 		amount of boxes in a solid cube 
@@ -139,6 +140,21 @@ App.prototype.generateLevel = function(){
 				if ((x==0 || x==self.rows-1) || (y==0 || y==self.rows-1) || (z==0 || z==self.rows-1)) {
 					amount++;
 					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), Math.random()*0xffffff );
+=======
+	for(var x=1; x<= self.rows; x++){
+		//ADD A NEW CUBE X-AXIS
+		self.addCube(position, 0x03c9a9);
+		for(var y=0; y<self.rows; y++){
+			//ADD A NEW CUBE Y-AXIS
+			self.addCube( self.setOffset(position, 0, y*self.cubeSize), 0xf64747  );
+			for(var z=0; z<self.rows; z++){
+				//ADD A NEW CUBE Z-AXIS
+				if(x == 1 || x == self.rows){
+					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), 0x19b5fe );
+				}
+				else if(z == self.rows-1 || y == 0 || y == self.rows-1){
+					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), 0x19b5fe);
+>>>>>>> design folder added to ignorelist
 				}
 			}
 		}
