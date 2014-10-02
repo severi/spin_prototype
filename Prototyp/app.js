@@ -78,19 +78,7 @@ App.prototype.addEventListener = function(){
 		if ( intersects.length > 0 ) {
 			//SELECTED OBJECT
 			var sObject = intersects[0];
-			var cColor = 0x000000
-			sObject.face.color.setHex(cColor);
-			sObject.object.geometry.colorsNeedUpdate = true;
-			normalValues = intersects[0].face.normal;
-
-			for(var i=0; i< sObject.object.geometry.faces.length; i++){
-				var face = sObject.object.geometry.faces[i];
-				var fNormals = face.normal;
-
-				if(normalValues.x == fNormals.x && normalValues.y == fNormals.y && normalValues.z == fNormals.z){
-					face.color.setHex(cColor);
-				}	
-			}
+			sObject.object.colorFaces(sObject, 0x000000);
 		}
 	}, false );
 }
