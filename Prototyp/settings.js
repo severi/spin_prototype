@@ -1,6 +1,6 @@
 var settings = {
 	fps : 60,
-	rows : 6,
-	cubeSize : 2,
+	rows : 10,
+	cubeSize : 1,
 	axes: false
 };
