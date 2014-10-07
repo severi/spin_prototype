@@ -28,7 +28,7 @@ App.prototype.init = function(){
 		alert("ERROR: hScale IS OUT OF EXPECTED RANGE [0.1 - 1]"); 
 		return false;
 	}
-	
+	self.activeFaces = [];
 	//LOADING REQUIRED SETTINGS
 	self.loadSettings();
 	
@@ -49,6 +49,7 @@ App.prototype.init = function(){
 	}
 	
 	self.projector = new THREE.Projector();
+
 	//INIT SUCCESSFUL
 	return true;
 }
@@ -83,7 +84,7 @@ App.prototype.addEventListener = function(){
 	}, false );
 }
 
-App.prototype.addCube = function(position, color){
+App.prototype.addCube = function(position, location){
 	var self = this;
 	
 	if(position == null){
@@ -91,10 +92,81 @@ App.prototype.addCube = function(position, color){
 	}
 	//SETUP GEOMETRY AND CUBE SIZE FOR TESTING CUBE SIZE OF 1 is OK
 	var geometry = new THREE.BoxGeometry( self.cubeSize, self.cubeSize, self.cubeSize);
-	var material = new THREE.MeshBasicMaterial( {color: color, vertexColors: THREE.FaceColors } );
+	var material = new THREE.MeshBasicMaterial( {vertexColors: THREE.FaceColors } );
 	var cube = new ColorCube( geometry, material);
 	cube.position.set(position.x, position.y, position.z);
 	self.scene.add(cube); 
+
+	for (var j =0; j < cube.geometry.faces.length ; j++) {
+		var face = cube.geometry.faces[j];
+		j++; // TODO: not really a good way of finding the faces for square
+		var face2 = cube.geometry.faces[j];
+		if ((location[0]==0 && face.normal.x==-1)){
+			self.activeFaces.push([face,face2]);
+		}
+		if (location[0]==self.rows -1 && face.normal.x==1){
+			self.activeFaces.push([face,face2]);
+		}
+		if ((location[1]==0 && face.normal.y==-1)){
+			self.activeFaces.push([face,face2]);
+		}
+		if (location[1]==self.rows -1 && face.normal.y==1){
+			self.activeFaces.push([face,face2]);
+		}
+		if ((location[2]==0 && face.normal.z==1)){
+			self.activeFaces.push([face,face2]);
+		}
+		if (location[2]==self.rows -1 && face.normal.z==-1){
+			self.activeFaces.push([face,face2]);
+		}
+	}
+
+}
+
+App.prototype.generateFaceColors = function(){
+	var self = this;
+	var colors = [faceColors.red,faceColors.blue,faceColors.yellow,faceColors.green];
+	colors = self.shuffleArray(colors);
+	if (settings.colors>colors.length){
+		console.log("ERROR: Amount of colors too big - define more colors in settings.js");
+		console.log("setting color amount to: "+colors.length);
+		settings.colors=colors.length;
+	}
+	while (colors.length>settings.colors){
+		colors.pop();
+	}
+	colorArray=[];
+	for (var i =0; i < 6*self.rows*self.rows ; i++) {
+		colorArray.push(colors[i%colors.length]);
+	}
+	colorArray=self.shuffleArray(colorArray);
+
+	var self = this;
+	for (var i =0; i < self.activeFaces.length ; i++) {
+		var color=colorArray.pop();
+		self.activeFaces[i][0].color.setHex(color);
+		self.activeFaces[i][1].color.setHex(color);
+	}
+}
+
+/*
+ * Randomize array element order in-place.
+ * Using Fisher-Yates shuffle algorithm.
+ *
+ * copied from:
+ * http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+ *
+ * More info:
+ * http://bost.ocks.org/mike/shuffle/
+ */
+App.prototype.shuffleArray = function(array){
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
 }
 
 App.prototype.generateLevel = function(){
@@ -130,7 +202,7 @@ App.prototype.generateLevel = function(){
 				if ((x==0 || x==self.rows-1) || (y==0 || y==self.rows-1) || (z==0 || z==self.rows-1)) {
 					amount++;
 					//ADD A NEW CUBE Z-AXIS
-					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), Math.random()*0xffffff );
+					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), [x,y,z]);
 				}
 			}
 		}
@@ -139,6 +211,13 @@ App.prototype.generateLevel = function(){
 	}
 	var minus = (self.rows>2)?Math.pow(self.rows-2,3):0;
 	console.log("amount: "+amount+ " - should be: "+( Math.pow(self.rows,3) - minus));
+
+	self.generateFaceColors();
+	self.scene.traverse(function (e) {
+                if (e instanceof ColorCube) {
+                	e.geometry.colorsNeedUpdate = true;
+                }
+            });
 }
 
 App.prototype.setOffset = function(curValue, x, y, z){

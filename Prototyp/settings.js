@@ -2,7 +2,8 @@ var settings = {
 	fps : 60,
 	rows : 2,
 	cubeSize : 1,
-	axes: false
+	axes: false,
+	colors: 4
 };
 
 var faceColors = {
