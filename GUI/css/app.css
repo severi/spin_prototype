@@ -1,6 +1,13 @@
 html {
     background-color: #fff;
     color: #000;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .double-sided {
@@ -8,16 +15,41 @@ html {
     backface-visibility: visible;
 }
 
+img{
+	-webkit-user-drag: none;
+	-moz-user-select: none;
+	user-drag: none;
+}
+
 .appHeader{
 	background-color: #f5f6f8;
 	border-bottom-style: solid;
-	border-bottom-color: #6c7a89;
+	border-bottom-color: #b5bcc4;
 	border-width: 1px;
 }
 
 .appFooter{
 	background-color: #f5f6f8;
 	border-top-style: solid;
-	border-top-color: #6c7a89;
+	border-top-color: #b5bcc4;
 	border-width: 1px;
+}
+
+.button {
+
+   	color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 7px 30px 7px 30px;
+    font-family: "HelveticaNeue";
+}
+
+.newGame {
+	background-color: #19b5fe;
+	width: auto;
+	height: auto;
+}
+
+.iconButton{
+	opacity: 0.5 !important;
 }
