@@ -13,6 +13,7 @@ define(function(require, exports, module) {
         //APP MODULES
         this.Header = require('Header');
         this.Footer = require('Footer');
+        this.Button = require('Button');
     }
 
     FamousLib.prototype.loadGlobalVars = function(){

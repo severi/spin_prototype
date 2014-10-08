@@ -11,25 +11,12 @@ define(function(require, exports, module) {
         var self = this;
         var LIB = self.LIB;
 
+        self.buttonArray = new Array();
+
         self.footerContainer = new LIB.ContainerSurface({
             size: [LIB.headerSize.width, LIB.headerSize.height],
             classes: ['appFooter']
         });
-        //ADD NEW GAME BUTTON
-        self.newGameButton = new LIB.Surface({
-            size: [ 180 , LIB.buttonSize.height],
-            content: "New game",
-            classes: ['button', 'newGame'],
-            properties: {
-                fontSize: LIB.buttonFontSize + "px",
-                padding: LIB.buttonPadding.top +"px " + LIB.buttonPadding.left + "px " + LIB.buttonPadding.bottom + "px " + LIB.buttonPadding.right + "px" 
-            }
-        });
-        self.newGameModifier = new LIB.StateModifier({
-            origin: [0, 0.5],
-            align: [0.05, 0.5]
-        });
-        self.footerContainer.add(self.newGameModifier).add(self.newGameButton);
 
         //BUTTONS SETTUP
         var width = LIB.winSize.width*0.95;
@@ -37,47 +24,43 @@ define(function(require, exports, module) {
         var spaceBTWElemnets = 20;
         var offset = 0;
         
+        self.addButton( 'New game', null, 'newGame', LIB.Transform.translate(offset, 0, 0) );
         offset = width;
-        self.settingsButton = new LIB.ImageSurface({
-            size: [iconSize, iconSize],
-            content: LIB.settingsIcon,
-            classes: ['iconButton']
-        });
-        self.settingsModifier = new LIB.StateModifier({
-            origin: [1, 0.5],
-            align: [0, 0.5],
-            transform: LIB.Transform.translate(offset, 0, 0)
-        });
-        self.footerContainer.add(self.settingsModifier).add(self.settingsButton);
-
+        self.addButton( null, LIB.settingsIcon, 'settings', LIB.Transform.translate(offset, 0, 0) );
         offset -= (iconSize + spaceBTWElemnets);
-        self.trophyButton = new LIB.ImageSurface({
-            size: [iconSize, iconSize],
-            content: LIB.trophyIcon,
-            classes: ['iconButton']
-        });
-        self.trophyModifier = new LIB.StateModifier({
-            origin: [1, 0.5],
-            align: [0, 0.5],
-            transform: LIB.Transform.translate(offset , 0, 0)
-        });
-        self.footerContainer.add(self.trophyModifier).add(self.trophyButton);
-
+        self.addButton( null, LIB.trophyIcon, 'trophy', LIB.Transform.translate(offset, 0, 0) );
         offset -= (iconSize + spaceBTWElemnets);
-        self.shareButton = new LIB.ImageSurface({
-            size: [iconSize, iconSize],
-            content: LIB.shareIcon,
-            classes: ['iconButton']
-        });
-        self.shareModifier = new LIB.StateModifier({
-            origin: [1, 0.5],
-            align: [0, 0.5],
-            transform: LIB.Transform.translate(offset, 0, 0)
-        });
-        self.footerContainer.add(self.shareModifier).add(self.shareButton);
+        self.addButton( null, LIB.shareIcon, 'share', LIB.Transform.translate(offset, 0, 0) );
+
         //ADD FOOTER TO CONTEXT
         self.context.add(LIB.bottomModifier).add(self.footerContainer);
-    
+    }
+
+    Footer.prototype.addButton = function(text, filename, id, translate){
+        var self = this;
+        var LIB = self.LIB;
+        var button = null;
+
+        if(LIB || self.footerContainer || self.buttonArray == null){
+            console.log("Error reference is null in addButton class Footer");
+            return;
+        }
+
+        if(text != null){
+            button = new LIB.Button(LIB, self.footerContainer);
+            button.initButtonWithText(text, id, translate);
+
+        }
+        else if(filename != null){
+            button = new LIB.Button(LIB, self.footerContainer);
+            button.initButtonWithIcon(filename, id, translate);
+        }
+
+        if(button == null){
+            console.log("Button is null in add Button class Footer");
+            return;
+        }
+        self.buttonArray.push(button);
     }
 
     return Footer;
