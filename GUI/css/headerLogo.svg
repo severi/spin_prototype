@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="255.074" height="118" viewBox="0, 0, 255.074, 118">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="237.074" height="119" viewBox="0, 0, 237.074, 119">
   <g id="Layer_1" transform="translate(0, 0)">
-    <path d="M146.278,26.181 L168.278,26.181 L168.278,48.181 L146.278,48.181 L146.278,26.181 z" fill="#F64747"/>
-    <path d="M146.278,50.268 L168.278,50.268 L168.278,72.268 L146.278,72.268 L146.278,50.268 z" fill="#F9BF3B"/>
-    <path d="M146.278,74.268 L168.278,74.268 L168.278,96.268 L146.278,96.268 L146.278,74.268 z" fill="#03C9A9"/>
-    <text transform="matrix(1, 0, 0, 1, 64.435, 59)">
-      <tspan x="-64.435" y="37" font-family="HelveticaNeue-Medium" font-size="98" fill="#6C7A89">SP</tspan>
+    <path d="M133.278,26.181 L155.278,26.181 L155.278,48.181 L133.278,48.181 L133.278,26.181 z" fill="#F64747"/>
+    <path d="M133.278,50.268 L155.278,50.268 L155.278,72.268 L133.278,72.268 L133.278,50.268 z" fill="#F9BF3B"/>
+    <path d="M133.278,74.268 L155.278,74.268 L155.278,96.268 L133.278,96.268 L133.278,74.268 z" fill="#03C9A9"/>
+    <text transform="matrix(1, 0, 0, 1, 64.435, 59.5)">
+      <tspan x="-56.914" y="37.5" font-family="Lato-Bold" font-size="98" fill="#6C7A89">SP</tspan>
     </text>
-    <text transform="matrix(1, 0, 0, 1, 219.696, 59)">
-      <tspan x="-35.378" y="37" font-family="HelveticaNeue-Medium" font-size="98" fill="#6C7A89">N</tspan>
+    <text transform="matrix(1, 0, 0, 1, 201.696, 59.5)">
+      <tspan x="-35.378" y="37.5" font-family="Lato-Bold" font-size="98" fill="#6C7A89">N</tspan>
     </text>
   </g>
 </svg>

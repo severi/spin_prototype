@@ -1,3 +1,18 @@
+@font-face {
+    font-family: Lato-Bold;
+    src: url('./font/Lato-Bold.tff');
+}
+
+@font-face {
+    font-family: Lato-Regular;
+    src: url('./font/Lato-Regular.tff');
+}
+
+@font-face {
+    font-family: Lato-Light;
+    src: url('./font/Lato-Light.tff');
+}
+
 html {
     background-color: #fff;
     color: #000;
@@ -40,8 +55,7 @@ img{
    	color: white;
     text-align: center;
     border-radius: 5px;
-    padding: 7px 30px 7px 30px;
-    font-family: "HelveticaNeue";
+    font-family: "Lato-Regular";
 }
 
 .newGame {

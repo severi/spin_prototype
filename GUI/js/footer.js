@@ -21,7 +21,8 @@ define(function(require, exports, module) {
             content: "New game",
             classes: ['button', 'newGame'],
             properties: {
-                fontSize: LIB.buttonFontSize
+                fontSize: LIB.buttonFontSize + "px",
+                padding: LIB.buttonPadding.top +"px " + LIB.buttonPadding.left + "px " + LIB.buttonPadding.bottom + "px " + LIB.buttonPadding.right + "px" 
             }
         });
         self.newGameModifier = new LIB.StateModifier({
@@ -32,7 +33,7 @@ define(function(require, exports, module) {
 
         //BUTTONS SETTUP
         var width = LIB.winSize.width*0.95;
-        var iconSize = parseInt(LIB.buttonSize.height);
+        var iconSize = parseInt(LIB.buttonSize.height*0.8);
         var spaceBTWElemnets = 20;
         var offset = 0;
         
