@@ -1,8 +1,9 @@
 define(function(require, exports, module) {
 
-    function Header(lib, context){
+    function Header(lib, app){
         var self = this;
-        self.context = context;
+        self.app = app;
+        self.context = app.mainContext;
         self.LIB = lib;
     }
 

@@ -10,10 +10,12 @@ define(function(require, exports, module) {
         this.Surface = require('famous/core/Surface');
         this.StateModifier = require('famous/modifiers/StateModifier');
         this.Transform = require('famous/core/Transform');
+        this.Easing = require('famous/transitions/Easing');
         //APP MODULES
         this.Header = require('Header');
         this.Footer = require('Footer');
         this.Button = require('Button');
+        this.Content = require('Content');
     }
 
     FamousLib.prototype.loadGlobalVars = function(){
@@ -21,6 +23,11 @@ define(function(require, exports, module) {
         this.settingsIcon = "./css/settings.png";
         this.trophyIcon = "./css/trophy.png";
         this.shareIcon = "./css/share.png";
+
+        this.share = "share";
+        this.trophy = "trophy";
+        this.settings = "settings";
+        this.newGame = "newGame";
 
         this.winSize = {width: window.innerWidth, height: window.innerHeight};
         this.headerSize = {width: this.winSize.width, height: parseInt(this.winSize.height* 0.107)};

@@ -1,8 +1,9 @@
 define(function(require, exports, module) {
 
-    function Footer(lib, context){
+    function Footer(lib, app){
         var self = this;
-        self.context = context;
+        self.app = app;
+        self.context = app.mainContext;
         self.LIB = lib;
     }
 
@@ -24,13 +25,13 @@ define(function(require, exports, module) {
         var spaceBTWElemnets = 20;
         var offset = 0;
         
-        self.addButton( 'New game', null, 'newGame', LIB.Transform.translate(offset, 0, 0) );
+        self.addButton( 'New game', null, LIB.newGame, LIB.Transform.translate(offset, 0, 0) );
         offset = width;
-        self.addButton( null, LIB.settingsIcon, 'settings', LIB.Transform.translate(offset, 0, 0) );
+        self.addButton( null, LIB.settingsIcon, LIB.settings, LIB.Transform.translate(offset, 0, 0) );
         offset -= (iconSize + spaceBTWElemnets);
-        self.addButton( null, LIB.trophyIcon, 'trophy', LIB.Transform.translate(offset, 0, 0) );
+        self.addButton( null, LIB.trophyIcon, LIB.trophy, LIB.Transform.translate(offset, 0, 0) );
         offset -= (iconSize + spaceBTWElemnets);
-        self.addButton( null, LIB.shareIcon, 'share', LIB.Transform.translate(offset, 0, 0) );
+        self.addButton( null, LIB.shareIcon, LIB.share, LIB.Transform.translate(offset, 0, 0) );
 
         //ADD FOOTER TO CONTEXT
         self.context.add(LIB.bottomModifier).add(self.footerContainer);
@@ -41,18 +42,18 @@ define(function(require, exports, module) {
         var LIB = self.LIB;
         var button = null;
 
-        if(LIB || self.footerContainer || self.buttonArray == null){
+        if( (LIB || self.footerContainer || self.buttonArray) == null){
             console.log("Error reference is null in addButton class Footer");
             return;
         }
 
         if(text != null){
-            button = new LIB.Button(LIB, self.footerContainer);
+            button = new LIB.Button(self.app, self.footerContainer);
             button.initButtonWithText(text, id, translate);
 
         }
         else if(filename != null){
-            button = new LIB.Button(LIB, self.footerContainer);
+            button = new LIB.Button(self.app, self.footerContainer);
             button.initButtonWithIcon(filename, id, translate);
         }
 
@@ -60,7 +61,54 @@ define(function(require, exports, module) {
             console.log("Button is null in add Button class Footer");
             return;
         }
+        //SET CONTENT REFERENCE
+        if(id == LIB.settings){
+            button.setContentRef( self.app.settingsContent );
+        } 
+        else if(id == LIB.trophy){
+             button.setContentRef( self.app.trophyContent );
+        } 
+        else if(id == LIB.share){
+            button.setContentRef( self.app.shareContent );
+        }
+        
+        //ADD EVENTLISTENER
+        button.addEventListener();
         self.buttonArray.push(button);
+    }
+
+    Footer.prototype.hideButtons = function(exceptId){
+        var self = this;
+        var LIB = self.LIB;
+
+        if(self.buttonArray == null){
+            console.log("buttonArray is null in hideNewGameButton class Footer");
+            return;
+        }
+        //MOVE OTHER BUTTONS TO CENTER
+        var i = 1;
+        var distanceX = LIB.winSize.width*0.5 + parseInt(LIB.buttonSize.height*0.8);
+        //FADE NEW GAME BUTTON OUT
+        self.buttonArray[0].setTransform(-distanceX, 0, 0);
+        for(i=1; i<self.buttonArray.length; i++){
+            var object = self.buttonArray[i];
+            object.setTransform( distanceX , 0, 0);    
+        }
+    }
+
+
+
+
+
+    Footer.prototype.showButtons = function(){
+        var self = this;
+        var LIB = self.LIB;
+
+        if(self.buttonArray == null){
+            console.log("buttonArray is null in showNewGameButton class Footer");
+            return;
+        }
+        self.buttonArray[0].setTransform(0, 0, 0);
     }
 
     return Footer;

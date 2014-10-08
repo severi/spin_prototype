@@ -50,6 +50,18 @@ img{
 	border-width: 1px;
 }
 
+.share{
+    background-color: red;
+}
+
+.settings{
+    background-color: blue;
+}
+
+.trophy{
+    background-color: green;
+}
+
 .button {
 
    	color: white;
@@ -64,6 +76,3 @@ img{
 	height: auto;
 }
 
-.iconButton{
-	opacity: 0.5 !important;
-}
