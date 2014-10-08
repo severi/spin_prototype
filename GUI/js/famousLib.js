@@ -30,7 +30,7 @@ define(function(require, exports, module) {
         if(this.buttonFontSize >22){
            this.buttonFontSize = 22; 
         }
-        this.buttonPadding = {top: (this.buttonSize.height - this.buttonFontSize) * 0.45, bottom: (this.buttonSize.height - this.buttonFontSize)*0.45, left: 30, right: 30};
+        this.buttonPadding = {top: parseInt( (this.buttonSize.height - this.buttonFontSize) * 0.45 ), bottom: parseInt( (this.buttonSize.height - this.buttonFontSize)*0.45 ), left: 20, right: 20};
     }
 
     FamousLib.prototype.loadGlobalModifiers = function(){
