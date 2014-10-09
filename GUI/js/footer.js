@@ -20,13 +20,13 @@ define(function(require, exports, module) {
         });
 
         //BUTTONS SETTUP
-        var width = LIB.winSize.width*0.95;
+        var width = LIB.winSize.width*0.5;
         var iconSize = parseInt(LIB.buttonSize.height*0.8);
         var spaceBTWElemnets = 20;
         var offset = 0;
         
         self.addButton( 'New game', null, LIB.newGame, LIB.Transform.translate(offset, 0, 0) );
-        offset = width;
+        offset = width - width*2*0.1;
         self.addButton( null, LIB.settingsIcon, LIB.settings, LIB.Transform.translate(offset, 0, 0) );
         offset -= (iconSize + spaceBTWElemnets);
         self.addButton( null, LIB.trophyIcon, LIB.trophy, LIB.Transform.translate(offset, 0, 0) );
@@ -87,18 +87,16 @@ define(function(require, exports, module) {
         }
         //MOVE OTHER BUTTONS TO CENTER
         var i = 1;
-        var distanceX = LIB.winSize.width*0.5 + parseInt(LIB.buttonSize.height*0.8);
         //FADE NEW GAME BUTTON OUT
-        self.buttonArray[0].setTransform(-distanceX, 0, 0);
+        self.buttonArray[0].setTransform(-LIB.winSize.width, 0, 0);
         for(i=1; i<self.buttonArray.length; i++){
             var object = self.buttonArray[i];
-            object.setTransform( distanceX , 0, 0);    
+            object.setTransform( 0, 0, 0);
+            if(object.id != exceptId){
+                object.modifier.setOpacity(0, {duration: 800});  
+            }  
         }
     }
-
-
-
-
 
     Footer.prototype.showButtons = function(){
         var self = this;

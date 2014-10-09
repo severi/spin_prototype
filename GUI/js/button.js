@@ -27,7 +27,7 @@ define(function(require, exports, module) {
         }
         //ADD NEW TEXT BUTTON
         self.button = new LIB.Surface({
-            size: [ 180 , LIB.buttonSize.height],
+            size: [ 160 , LIB.buttonSize.height],
             content: text,
             classes: ['button', id],
             properties: {
@@ -66,8 +66,8 @@ define(function(require, exports, module) {
             classes: ['iconButton', id + "B"]
         });
         self.modifier = new LIB.StateModifier({
-            origin: [1, 0.5],
-            align: [0, 0.5],
+            origin: [0.5, 0.5],
+            align: [0.5, 0.5],
             opacity: 0.5,
             transform: translate
         });
@@ -126,6 +126,7 @@ define(function(require, exports, module) {
                 }
                 self.app.footer.hideButtons(self.id);
                 self.contentRef.isVisible = true;
+                console.log(self.id);
                 self.contentRef.setTransform(0, 0, 0);
             }
         });
