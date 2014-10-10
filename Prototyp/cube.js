@@ -25,8 +25,8 @@ Cube.prototype.addFacesFromBox = function(box, location){
 		if ((location[0]==0 && face.normal.x==-1) || 
 			(location[0]==self.rows -1 && face.normal.x==1) ||
 			(location[1]==0 && face.normal.y==-1) ||
-			(location[1]==self.rows -1 && face.normal.y==1) || 
-			(location[2]==0 && face.normal.z==1) || 
+			(location[1]==self.rows -1 && face.normal.y==1) ||
+			(location[2]==0 && face.normal.z==1) ||
 			(location[2]==self.rows -1 && face.normal.z==-1)){
 			this.activeFaces.push([face, box.geometry.faces[++j]]);
 		}

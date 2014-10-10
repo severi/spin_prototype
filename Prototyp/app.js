@@ -20,9 +20,7 @@ App.prototype.loadSettings = function(){
 
 App.prototype.init = function(){
 	var self = this;
-
 	self.cube = new Cube(settings.rows);
-	
 	//USED TO SET THE HEIGHT OF THE CANVAS VALUES IN % [0-1] e.g 0.5 means 50%;
 	var hScale = 1;
 	if(hScale <= 0 || hScale > 1) { 
@@ -43,13 +41,10 @@ App.prototype.init = function(){
 	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(self.rows * 10 * self.cubeSize));
 	self.camera.position.z = self.rows* 5 * self.cubeSize;
 
-	if (settings.axes==true){
-		var axes = new THREE.AxisHelper( 20 );
-		self.scene.add(axes);
-	}
-	
 	self.projector = new THREE.Projector();
 
+	//SETUP DEBUG OBJECT -> NEED TO BE CALLED AT LAST TO MAKE SURE ALL REQUIRED OBJECTS ARE REALLY CREATED LIKE SCENE ...
+	self.debug = new Debug(self);
 	//INIT SUCCESSFUL
 	return true;
 }
@@ -62,8 +57,8 @@ App.prototype.addEventListener = function(){
 	if(self.center == null){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
 	}
-	self.controls.target.set( self.center.x, self.center.y, self.center.z );
-
+	self.controls.target.set( 0, 0, 0 );
+	console.log(self.center);
 	//CLICK EVENT HANDLER BASED ON SEVERI
 	self.renderer.domElement.addEventListener( 'click', function(event){
 		
@@ -96,8 +91,14 @@ App.prototype.addCube = function(position, location){
 	var material = new THREE.MeshBasicMaterial( {vertexColors: THREE.FaceColors } );
 	var box = new ColorCube( geometry, material);
 	box.position.set(position.x, position.y, position.z);
-	self.scene.add(box); 
 	self.cube.addFacesFromBox(box, location);
+	//IF PARENT CUBE EXISTS AND DEBUG MODE IS ACTIVE ADD NEW CUBE TO PARENT CUBE
+	if( !settings.debug && self.debug.cube != null){
+		self.debug.cube.add(box);
+		console.log("box added to parent Cube for debugging")
+		return;
+	}
+	self.scene.add(box); 
 }
 
 
@@ -124,8 +125,11 @@ App.prototype.generateLevel = function(){
 	 *
 	 * BTW this is where unit testing would be handy instead of putting  this inside of code ;)
 	 */
-
-	var position = { x: 0, y:0, z:0 };
+	
+	//INITPOS IS CALCULATED BECAUSE OF THE MESH ORIGIN WHICH IS NORMALY [0.5, 0.5] SO YOU NEED TO CALCULATED BASED ON THE FORMULAR BELLOW
+	var initPos = -settings.rows * settings.cubeSize *0.5 + settings.cubeSize*0.5;
+	//SET INITPOS
+	var position = { x: initPos, y: initPos, z: -initPos };
 	var amount=0;
 	for (var x=0; x<self.rows; x++){
 		//ADD A NEW CUBE X-AXIS
@@ -142,6 +146,7 @@ App.prototype.generateLevel = function(){
 		//UPDATE THE POSITION OF X-AXIS BASED ON CUBE SIZE
 		position = self.setOffset(position, self.cubeSize, 0 , 0);
 	}
+
 	var minus = (self.rows>2)?Math.pow(self.rows-2,3):0;
 	console.log("amount: "+amount+ " - should be: "+( Math.pow(self.rows,3) - minus));
 
