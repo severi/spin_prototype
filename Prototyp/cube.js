@@ -63,6 +63,10 @@ Cube.prototype.generateFaceColors = function(){
 	}
 }
 
+Cube.prototype.setRows = function(rows){
+	self.rows = rows;
+}
+
 /*
  * Randomize array element order in-place.
  * Using Fisher-Yates shuffle algorithm.

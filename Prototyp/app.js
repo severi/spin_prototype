@@ -5,6 +5,7 @@ function App(){
 		self.addEventListener();
 		self.generateLevel(self.rows);
 		self.renderScene();
+			self.nextLevel();
 	}
 }
 
@@ -20,7 +21,7 @@ App.prototype.loadSettings = function(){
 
 App.prototype.init = function(){
 	var self = this;
-	self.cube = new Cube(settings.rows);
+	self.levelCubes = new Array();
 	//USED TO SET THE HEIGHT OF THE CANVAS VALUES IN % [0-1] e.g 0.5 means 50%;
 	var hScale = 1;
 	if(hScale <= 0 || hScale > 1) { 
@@ -38,8 +39,8 @@ App.prototype.init = function(){
 	
 	//SETUP SCENE AND CAMERA
 	self.scene = new THREE.Scene();
-	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(self.rows * 10 * self.cubeSize));
-	self.camera.position.z = self.rows* 5 * self.cubeSize;
+	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(100));
+	self.camera.position.z =  self.cubeSize * 10;
 
 	self.projector = new THREE.Projector();
 
@@ -53,6 +54,8 @@ App.prototype.addEventListener = function(){
 	var self = this;
 	//ADD CONTROLLS ATTENTION THAT CONTROLLS WORK PROPERLY YOU NEED TO CALL controls.update() WITHIN RENDER METHOD
 	self.controls = new THREE.TrackballControls( self.camera, self.renderer.domElement );
+	//DEACTIVATE USER ZOOM
+	self.controls.noZoom = true;
 	//SET THE CENTER TO TRACK
 	if(self.center == null){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
@@ -104,11 +107,13 @@ App.prototype.addCube = function(position, location){
 
 // TODO: maybe move this to cube.js and eventually rename to "generateCube"
 App.prototype.generateLevel = function(){
-
 	var self = this;
-
 	if(self.rows == null){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
+	}
+	if(self.levelCubes == null){
+		console.log("levelCubes is null in class App generateLevel()");
+		return;
 	}
 	
 	/*
@@ -125,12 +130,16 @@ App.prototype.generateLevel = function(){
 	 *
 	 * BTW this is where unit testing would be handy instead of putting  this inside of code ;)
 	 */
-	
+
+
+	self.levelCubes.push(new Cube(settings.rows));
+	self.cube = self.levelCubes[self.levelCubes.length - 1];
 	//INITPOS IS CALCULATED BECAUSE OF THE MESH ORIGIN WHICH IS NORMALY [0.5, 0.5] SO YOU NEED TO CALCULATED BASED ON THE FORMULAR BELLOW
 	var initPos = -settings.rows * settings.cubeSize *0.5 + settings.cubeSize*0.5;
 	//SET INITPOS
 	var position = { x: initPos, y: initPos, z: -initPos };
 	var amount=0;
+
 	for (var x=0; x<self.rows; x++){
 		//ADD A NEW CUBE X-AXIS
 		for(var y=0; y<self.rows; y++){
@@ -149,13 +158,40 @@ App.prototype.generateLevel = function(){
 
 	var minus = (self.rows>2)?Math.pow(self.rows-2,3):0;
 	console.log("amount: "+amount+ " - should be: "+( Math.pow(self.rows,3) - minus));
-
 	self.cube.generateFaceColors();
 	self.scene.traverse(function (e) {
-                if (e instanceof ColorCube) {
-                	e.geometry.colorsNeedUpdate = true;
-                }
-            });
+        if (e instanceof ColorCube) {
+            e.geometry.colorsNeedUpdate = true;
+        }
+    });
+    //REMOVE PREVIOUS LEVEL IF EXISTING
+    self.removePreviousLevel();
+}
+
+App.prototype.removePreviousLevel = function(){
+	var self = this;
+	if(self.levelCubes == null && self.levelCubes.length > 0){
+		console.log("levelCubes are null in class App removePreviousLevel");
+		return;
+	}
+	//REMOVE ALL LVL EXCEPT THE LATEST NEW ONE THATS WHY length-1
+	for(var i=0; i<self.levelCubes.length-1; i++){
+		var lvl = self.levelCubes[i];
+		self.scene.remove(lvl);
+	}
+}
+
+App.prototype.nextLevel = function(){
+	var self = this;
+	var timer = window.setInterval(function(){
+			//MAX ROWS ARCHIEVED
+			if(self.rows >= settings.maxRows){
+				console.log("MAX ROWS ARCHIEVED");
+				return;
+			}
+			self.rows = settings.rows +=1;
+			self.generateLevel();
+	}, 3000);
 }
 
 App.prototype.setOffset = function(curValue, x, y, z){
@@ -202,5 +238,6 @@ App.prototype.renderScene = function(){
 }
 
 App.prototype.update = function(){
-	//CALL REQUIRED GAME LOGIC HERE
+	var self = this;
+
 }
