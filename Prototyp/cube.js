@@ -1,4 +1,5 @@
-function Cube(rows){
+function Cube(rows, scene){
+	var self=this;
 	this.rows = rows;
 	this.cubes = [];
 
@@ -13,6 +14,8 @@ function Cube(rows){
 	 * 										false:color of the square is black
 	 */	
 	this.activeFaces = [];
+	self.scene = scene;
+	self.generateCube();
 }
 
 /*
@@ -94,7 +97,6 @@ Cube.prototype.shuffleArray = function(array){
 Cube.prototype.selectFaces = function(vertex){
 	for (var i=0; i<this.activeFaces.length; i++){
 		if (this.activeFaces[i][0]==vertex.face || this.activeFaces[i][1]==vertex.face){
-			console.log(vertex.face);
 			var color = 0x000000;
 			if (this.activeFaces[i][3]==false){
 				color=this.activeFaces[i][2];
@@ -108,4 +110,120 @@ Cube.prototype.selectFaces = function(vertex){
 			vertex.object.geometry.colorsNeedUpdate = true;
 		}
 	}
+}
+
+
+Cube.prototype.generateCube = function(){
+	var self = this;
+	if(self.rows == null){
+		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
+	}
+	
+	/*
+	 * The correct size for a hollow cube is:
+	 * 		amount of boxes in a solid cube 
+	 * 			minus
+	 * 		amount of boxes in a smaller solid cube that precicely fits inside of the bigger cube
+	 *
+	 * Math:
+	 * if self.rows >= 3
+	 * 		amount: self.rows^3 - (self.rows-2)^3
+	 * else
+	 * 		amount: self.rows^3
+	 *
+	 * BTW this is where unit testing would be handy instead of putting  this inside of code ;)
+	 */
+
+
+				//self.levelCubes.push(new Cube(settings.rows));
+				//self.cube = self.levelCubes[self.levelCubes.length - 1];
+	
+	//INITPOS IS CALCULATED BECAUSE OF THE MESH ORIGIN WHICH IS NORMALY [0.5, 0.5] SO YOU NEED TO CALCULATED BASED ON THE FORMULAR BELLOW
+	var initPos = -self.rows * settings.cubeSize *0.5 + settings.cubeSize*0.5;
+	//SET INITPOS
+	var position = { x: initPos, y: initPos, z: -initPos };
+	var amount=0;
+
+	for (var x=0; x<self.rows; x++){
+		//ADD A NEW CUBE X-AXIS
+		for(var y=0; y<self.rows; y++){
+			//ADD A NEW CUBE Y-AXIS
+			for(var z=0; z<self.rows; z++){
+				if ((x==0 || x==self.rows-1) || (y==0 || y==self.rows-1) || (z==0 || z==self.rows-1)) {
+					amount++;
+					//ADD A NEW CUBE Z-AXIS
+					
+					self.addCube( self.setOffset(position, 0, y*settings.cubeSize, -z*settings.cubeSize), [x,y,z]);
+				}
+			}
+		}
+		//UPDATE THE POSITION OF X-AXIS BASED ON CUBE SIZE
+	
+		position = self.setOffset(position, settings.cubeSize, 0 , 0);
+		
+	}
+
+	var minus = (self.rows>2)?Math.pow(self.rows-2,3):0;
+	console.log("amount: "+amount+ " - should be: "+( Math.pow(self.rows,3) - minus));
+	self.generateFaceColors();
+	self.scene.traverse(function (e) {
+        if (e instanceof THREE.Mesh) {
+            e.geometry.colorsNeedUpdate = true;
+        }
+    });
+   	
+}
+
+
+Cube.prototype.setOffset = function(curValue, x, y, z){
+	if(x == null){ x = 0; }
+	if(y == null ){ y = 0; }
+	if(z == null){ z = 0; }
+
+	var rValue = curValue;
+	if(curValue == null){
+		rValue = {x: x, y: y, z:z };
+	}	
+	return {x: (rValue.x + x), y: (rValue.y + y), z: (rValue.z + z) }
+}
+
+Cube.prototype.addCube = function(position, location){
+	var self = this;
+	
+	if(position == null){
+		position = { x: 0, y: 0, z: 0};
+	}
+	//SETUP GEOMETRY AND CUBE SIZE FOR TESTING CUBE SIZE OF 1 is OK
+	var geometry = new THREE.BoxGeometry( settings.cubeSize, settings.cubeSize, settings.cubeSize);
+	var material = new THREE.MeshBasicMaterial( {vertexColors: THREE.FaceColors} );
+	var box = new THREE.Mesh( geometry, material);
+	box.position.set(position.x, position.y, position.z);
+	self.addFacesFromBox(box, location);
+	//IF PARENT CUBE EXISTS AND DEBUG MODE IS ACTIVE ADD NEW CUBE TO PARENT CUBE
+	
+	//TODO: add the part below
+	/*if( !settings.debug && self.debug.cube != null){
+		self.debug.cube.add(box);
+		console.log("box added to parent Cube for debugging")
+		return;
+	}*/
+	self.scene.add(box);
+	self.cubes.push(box)
+}
+
+Cube.prototype.destroy = function(){
+	var self=this;
+	var num=0;
+    for (var i=0;i<self.cubes.length;i++){
+    	var e, j;
+		for ( j = self.scene.children.length - 1; j >= 0 ; j -- ) {
+		    e = self.scene.children[ j ];
+	    	if (e instanceof THREE.Mesh && e==self.cubes[i]){
+	    		self.scene.remove(e);
+	    		num++;
+	    		break;
+	    	}
+	    }
+    }
+    console.log("Cube-"+self.rows+":destroyed "+num+"/"+self.cubes.length);
 }

@@ -14,7 +14,6 @@ function App(){
        		//INIT 3D SCENE
            	if(self.init()){
 				self.addEventListener();
-				self.generateLevel(self.rows);
 				self.renderScene();
 				self.nextLevel();
 			}
@@ -89,97 +88,12 @@ App.prototype.addEventListener = function(){
 		//CHANGE COLOR BASED ON INTERSECTION WITH ELEMENT
 		if ( intersects.length > 0 ) {
 			//SELECTED OBJECT
-			//var sObject = intersects[0];
-			self.cube.selectFaces(intersects[0]);
-			//sObject.object.colorFaces(sObject, 0x000000);
+			self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]); //FIXME
 		}
 	}, false );
 }
 
-App.prototype.addCube = function(position, location){
-	var self = this;
-	
-	if(position == null){
-		position = { x: 0, y: 0, z: 0};
-	}
-	//SETUP GEOMETRY AND CUBE SIZE FOR TESTING CUBE SIZE OF 1 is OK
-	var geometry = new THREE.BoxGeometry( self.cubeSize, self.cubeSize, self.cubeSize);
-	var material = new THREE.MeshBasicMaterial( {vertexColors: THREE.FaceColors } );
-	var box = new ColorCube( geometry, material);
-	box.position.set(position.x, position.y, position.z);
-	self.cube.addFacesFromBox(box, location);
-	//IF PARENT CUBE EXISTS AND DEBUG MODE IS ACTIVE ADD NEW CUBE TO PARENT CUBE
-	if( !settings.debug && self.debug.cube != null){
-		self.debug.cube.add(box);
-		console.log("box added to parent Cube for debugging")
-		return;
-	}
-	self.scene.add(box); 
-}
 
-
-// TODO: maybe move this to cube.js and eventually rename to "generateCube"
-App.prototype.generateLevel = function(){
-	var self = this;
-	if(self.rows == null){
-		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
-	}
-	if(self.levelCubes == null){
-		console.log("levelCubes is null in class App generateLevel()");
-		return;
-	}
-	
-	/*
-	 * The correct size for a hollow cube is:
-	 * 		amount of boxes in a solid cube 
-	 * 			minus
-	 * 		amount of boxes in a smaller solid cube that precicely fits inside of the bigger cube
-	 *
-	 * Math:
-	 * if self.rows >= 3
-	 * 		amount: self.rows^3 - (self.rows-2)^3
-	 * else
-	 * 		amount: self.rows^3
-	 *
-	 * BTW this is where unit testing would be handy instead of putting  this inside of code ;)
-	 */
-
-
-	self.levelCubes.push(new Cube(settings.rows));
-	self.cube = self.levelCubes[self.levelCubes.length - 1];
-	//INITPOS IS CALCULATED BECAUSE OF THE MESH ORIGIN WHICH IS NORMALY [0.5, 0.5] SO YOU NEED TO CALCULATED BASED ON THE FORMULAR BELLOW
-	var initPos = -settings.rows * settings.cubeSize *0.5 + settings.cubeSize*0.5;
-	//SET INITPOS
-	var position = { x: initPos, y: initPos, z: -initPos };
-	var amount=0;
-
-	for (var x=0; x<self.rows; x++){
-		//ADD A NEW CUBE X-AXIS
-		for(var y=0; y<self.rows; y++){
-			//ADD A NEW CUBE Y-AXIS
-			for(var z=0; z<self.rows; z++){
-				if ((x==0 || x==self.rows-1) || (y==0 || y==self.rows-1) || (z==0 || z==self.rows-1)) {
-					amount++;
-					//ADD A NEW CUBE Z-AXIS
-					self.addCube( self.setOffset(position, 0, y*self.cubeSize, -z*self.cubeSize), [x,y,z]);
-				}
-			}
-		}
-		//UPDATE THE POSITION OF X-AXIS BASED ON CUBE SIZE
-		position = self.setOffset(position, self.cubeSize, 0 , 0);
-	}
-
-	var minus = (self.rows>2)?Math.pow(self.rows-2,3):0;
-	console.log("amount: "+amount+ " - should be: "+( Math.pow(self.rows,3) - minus));
-	self.cube.generateFaceColors();
-	self.scene.traverse(function (e) {
-        if (e instanceof ColorCube) {
-            e.geometry.colorsNeedUpdate = true;
-        }
-    });
-    //REMOVE PREVIOUS LEVEL IF EXISTING
-    self.removePreviousLevel();
-}
 
 App.prototype.removePreviousLevel = function(){
 	var self = this;
@@ -190,7 +104,7 @@ App.prototype.removePreviousLevel = function(){
 	//REMOVE ALL LVL EXCEPT THE LATEST NEW ONE THATS WHY length-1
 	for(var i=0; i<self.levelCubes.length-1; i++){
 		var lvl = self.levelCubes[i];
-		self.scene.remove(lvl);
+		lvl.destroy();
 	}
 }
 
@@ -202,22 +116,16 @@ App.prototype.nextLevel = function(){
 				console.log("MAX ROWS ARCHIEVED");
 				return;
 			}
-			self.rows = settings.rows +=1;
-			self.generateLevel();
+			
+			var cube = new Cube(self.rows, self.scene);
+			self.levelCubes.push(cube);
+			self.rows+=1;
+			// destroy old level
+			self.removePreviousLevel();
 	}, 3000);
 }
 
-App.prototype.setOffset = function(curValue, x, y, z){
-	if(x == null){ x = 0; }
-	if(y == null ){ y = 0; }
-	if(z == null){ z = 0; }
 
-	var rValue = curValue;
-	if(curValue == null){
-		rValue = {x: x, y: y, z:z };
-	}	
-	return {x: (rValue.x + x), y: (rValue.y + y), z: (rValue.z + z) }
-}
 
 //CALL THIS METHOD IF THE APPLICATION GET DESTROYED
 App.prototype.terminateApplication = function(){
