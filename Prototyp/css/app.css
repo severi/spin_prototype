@@ -1,0 +1,84 @@
+@font-face {
+    font-family: Lato-Bold;
+    src: url('./font/Lato-Bold.tff');
+}
+
+@font-face {
+    font-family: Lato-Regular;
+    src: url('./font/Lato-Regular.tff');
+}
+
+@font-face {
+    font-family: Lato-Light;
+    src: url('./font/Lato-Light.tff');
+}
+
+html {
+    background-color: #fff;
+    color: #000;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.double-sided {
+    -webkit-backface-visibility: visible;
+    backface-visibility: visible;
+}
+
+img{
+	-webkit-user-drag: none;
+	-moz-user-select: none;
+	user-drag: none;
+}
+
+canvas{ 
+    position:absolute; 
+    bottom:0px; 
+    left:0px;
+}
+
+.appHeader{
+	background-color: #f5f6f8;
+	border-bottom-style: solid;
+	border-bottom-color: #b5bcc4;
+	border-width: 1px;
+}
+
+.appFooter{
+	background-color: #f5f6f8;
+	border-top-style: solid;
+	border-top-color: #b5bcc4;
+	border-width: 1px;
+}
+
+.share{
+    background-color: red;
+}
+
+.settings{
+    background-color: blue;
+}
+
+.trophy{
+    background-color: green;
+}
+
+.button {
+
+   	color: white;
+    text-align: center;
+    border-radius: 5px;
+    font-family: "Lato-Regular";
+}
+
+.newGame {
+	background-color: #19b5fe;
+	width: auto;
+	height: auto;
+}
+

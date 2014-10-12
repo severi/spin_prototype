@@ -1,12 +1,25 @@
 function App(){
 	var self = this;
 
-	if(self.init()){
-		self.addEventListener();
-		self.generateLevel(self.rows);
-		self.renderScene();
-			self.nextLevel();
-	}
+	require.config({baseUrl: 'gui/js'});
+	//CALLBACK FOR LOADING FAMOUSLIB
+    require(['famousLib'], function(FamousLib) {
+        var lib = new FamousLib();
+        lib.loadGlobalVars();
+        lib.loadGlobalModifiers();
+        //CALLBACK FOR MAIN MODULE 
+        require(['gui'], function(GUI){
+            //INIT GUI
+       		self.gui = new GUI(lib).init();
+       		//INIT 3D SCENE
+           	if(self.init()){
+				self.addEventListener();
+				self.generateLevel(self.rows);
+				self.renderScene();
+				self.nextLevel();
+			}
+        });
+    });
 }
 
 App.prototype.loadSettings = function(){
@@ -40,7 +53,7 @@ App.prototype.init = function(){
 	//SETUP SCENE AND CAMERA
 	self.scene = new THREE.Scene();
 	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(100));
-	self.camera.position.z =  self.cubeSize * 10;
+	self.camera.position.z =  self.cubeSize * 15;
 
 	self.projector = new THREE.Projector();
 

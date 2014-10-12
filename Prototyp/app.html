@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>App</title>
+		<title>Spin</title>	
+		<meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+		<!-- GUI -->
+        <script type="text/javascript" src="./gui/lib/famo/functionPrototypeBind.js"></script>
+        <script type="text/javascript" src="./gui/lib/famo/classList.js"></script>
+        <script type="text/javascript" src="./gui/lib/famo/requestAnimationFrame.js"></script>
+        <script type="text/javascript" src="./gui/lib/famo/require.js"></script>
+        <link rel="stylesheet" type="text/css" href="./gui/lib/famo/famous.css" />
+        <script type="text/javascript" src="./gui/lib/famo/famous.min.js"></script>
+
+        <!-- VISUALIZAION -->
 		<script type="text/javascript" src="./three.min.js"></script>
 		<script type="text/javascript" src="./TrackballControls.js"></script>
 		<script type="text/javascript" src="./settings.js"></script>
@@ -10,9 +24,8 @@
 		<script type="text/javascript" src="./cube.js"></script>
 		<script type="text/javascript" src="./debug.js"></script>
 
-		<style>
-			canvas{ position:absolute; bottom:0px; left:0px;}
-		</style>
+		<!-- SHARED STYLESHEET -->
+        <link rel="stylesheet" type="text/css" href="./css/app.css" />
 
 	</head>
 	<body>
