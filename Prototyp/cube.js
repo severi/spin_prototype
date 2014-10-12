@@ -1,7 +1,9 @@
-function Cube(rows, scene){
+function Cube(rows, scene, debug){
 	var self=this;
 	this.rows = rows;
 	this.cubes = [];
+
+	self.debug=debug;
 
 	/*
 	 * 	2 dimensional list including all outer faces
@@ -201,12 +203,12 @@ Cube.prototype.addCube = function(position, location){
 	self.addFacesFromBox(box, location);
 	//IF PARENT CUBE EXISTS AND DEBUG MODE IS ACTIVE ADD NEW CUBE TO PARENT CUBE
 	
-	//TODO: add the part below
-	/*if( !settings.debug && self.debug.cube != null){
+	
+	if( !settings.debug && self.debug.cube != null){
 		self.debug.cube.add(box);
 		console.log("box added to parent Cube for debugging")
 		return;
-	}*/
+	}
 	self.scene.add(box);
 	self.cubes.push(box)
 }

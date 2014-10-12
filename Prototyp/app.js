@@ -117,7 +117,7 @@ App.prototype.nextLevel = function(){
 				return;
 			}
 			
-			var cube = new Cube(self.rows, self.scene);
+			var cube = new Cube(self.rows, self.scene, self.debug);
 			self.levelCubes.push(cube);
 			self.rows+=1;
 			// destroy old level
