@@ -2,7 +2,7 @@ function Cube(rows, scene, debug){
 	var self=this;
 	this.rows = rows;
 	this.cubes = [];
-
+	self.percentage = settings.percentage;
 	self.debug=debug;
 
 	/*
@@ -107,7 +107,7 @@ Cube.prototype.checkArrayRandomness = function(array){
 		else {
 			counter=0;
 		}
-		if (counter>=self.rows*self.rows){
+		if (counter>=Math.ceil(self.rows*self.rows*self.percentage)){
 			console.log("!!!!!!!!!!!!!!!1")
 			return false;
 		}

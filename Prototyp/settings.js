@@ -4,7 +4,8 @@ var settings = {
 	cubeSize : 1,
 	debug: false,
 	colors: 4,
-	maxRows: 5
+	maxRows: 5,
+	percentage: 0.8
 };
 
 var faceColors = {
