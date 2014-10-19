@@ -83,15 +83,38 @@ Cube.prototype.setRows = function(rows){
  * http://bost.ocks.org/mike/shuffle/
  */
 Cube.prototype.shuffleArray = function(array){
+	var self=this;
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
         var temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
+    if (!self.checkArrayRandomness(array)){
+    	self.shuffleArray(array);
+    }
     return array;
 }
 
+Cube.prototype.checkArrayRandomness = function(array){
+	var self = this;
+	var counter=0;
+	var currentColor=undefined;
+	for (var i=0; i<array.length;i++){
+		if (array[i]==currentColor){
+			counter++;
+		}
+		else {
+			counter=0;
+		}
+		if (counter>=self.rows*self.rows){
+			console.log("!!!!!!!!!!!!!!!1")
+			return false;
+		}
+		currentColor=array[i];
+	}
+	return true;
+}
 
 /*
  * 	If face is clicked, toggle between correct color and black
