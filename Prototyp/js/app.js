@@ -1,24 +1,11 @@
 function App(){
 	var self = this;
-
-	require.config({baseUrl: 'gui/js'});
-	//CALLBACK FOR LOADING FAMOUSLIB
-    require(['famousLib'], function(FamousLib) {
-        var lib = new FamousLib();
-        lib.loadGlobalVars();
-        lib.loadGlobalModifiers();
-        //CALLBACK FOR MAIN MODULE 
-        require(['gui'], function(GUI){
-            //INIT GUI
-       		self.gui = new GUI(lib).init();
-       		//INIT 3D SCENE
-           	if(self.init()){
-				self.addEventListener();
-				self.renderScene();
-				self.nextLevel();
-			}
-        });
-    });
+    //INIT 3D SCENE
+    if(self.init()){
+		self.addEventListener();
+		self.renderScene();
+		self.nextLevel();
+	}
 }
 
 App.prototype.loadSettings = function(){
@@ -52,10 +39,9 @@ App.prototype.init = function(){
 	//SETUP SCENE AND CAMERA
 	self.scene = new THREE.Scene();
 	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(100));
-	self.camera.position.z =  self.cubeSize * 15;
+	self.camera.position.z =  self.cubeSize * 8;
 
 	self.projector = new THREE.Projector();
-
 	//SETUP DEBUG OBJECT -> NEED TO BE CALLED AT LAST TO MAKE SURE ALL REQUIRED OBJECTS ARE REALLY CREATED LIKE SCENE ...
 	self.debug = new Debug(self);
 	//INIT SUCCESSFUL
@@ -91,9 +77,17 @@ App.prototype.addEventListener = function(){
 			self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]); //FIXME
 		}
 	}, false );
+
+	window.addEventListener("resize", function(){
+
+		self.camera.aspect = window.innerWidth / (window.innerHeight);
+		self.camera.updateProjectionMatrix();
+		self.renderer.setSize(window.innerWidth, window.innerHeight);
+		self.controls.handleResize();
+
+	}, false);
+
 }
-
-
 
 App.prototype.removePreviousLevel = function(){
 	var self = this;
