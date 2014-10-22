@@ -45,6 +45,7 @@ App.prototype.init = function(){
 	//SETUP DEBUG OBJECT -> NEED TO BE CALLED AT LAST TO MAKE SURE ALL REQUIRED OBJECTS ARE REALLY CREATED LIKE SCENE ...
 	self.debug = new Debug(self);
 
+	//TODO ITS JUST A TEST FOR LOGIC MODULE
 	self.logic = new Logic(self);
 	//INIT SUCCESSFUL
 	return true;

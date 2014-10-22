@@ -1,6 +1,6 @@
 var settings = {
 	fps : 60,
-	rows : 1,
+	rows : 4,
 	cubeSize : 1,
 	debug: false,
 	colors: 4,

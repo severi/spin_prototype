@@ -2,21 +2,17 @@
     font-family: Lato-Bold;
     src: url('./font/Lato-Bold.tff');
 }
-
 @font-face {
     font-family: Lato-Regular;
     src: url('./font/Lato-Regular.tff');
 }
-
 @font-face {
     font-family: Lato-Light;
     src: url('./font/Lato-Light.tff');
 }
-
 html {
     background-color: #fff;
     color: #000;
-
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -24,61 +20,100 @@ html {
     -ms-user-select: none;
     user-select: none;
 }
-
-.double-sided {
-    -webkit-backface-visibility: visible;
-    backface-visibility: visible;
-}
-
-img{
-	-webkit-user-drag: none;
-	-moz-user-select: none;
-	user-drag: none;
-}
-
-canvas{ 
-    position:absolute; 
-    bottom:0px; 
-    left:0px;
-}
-
-.appHeader{
-	background-color: #f5f6f8;
-	border-bottom-style: solid;
-	border-bottom-color: #b5bcc4;
-	border-width: 1px;
-}
-
-.appFooter{
-	background-color: #f5f6f8;
-	border-top-style: solid;
-	border-top-color: #b5bcc4;
-	border-width: 1px;
-}
-
-.share{
-    background-color: red;
-}
-
-.settings{
-    background-color: blue;
-}
-
-.trophy{
-    background-color: green;
-}
-
-.button {
-
-   	color: white;
+.body{ overflow: hidden; }
+.double-sided { -webkit-backface-visibility: visible; backface-visibility: visible; }
+canvas{  position:absolute; bottom:0px; left:0px; }
+.marginAuto{ margin-left: auto; margin-right: auto; }
+.buttonRect {
+    position: relative;
+    width: 80px;
+    padding: 5px 10px 5px 10px;
     text-align: center;
-    border-radius: 5px;
     font-family: "Lato-Regular";
+    opacity: 0.5;
+}
+.label{
+    position: absolute;
+    width: auto !important;
+    font-family: "Lato-Regular";
+    opacity: 0.5;
+    width: 50%;
+    list-style: none;
+    text-align: center !important ;
+}
+.label p{ margin: 0px 0px 0px 0px; }
+.curColor{
+    width:60%; 
+    height:60%; 
+    background-color: #03c9a9; 
+    margin-left: 20%; 
+    margin-top: 20%; 
+    margin-right:20%; 
+    border-radius: 2px;
+}
+.buttonRect:hover{ opacity: 1; }
+.container{
+    position: absolute;
+    width:100%;
+    height: auto;
+    max-height: 72px;
+    left:0px;
+    z-index: 10;
+}
+.header{
+    top:0px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    background-image: url('./img/logo.png');
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: auto 60%;
+}
+.footer{ bottom:0px; border-top-style: solid; border-top-width: 1px; }
+.darkBorder{ border-color: #607282; }
+.darkFont{ color: #607282; }
+.blueBorder{ border-color: #19b5fe; }
+.blueFont{ color: #19b5fe; }
+.lightGrayBorderColor{ border-color: #b2b9c1; }
+.lightGrayFont{ color: #f7f8f9; };
+.lightGrayBackground{ background-color: #f7f8f9; }
+
+@media screen and (max-height: 544px){
+    .containerPadding{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .fontSizeButton { font-size: 14px; }
+    .fontSizeLabelSmall { font-size: 8px; }
+    .fontSizeLabelBig { font-size: 14px; }
+    .colorBox{
+        position: relative; 
+        width:15px; 
+        height:15px; 
+        border-style:solid; 
+        border-radius:4px; 
+        border-width: 1px; 
+        top:5px;
+    }
 }
 
-.newGame {
-	background-color: #19b5fe;
-	width: auto;
-	height: auto;
+@media screen and (min-height: 544px){
+    .containerPadding{
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .fontSizeButton { font-size: 20px; }
+    .fontSizeLabelSmall { font-size: 12px; }
+    .fontSizeLabelBig { font-size: 20px; }
+    .colorBox{
+        position: relative; 
+        width:20px; 
+        height:20px; 
+        border-style:solid; 
+        border-radius:6px; 
+        border-width: 2px; 
+        top:10px;
+    }
 }
+
 

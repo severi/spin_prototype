@@ -45,7 +45,5 @@ Logic.prototype.clearTimer = function(){
 Logic.prototype.end = function(){
 	var self = this;
 	self.clearTimer();
-	alert("GAME DONE");
-
-
+	alert("TIME IS OUT GAME DONE");
 }

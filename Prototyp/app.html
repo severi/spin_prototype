@@ -9,6 +9,7 @@
 
         <!-- VISUALIZAION -->
 		<script type="text/javascript" src="./lib/three.min.js"></script>
+		<script type="text/javascript" src="./lib/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="./js/TrackballControls.js"></script>
 		<script type="text/javascript" src="./js/settings.js"></script>
 		<script type="text/javascript" src="./js/colorCube.js"></script>
@@ -22,7 +23,15 @@
 
 	</head>
 	<body>
+		<div class="container" style="top: 10px; "> 
+			<li class="label darkFont" style="text-align:left; left:0px; padding-left:10%;"><p class="fontSizeLabelBig">30</p><p class="fontSizeLabelSmall">time</p></li> 
+			<li class="label darkFont" style="text-align:right; right:0px; padding-right:10%"><p class="fontSizeLabelBig">0</p><p class="fontSizeLabelSmall">score</p></li> 
+			<div class="colorBox marginAuto lightGrayBorderColor"><p class="curColor"></p></div>
+		</div>
 
+		<div class="container" style="bottom: 10px;"> 
+			<div class="buttonRect marginAuto darkFont fontSizeButton">done</div> 
+		</div>
 		<script type="text/javascript">
 			var app = new App();
 		</script>
