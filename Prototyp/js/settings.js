@@ -5,7 +5,9 @@ var settings = {
 	debug: false,
 	colors: 4,
 	maxRows: 5,
-	percentage: 0.8
+	percentage: 0.8,
+	maxPlayTime: 30,
+	stage: 2
 };
 
 var faceColors = {
@@ -14,3 +16,5 @@ var faceColors = {
 		green: 0x03c9a9,
 		blue: 0x19b5fe,
 };
+
+

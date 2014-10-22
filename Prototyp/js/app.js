@@ -44,6 +44,8 @@ App.prototype.init = function(){
 	self.projector = new THREE.Projector();
 	//SETUP DEBUG OBJECT -> NEED TO BE CALLED AT LAST TO MAKE SURE ALL REQUIRED OBJECTS ARE REALLY CREATED LIKE SCENE ...
 	self.debug = new Debug(self);
+
+	self.logic = new Logic(self);
 	//INIT SUCCESSFUL
 	return true;
 }
@@ -86,7 +88,6 @@ App.prototype.addEventListener = function(){
 		self.controls.handleResize();
 
 	}, false);
-
 }
 
 App.prototype.removePreviousLevel = function(){
@@ -99,27 +100,26 @@ App.prototype.removePreviousLevel = function(){
 	for(var i=0; i<self.levelCubes.length-1; i++){
 		var lvl = self.levelCubes[i];
 		lvl.destroy();
+		//REMOVE THE PREVIOUS ARRAY POSITION
+		self.levelCubes.splice(0,1);
 	}
 }
 
 App.prototype.nextLevel = function(){
 	var self = this;
-	var timer = window.setInterval(function(){
-			//MAX ROWS ARCHIEVED
-			if(self.rows >= settings.maxRows){
-				console.log("MAX ROWS ARCHIEVED");
-				return;
-			}
-			
-			var cube = new Cube(self.rows, self.scene, self.debug);
-			self.levelCubes.push(cube);
-			self.rows+=1;
-			// destroy old level
-			self.removePreviousLevel();
-	}, 3000);
+	//MAX ROWS ARCHIEVED
+	if(self.rows >= settings.maxRows){
+		console.log("MAX ROWS ARCHIEVED");
+		return;
+	}
+	//CREATE NEW CUBE
+	var cube = new Cube(self.rows, self.scene, self.debug);
+	self.levelCubes.push(cube);
+	//ADD NEW ROW TO CUBE
+	self.rows+=1;
+	// destroy old level
+	self.removePreviousLevel();
 }
-
-
 
 //CALL THIS METHOD IF THE APPLICATION GET DESTROYED
 App.prototype.terminateApplication = function(){
