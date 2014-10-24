@@ -1,11 +1,21 @@
 function Debug(app){
 	var self = this;
-	self.app = app;
-	if(settings.debug == false){
+	if(app == null){
+		console.log("constructor app parameter is null in Logic");
 		return;
+	}
+	self.app = app;
+}
+
+Debug.prototype.init = function(){
+	var self = this;
+	if(settings.debug == false){
+		console.log("Debug deactivated but init ok");
+		return true;
 	}
 	self.debugAxis();
 	self.debugCube();
+	return true;
 }
 
 Debug.prototype.debugAxis = function(){

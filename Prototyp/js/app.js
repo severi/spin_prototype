@@ -20,6 +20,29 @@ App.prototype.loadSettings = function(){
 
 App.prototype.init = function(){
 	var self = this;
+
+	if(!self.init3dView()){
+		console.log("Error during init in class app method init -> initedView returnt false");
+		return false;
+	}
+	//SETUP GUI OBJECT -> NEED TO BE CALLED BEFORE LOGIC BECAUSE OF VALUE DEPENDENCIES
+	self.gui = new GUI(self);
+	if(!self.gui.init()){
+		console.log("Error during init in class app method init -> gui returnt false");
+		return false;
+	}
+	//SETUP DEBUG OBJECT -> NEED TO BE CALLED AT LAST TO MAKE SURE ALL REQUIRED OBJECTS ARE REALLY CREATED LIKE SCENE ...
+	self.debug = new Debug(self);
+	if(!self.debug.init()){
+		console.log("Error during init in class app method init -> debug returnt false");
+		return false;
+	}
+	//IF EVERYTHING WENT WELL INIT OK
+	return true;
+}
+
+App.prototype.init3dView = function(){
+	var self = this;
 	self.levelCubes = new Array();
 	//USED TO SET THE HEIGHT OF THE CANVAS VALUES IN % [0-1] e.g 0.5 means 50%;
 	var hScale = 1;
@@ -42,11 +65,6 @@ App.prototype.init = function(){
 	self.camera.position.z =  self.cubeSize * 8;
 
 	self.projector = new THREE.Projector();
-	//SETUP DEBUG OBJECT -> NEED TO BE CALLED AT LAST TO MAKE SURE ALL REQUIRED OBJECTS ARE REALLY CREATED LIKE SCENE ...
-	self.debug = new Debug(self);
-
-	//TODO ITS JUST A TEST FOR LOGIC MODULE
-	self.logic = new Logic(self);
 	//INIT SUCCESSFUL
 	return true;
 }

@@ -6,7 +6,8 @@ var settings = {
 	colors: 4,
 	maxRows: 5,
 	percentage: 0.8,
-	maxPlayTime: 30,
+	initPlayTime: 30,
+	initScore: 0,
 	stage: 2
 };
 

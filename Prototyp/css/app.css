@@ -13,6 +13,7 @@
 html {
     background-color: #fff;
     color: #000;
+    overflow: hidden;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -26,7 +27,7 @@ canvas{  position:absolute; bottom:0px; left:0px; }
 .marginAuto{ margin-left: auto; margin-right: auto; }
 .buttonRect {
     position: relative;
-    width: 80px;
+    width: 100%;
     padding: 5px 10px 5px 10px;
     text-align: center;
     font-family: "Lato-Regular";
@@ -60,14 +61,17 @@ canvas{  position:absolute; bottom:0px; left:0px; }
     left:0px;
     z-index: 10;
 }
-.header{
-    top:0px;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    background-image: url('./img/logo.png');
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    background-size: auto 60%;
+.canBeAnimated{
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+.topOut{
+    -webkit-transform: translate3d(0px, -200%, 0px);
+    transform: translate3d(0px, -200%, 0px);
+}
+.bottomOut{
+    -webkit-transform: translate3d(0px, 200%, 0px);
+    transform: translate3d(0px, 200%, 0px);
 }
 .footer{ bottom:0px; border-top-style: solid; border-top-width: 1px; }
 .darkBorder{ border-color: #607282; }
@@ -95,6 +99,9 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         border-width: 1px; 
         top:5px;
     }
+    .logoHeader img{
+        height: 27px;
+    }
 }
 
 @media screen and (min-height: 544px){
@@ -113,6 +120,9 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         border-radius:6px; 
         border-width: 2px; 
         top:10px;
+    }
+    .logoHeader img{
+        height: 36px;
     }
 }
 

@@ -17,20 +17,27 @@
 		<script type="text/javascript" src="./js/cube.js"></script>
 		<script type="text/javascript" src="./js/debug.js"></script>
 		<script type="text/javascript" src="./js/logic.js"></script>
+		<script type="text/javascript" src="./js/gui.js"></script>
 
 		<!-- SHARED STYLESHEET -->
         <link rel="stylesheet" type="text/css" href="./css/app.css" />
 
 	</head>
 	<body>
-		<div class="container" style="top: 10px; "> 
-			<li class="label darkFont" style="text-align:left; left:0px; padding-left:10%;"><p class="fontSizeLabelBig">30</p><p class="fontSizeLabelSmall">time</p></li> 
-			<li class="label darkFont" style="text-align:right; right:0px; padding-right:10%"><p class="fontSizeLabelBig">0</p><p class="fontSizeLabelSmall">score</p></li> 
+		<div class="container canBeAnimated logoHeader" style="top: 15px; text-align: center;"> 
+			<img src="./css/img/logo.png">
+		</div>
+		<div class="container canBeAnimated gameHeader topOut" style="top: 10px;"> 
+			<li class="label darkFont" style="text-align:left; left:0px; padding-left:10%;"><p class="fontSizeLabelBig curTime"></p><p class="fontSizeLabelSmall">time</p></li> 
+			<li class="label darkFont" style="text-align:right; right:0px; padding-right:10%"><p class="fontSizeLabelBig curScore">0</p><p class="fontSizeLabelSmall">score</p></li> 
 			<div class="colorBox marginAuto lightGrayBorderColor"><p class="curColor"></p></div>
 		</div>
 
-		<div class="container" style="bottom: 10px;"> 
-			<div class="buttonRect marginAuto darkFont fontSizeButton">done</div> 
+		<div class="button container canBeAnimated newGameButton" style="bottom: 10px;"> 
+			<div class="buttonRect canBeAnimated marginAuto darkFont fontSizeButton">new game</div> 
+		</div>
+		<div class="button container canBeAnimated bottomOut doneButton" style="bottom: 10px;"> 
+			<div class="buttonRect marginAuto darkFont fontSizeButton">submit</div> 
 		</div>
 		<script type="text/javascript">
 			var app = new App();
