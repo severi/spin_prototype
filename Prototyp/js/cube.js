@@ -136,6 +136,7 @@ Cube.prototype.checkArrayRandomness = function(array){
 Cube.prototype.selectFaces = function(vertex){
 	var self = this;
 	var chosen = true; //true if square selected, false if deselected
+	var oldColor;
 	var color = self.cubeColors[1][self.cubeColors[1].length-1]
 	for (var i=0; i<this.activeFaces.length; i++){
 		if (this.activeFaces[i][0]==vertex.face || this.activeFaces[i][1]==vertex.face){
@@ -149,12 +150,13 @@ Cube.prototype.selectFaces = function(vertex){
 				this.activeFaces[i][3]=false;
 			}
 			color = new THREE.Color(color);
+			oldColor = this.activeFaces[i][0].color.getHex();
 			this.activeFaces[i][0].color=color;
 			this.activeFaces[i][1].color=color;
 			vertex.object.geometry.colorsNeedUpdate = true;
 		}
 	}
-	return chosen;
+	return [chosen, oldColor];
 }
 
 
@@ -279,4 +281,14 @@ Cube.prototype.getNextColor = function(){
 	var color = self.cubeColors[0].pop();
 	self.cubeColors[1].push(color);
 	return color;
+}
+
+Cube.prototype.revertColor = function(color){
+	var self = this;
+
+	var index = self.cubeColors[1].indexOf(color);
+	if (index > -1) {
+    	self.cubeColors[1].splice(index, 1);
+    	self.cubeColors[0].splice(Math.floor(Math.random()*self.cubeColors[0].length), 0, color);
+    }
 }

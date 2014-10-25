@@ -102,8 +102,12 @@ App.prototype.addEventListener = function(){
 		//CHANGE COLOR BASED ON INTERSECTION WITH ELEMENT
 		if ( intersects.length > 0 ) {
 			//SELECTED OBJECT
-			var chosen = self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]);
-			self.logic.setCurrentColor();
+			var retAr = self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]);
+			if(retAr[0]==true){
+				self.logic.setCurrentColor();
+			} else {
+				self.logic.revertColor(retAr[1]);
+			}
 		}
 	}, false );
 

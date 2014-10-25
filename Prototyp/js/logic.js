@@ -85,3 +85,8 @@ Logic.prototype.setCurrentColor = function(){
 
 	self.gui.setCurrentColor(self.cube.getNextColor());
 }
+
+Logic.prototype.revertColor = function(color){
+	var self=this;
+	self.cube.revertColor(color);
+}
