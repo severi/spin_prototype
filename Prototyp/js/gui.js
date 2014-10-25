@@ -21,7 +21,7 @@ GUI.prototype.init = function(){
 		console.log("Error ref is null in initValues class GUI");
 		return false;
 	}
-	self.curTime.html( settings.initPlayTime );
+	self.curTime.html( settings.initPreTime );
 	self.curScore.html( settings.initScore );
 	
 	self.addEventListener();

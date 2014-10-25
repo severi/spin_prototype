@@ -4,6 +4,7 @@ function Logic(app){
 		console.log("constructor app parameter is null in Logic");
 		return;
 	}
+	self.gameStarted =false;
 	self.app = app;
 }
 
@@ -38,7 +39,6 @@ Logic.prototype.resetTimer = function(){
 		window.clearInterval(self.gameTimer);
 	}
 	self.gameTimer = window.setInterval(function(){
-		self.gui = app.gui;
 		if(self.gui == null){
 			console.log("Error self.gui is null in start class Logic");
 			return;
@@ -49,8 +49,19 @@ Logic.prototype.resetTimer = function(){
 		if(settings.debug){
 			console.log("updateTimer " + self.gui.curTime.html());
 		}
+
+		if( self.gameStarted==false && time == 0){
+			//remove cube colors;
+			self.gui.curTime.html(settings.initPlayTime);
+			self.cube.hideColors();
+			preGameTime=false;
+			self.gameStarted=true;
+			return;
+		}
+
 		if( time == 0){
 			self.end();
+			self.gameStarted=false;
 			return;
 		}
 		//REDUCE CURRENT TIME

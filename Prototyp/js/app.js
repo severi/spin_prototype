@@ -100,7 +100,7 @@ App.prototype.addEventListener = function(){
 		var raycaster = new THREE.Raycaster( self.camera.position, vector.sub( self.camera.position ).normalize() );
 		var intersects = raycaster.intersectObjects( self.scene.children );
 		//CHANGE COLOR BASED ON INTERSECTION WITH ELEMENT
-		if ( intersects.length > 0 ) {
+		if ( intersects.length > 0 && self.logic.gameStarted==true) {
 			//SELECTED OBJECT
 			var retAr = self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]);
 			if(retAr[0]==true){
