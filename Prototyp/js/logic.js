@@ -44,7 +44,7 @@ Logic.prototype.resetTimer = function(){
 			return;
 		}
 		//GET DISPLAYED TIME
-		var time = parseInt(self.gui.curTime.html());
+		var time = parseInt(self.gui.getTime());
 		//REDUCE CURRENT TIME BY 1s
 		if(settings.debug){
 			console.log("updateTimer " + self.gui.curTime.html());
@@ -52,7 +52,7 @@ Logic.prototype.resetTimer = function(){
 
 		if( self.gameStarted==false && time == 0){
 			//remove cube colors;
-			self.gui.curTime.html(settings.initPlayTime);
+			self.gui.setTime(settings.initPlayTime);
 			self.cube.hideColors();
 			preGameTime=false;
 			self.gameStarted=true;
@@ -67,7 +67,7 @@ Logic.prototype.resetTimer = function(){
 		//REDUCE CURRENT TIME
 		time--;
 		//UPDATE LABEL TIME
-		self.gui.curTime.html(time);
+		self.gui.setTime(time);
 	}, 1000); // 1 second per count
 }
 
@@ -81,15 +81,28 @@ Logic.prototype.clearTimer = function(){
 
 Logic.prototype.done = function(){
 	var self = this;
+
 	self.clearTimer();
-	alert("TODO SHOW SHOW RESULTS VIEW + HEADER (VIEW ANIMATION => SLIDE FROM SIDE) AND CALCULATE VALUES -> METHOD done in class LOGIC");
+	var score = self.calculatePoints();
+	self.gui.setScore(score);
+	console.log("score: "+score)
+	console.log("TODO SHOW SHOW RESULTS VIEW + HEADER (VIEW ANIMATION => SLIDE FROM SIDE) AND CALCULATE VALUES -> METHOD done in class LOGIC");
 }
 
 Logic.prototype.end = function(){
 	var self = this;
-	self.clearTimer();
-	alert("Game Over TODO SHOW MENU");
+
+	self.done();
+	console.log("Game Over TODO SHOW MENU");
 }
+
+Logic.prototype.calculatePoints = function(){
+	var self = this;
+
+	var array = self.cube.getNumberOfCorrectAndWrongColors();
+	return array[0]-array[1];
+}
+
 
 Logic.prototype.setCurrentColor = function(){
 	var self = this;

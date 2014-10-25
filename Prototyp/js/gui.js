@@ -99,3 +99,19 @@ GUI.prototype.getCurrentColor = function(){
 	var self = this;
 	return self.curColor.css("background-color"); //rgb(x,y,z)
 }
+
+GUI.prototype.getScore = function(){
+	return this.curScore.html();
+}
+
+GUI.prototype.setScore = function(score){
+	this.curScore.html(score);
+}
+
+GUI.prototype.setTime = function(time){
+	this.curTime.html(time);
+}
+
+GUI.prototype.getTime = function(){
+	return this.curTime.html();
+}

@@ -12,8 +12,8 @@ function Cube(rows, scene, debug){
 	 * 							[0][1] 	= face pair forming a square
 	 * 							[2]		= correct color of the square (for example faceColors.red)
 	 * 							[3]		= boolean value telling whether square has been selected or not
-	 * 										true: color of the square is the same as defined by index 2
-	 * 										false:color of the square is black
+	 * 										true: no color has been placed on square
+	 * 										false:color is placed on this square
 	 */	
 	this.activeFaces = [];
 
@@ -214,11 +214,7 @@ Cube.prototype.generateCube = function(){
 	var minus = (self.rows>2)?Math.pow(self.rows-2,3):0;
 	console.log("amount: "+amount+ " - should be: "+( Math.pow(self.rows,3) - minus));
 	self.generateFaceColors();
-	self.scene.traverse(function (e) {
-        if (e instanceof THREE.Mesh) {
-            e.geometry.colorsNeedUpdate = true;
-        }
-    });
+	self.updateColors();
    	
 }
 
@@ -295,12 +291,43 @@ Cube.prototype.revertColor = function(color){
 }
 
 Cube.prototype.hideColors = function(){
+	var self = this;
+
 	for (var i=0; i<this.activeFaces.length; i++){
 		this.activeFaces[i][0].color.setHex(settings.defaultColor);
 		this.activeFaces[i][1].color.setHex(settings.defaultColor);
-		console.log(this.activeFaces[i][1])
 	}
-	for (var i=0; i<this.cubes.length; i++){
-		this.cubes[i].geometry.colorsNeedUpdate = true;
+
+	self.updateColors();
+}
+
+Cube.prototype.updateColors = function(){
+	var self = this;
+
+	self.scene.traverse(function (e) {
+        if (e instanceof THREE.Mesh) {
+            e.geometry.colorsNeedUpdate = true;
+        }
+    });
+}
+
+Cube.prototype.getNumberOfCorrectAndWrongColors = function(){
+	var self = this;
+
+	var correct =0;
+	var wrong =0;
+	for (var i=0; i<this.activeFaces.length; i++){
+		var square = this.activeFaces[i];
+		var color = new THREE.Color(square[2]);
+		if (square[3]==false){
+			if (square[0].color.getHex()==color.getHex()){
+				correct++;
+			} else {
+				wrong++;
+			}
+
+		}
 	}
+	console.log("correct quesses: "+ correct + ", wrong guesses: "+wrong);
+	return [correct,wrong];
 }
