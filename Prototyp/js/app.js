@@ -31,6 +31,13 @@ App.prototype.init = function(){
 		console.log("Error during init in class app method init -> gui returnt false");
 		return false;
 	}
+	//INIT LOGIC
+	self.logic = new Logic(this);
+	if(!self.logic.init()){
+		console.log("Error during init in class app method init -> logic returnt false");
+		return false;
+	}
+
 	//SETUP DEBUG OBJECT -> NEED TO BE CALLED AT LAST TO MAKE SURE ALL REQUIRED OBJECTS ARE REALLY CREATED LIKE SCENE ...
 	self.debug = new Debug(self);
 	if(!self.debug.init()){
@@ -95,7 +102,8 @@ App.prototype.addEventListener = function(){
 		//CHANGE COLOR BASED ON INTERSECTION WITH ELEMENT
 		if ( intersects.length > 0 ) {
 			//SELECTED OBJECT
-			self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]); //FIXME
+			var chosen = self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]);
+			self.logic.setCurrentColor();
 		}
 	}, false );
 
@@ -173,5 +181,14 @@ App.prototype.renderScene = function(){
 
 App.prototype.update = function(){
 	var self = this;
+}
 
+App.prototype.start = function(){
+	var self = this;
+	self.logic.start();
+}
+
+App.prototype.done = function(){
+	var self = this;
+	self.logic.done();
 }

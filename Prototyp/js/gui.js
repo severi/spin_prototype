@@ -11,6 +11,7 @@ GUI.prototype.init = function(){
 	var self = this;
 	self.curTime = $(".curTime");
 	self.curScore = $(".curScore");
+	self.curColor = $(".curColor");
 	self.doneButton = $(".doneButton");
 	self.newGameButton = $(".newGameButton");
 	self.gameHeader = $(".gameHeader");
@@ -22,12 +23,7 @@ GUI.prototype.init = function(){
 	}
 	self.curTime.html( settings.initPlayTime );
 	self.curScore.html( settings.initScore );
-	//INIT LOGIC
-	self.logic = new Logic(self.app);
-	if(!self.logic.init()){
-		console.log("Error during init in class app method init -> logic returnt false");
-		return false;
-	}
+	
 	self.addEventListener();
 	//INIT OK
 	return true;
@@ -62,26 +58,26 @@ GUI.prototype.addEventListener = function(){
 	//ADD EVENTLISTENER NEW GAME BUTTON
 	if(self.newGameButton != null){
 		self.newGameButton.click(function(){
-			if(self.logic == null){
+			if(self.app == null){
 				console.log("Error in addEventListener class GUI");
 				return;
 			}
 			self.translateObject(self.logoHeader, {x: "0px", y: "-200%", z: "0px" }, self.gameHeader);
 			self.translateObject(self.newGameButton, {x: "0px", y: "200%", z: "0px" }, self.doneButton);
-			self.logic.start();
+			self.app.start();
 		});
 	}
 	//ADD EVENTLISTENER DONE BUTTON
 	if(self.doneButton != null){
 		self.doneButton.click(function(){
-			if(self.logic == null){
+			if(self.app == null){
 				console.log("Error in method addEventListener class GUI");
 				return;
 			}
 			self.translateObject(self.gameHeader, {x: "0px", y: "-200%", z: "0px" }, null);
 			self.translateObject(self.doneButton, {x: "0px", y: "200%", z: "0px" }, null);
 			alert("TODO SHOW RESULT VIEW IN WHEN YOU CLICK ON DONEBUTTON -> need TO BE IMPLEMENDED IN GUI");
-			self.logic.done();
+			self.app.done();
 		});
 	}
 }
@@ -94,3 +90,12 @@ GUI.prototype.removeEventListener = function(){
 	};
 }
 
+GUI.prototype.setCurrentColor = function(color){
+	var self = this;
+	self.curColor.css("background-color","#"+color.toString(16));
+}
+
+GUI.prototype.getCurrentColor = function(){
+	var self = this;
+	return self.curColor.css("background-color"); //rgb(x,y,z)
+}

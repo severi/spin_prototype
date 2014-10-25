@@ -16,6 +16,15 @@ function Cube(rows, scene, debug){
 	 * 										false:color of the square is black
 	 */	
 	this.activeFaces = [];
+
+	/*
+	 *	2 dimensional array for keeping count of placed colors vs free colors
+	 *	structure:
+	 *		[0] = array of colors that are not yet placed on cube
+	 *		[1] = array of colors that are placed on cube
+	 */
+	self.cubeColors = [];
+
 	self.scene = scene;
 	self.generateCube();
 }
@@ -58,14 +67,20 @@ Cube.prototype.generateFaceColors = function(){
 		colorArray.push(colors[i%colors.length]);
 	}
 	colorArray=self.shuffleArray(colorArray);
-
+	self.cubeColors.push([]);
+	self.cubeColors.push([]);
+	
 	for (var i =0; i < self.activeFaces.length ; i++) {
 		var color=colorArray.pop();
 		self.activeFaces[i].push(color);
 		self.activeFaces[i].push(true);
 		self.activeFaces[i][0].color.setHex(color);
 		self.activeFaces[i][1].color.setHex(color);
+		self.cubeColors[0].push(color);
 	}
+
+	// Randomize order of colors
+	self.cubeColors[0] = self.shuffleArray(self.cubeColors[0]);
 }
 
 Cube.prototype.setRows = function(rows){
@@ -108,7 +123,6 @@ Cube.prototype.checkArrayRandomness = function(array){
 			counter=0;
 		}
 		if (counter>=Math.ceil(self.rows*self.rows*self.percentage)){
-			console.log("!!!!!!!!!!!!!!!1")
 			return false;
 		}
 		currentColor=array[i];
@@ -120,21 +134,27 @@ Cube.prototype.checkArrayRandomness = function(array){
  * 	If face is clicked, toggle between correct color and black
  */
 Cube.prototype.selectFaces = function(vertex){
+	var self = this;
+	var chosen = true; //true if square selected, false if deselected
+	var color = self.cubeColors[1][self.cubeColors[1].length-1]
 	for (var i=0; i<this.activeFaces.length; i++){
 		if (this.activeFaces[i][0]==vertex.face || this.activeFaces[i][1]==vertex.face){
-			var color = 0x000000;
+			
 			if (this.activeFaces[i][3]==false){
 				color=this.activeFaces[i][2];
 				this.activeFaces[i][3]=true;
+				chosen=false;
 			}
 			else {
 				this.activeFaces[i][3]=false;
 			}
-			this.activeFaces[i][0].color.setHex(color);
-			this.activeFaces[i][1].color.setHex(color);
+			color = new THREE.Color(color);
+			this.activeFaces[i][0].color=color;
+			this.activeFaces[i][1].color=color;
 			vertex.object.geometry.colorsNeedUpdate = true;
 		}
 	}
+	return chosen;
 }
 
 
@@ -251,4 +271,12 @@ Cube.prototype.destroy = function(){
 	    }
     }
     console.log("Cube-"+self.rows+":destroyed "+num+"/"+self.cubes.length);
+}
+
+Cube.prototype.getNextColor = function(){
+	var self = this;
+
+	var color = self.cubeColors[0].pop();
+	self.cubeColors[1].push(color);
+	return color;
 }

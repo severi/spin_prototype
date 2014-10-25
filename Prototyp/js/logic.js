@@ -19,7 +19,7 @@ Logic.prototype.init = function(){
 
 Logic.prototype.start = function(){
 	var self = this;
-	self.cube = self.app.levelCubes;
+	self.cube = self.app.levelCubes[self.app.levelCubes.length-1];
 	if(self.app.levelCubes == null){
 		console.log("Error self.app.levelCubes is null in start class Logic");
 		return;
@@ -29,6 +29,7 @@ Logic.prototype.start = function(){
 		return;
 	}
 	self.resetTimer();
+	self.setCurrentColor();
 }
 
 Logic.prototype.resetTimer = function(){
@@ -77,4 +78,10 @@ Logic.prototype.end = function(){
 	var self = this;
 	self.clearTimer();
 	alert("Game Over TODO SHOW MENU");
+}
+
+Logic.prototype.setCurrentColor = function(){
+	var self = this;
+
+	self.gui.setCurrentColor(self.cube.getNextColor());
 }
