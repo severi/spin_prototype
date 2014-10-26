@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Spin</title>	
+		<title>Spin - A minimal style memory game</title>	
 		<meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
 
         <!-- VISUALIZAION -->
 		<script type="text/javascript" src="./lib/three.min.js"></script>
@@ -26,6 +27,9 @@
 		<div class="container canBeAnimated logoHeader" style="top: 15px; text-align: center;"> 
 			<img src="./css/img/logo.png">
 		</div>
+		<div class="container canBeAnimated prepareHeader topOut" style="top: 10px;"> 
+			<li class="label darkFont" style="text-align: center; position:relative;" ><p class="fontSizeLabelBig prepTime"></p><p class="fontSizeLabelSmall">time</p></li> 
+		</div>
 		<div class="container canBeAnimated gameHeader topOut" style="top: 10px;"> 
 			<li class="label darkFont" style="text-align:left; left:0px; padding-left:10%;"><p class="fontSizeLabelBig curTime"></p><p class="fontSizeLabelSmall">time</p></li> 
 			<li class="label darkFont" style="text-align:right; right:0px; padding-right:10%"><p class="fontSizeLabelBig curScore">0</p><p class="fontSizeLabelSmall">score</p></li> 
@@ -34,7 +38,7 @@
 		<div class="button container canBeAnimated newGameButton" style="bottom: 10px;"> 
 			<div class="buttonRect canBeAnimated marginAuto darkFont fontSizeButton">new game</div> 
 		</div>
-		<div class="button container canBeAnimated bottomOut startButton" style="bottom: 10px;"> 
+		<div class="button container canBeAnimated bottomOut readyButton" style="bottom: 10px;"> 
 			<div class="buttonRect marginAuto darkFont fontSizeButton">ready?</div> 
 		</div>
 		<div class="button container canBeAnimated bottomOut doneButton" style="bottom: 10px;"> 

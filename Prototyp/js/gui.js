@@ -9,46 +9,30 @@ function GUI(app){
 
 GUI.prototype.init = function(){
 	var self = this;
+	//JQUERY REFERENCES
 	self.curTime = $(".curTime");
+	self.prepTime = $(".prepTime");
 	self.curScore = $(".curScore");
 	self.curColor = $(".curColor");
 	self.doneButton = $(".doneButton");
 	self.newGameButton = $(".newGameButton");
-	self.startButton = $(".startButton");
+	self.readyButton = $(".readyButton");
 	self.gameHeader = $(".gameHeader");
 	self.logoHeader = $(".logoHeader");
+	self.prepareHeader = $(".prepareHeader");
 	//CHECK REFERENCES
 	if(self.curTime == null || self.curScore == null || self.doneButton == null || self.newGameButton == null || self.gameHeader == null || self.logoHeader == null){
 		console.log("Error ref is null in initValues class GUI");
 		return false;
 	}
-	self.curTime.html( settings.initPreTime );
+	//INITAL SCORE AND TIMER VALUES
+	self.prepTime.html( settings.initPreTime);
+	self.curTime.html( settings.initPlayTime );
 	self.curScore.html( settings.initScore );
-	
+	//ADD EVENT LISTENERS
 	self.addEventListener();
 	//INIT OK
 	return true;
-}
-
-GUI.prototype.translateObject = function(object, position, otherObject, callback){
-	if(object == null){
-		console.log("Error object is not an jQuery Ref or is null");
-		return;
-	}
-	object.css({ "-webkit-transform" : "translate3d(" + position.x + "," + position.y + "," + position.z + ")", 
-				 "transform" : "translate3d(" + position.x + "," + position.y + "," + position.z + ")" });
-
-	if(otherObject == null){
-		console.log("Error otherObject is not an jQuery Ref or is null");
-		return;
-	}
-	object.bind("webkitTransitionEnd transitionend", function(){
-		object.unbind("webkitTransitionEnd transitionend");
-		otherObject.css({ 
-						  "-webkit-transform" : "translate3d(0px, 0px, 0px)", 
-				 		  "transform" : "translate3d(0px, 0px, 0px)"
-						});
-	});
 }
 
 GUI.prototype.addEventListener = function(){
@@ -63,21 +47,17 @@ GUI.prototype.addEventListener = function(){
 				console.log("Error in addEventListener class GUI");
 				return;
 			}
-			self.translateObject(self.logoHeader, {x: "0px", y: "-250%", z: "0px" }, self.gameHeader);
-			self.translateObject(self.newGameButton, {x: "0px", y: "250%", z: "0px" }, self.startButton);
 			self.app.start();
 		});
 	}
-	//ADD EVENTLISTENER START BUTTON
-	if(self.startButton != null){
-		self.startButton.click(function(){
+	//ADD EVENTLISTENER READY BUTTON
+	if(self.readyButton != null){
+		self.readyButton.click(function(){
 			if(self.app == null){
 				console.log("Error in addEventListener class GUI");
 				return;
 			}
-			self.translateObject(self.startButton, {x: "0px", y: "250%", z: "0px" }, self.doneButton);
 			self.app.logic.runGame();
-
 		});
 	}
 	//ADD EVENTLISTENER DONE BUTTON
@@ -87,17 +67,44 @@ GUI.prototype.addEventListener = function(){
 				console.log("Error in method addEventListener class GUI");
 				return;
 			}
-			self.translateObject(self.gameHeader, {x: "0px", y: "-250%", z: "0px" }, null);
-			self.translateObject(self.doneButton, {x: "0px", y: "250%", z: "0px" }, null);
-			alert("TODO SHOW RESULT VIEW IN WHEN YOU CLICK ON DONEBUTTON -> need TO BE IMPLEMENDED IN GUI");
-			self.app.done();
+			self.app.logic.end();
 		});
 	}
 }
 
-GUI.prototype.dismissButton = function(object_1, object_2){
+GUI.prototype.translateObject = function(object, position, otherObject, callback){
+	if(object == null){
+		console.log("Error object is not an jQuery Ref or is null");
+		return;
+	}
+	object.css({ "-webkit-transform" : "translate3d(" + position.x + "," + position.y + "," + position.z + ")", 
+				 "transform" : "translate3d(" + position.x + "," + position.y + "," + position.z + ")" });
+	if(otherObject == null){
+		console.log("Error otherObject is not an jQuery Ref or is null");
+		return;
+	}
+	object.bind("webkitTransitionEnd transitionend", function(){
+		object.unbind("webkitTransitionEnd transitionend");
+		otherObject.css({ 
+						  "-webkit-transform" : "translate3d(0px, 0px, 0px)", 
+				 		  "transform" : "translate3d(0px, 0px, 0px)"
+						});
+	});
+	if(callback == null){
+		console.log("No callback provided -> it is even not required to pass an callback as parameter GUI translateObject method");
+		return;
+	}
+	callback();
+}
+
+GUI.prototype.toggleButton = function(object_1, object_2){
 	var self = this;
 	self.translateObject(object_1, {x: "0px", y: "250%", z: "0px" }, object_2);
+}
+
+GUI.prototype.toggleHeader = function(object_1, object_2){
+	var self = this;
+	self.translateObject(object_1, {x: "0px", y: "-250%", z: "0px" }, object_2);
 }
 
 GUI.prototype.removeEventListener = function(){
@@ -119,17 +126,48 @@ GUI.prototype.getCurrentColor = function(){
 }
 
 GUI.prototype.getScore = function(){
+	if(this.curScore == null){
+		console.log("Reference is null in class GUI getScore");
+		return null;
+	}
 	return this.curScore.html();
 }
 
 GUI.prototype.setScore = function(score){
+	if(this.curScore == null){
+		console.log("Reference is null in class GUI setScore");
+		return null;
+	}
 	this.curScore.html(score);
 }
 
-GUI.prototype.setTime = function(time){
+GUI.prototype.setPlayTime = function(time){
+	if(this.curTime == null){
+		console.log("Reference is null in class GUI setPlayTime");
+		return null;
+	}
 	this.curTime.html(time);
 }
-
-GUI.prototype.getTime = function(){
+GUI.prototype.getPlayTime = function(){
+	if(this.curTime == null){
+		console.log("Reference is null in class GUI getTime");
+		return null;
+	}
 	return this.curTime.html();
+}
+
+GUI.prototype.setPrepTime = function(time){
+	if(this.prepTime == null){
+		console.log("Reference is null in class GUI setPrepTime");
+		return null;
+	}
+	this.prepTime.html(time);
+}
+
+GUI.prototype.getPrepTime = function(){
+	if(this.prepTime == null){
+		console.log("Reference is null in class GUI setPrepTime");
+		return null;
+	}
+	return this.prepTime.html();
 }

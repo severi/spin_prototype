@@ -25,6 +25,7 @@ html {
 .double-sided { -webkit-backface-visibility: visible; backface-visibility: visible; }
 canvas{  position:absolute; bottom:0px; left:0px; }
 .marginAuto{ margin-left: auto; margin-right: auto; }
+.noMargin{ margin: 0 0 0 0; }
 .buttonRect {
     position: relative;
     width: 100%;
@@ -81,6 +82,8 @@ canvas{  position:absolute; bottom:0px; left:0px; }
 .lightGrayBorderColor{ border-color: #b2b9c1; }
 .lightGrayFont{ color: #f7f8f9; };
 .lightGrayBackground{ background-color: #f7f8f9; }
+.greenFont{ color: #03c9a9; }
+
 
 @media screen and (max-height: 544px){
     .containerPadding{
@@ -98,6 +101,7 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         border-radius:4px; 
         border-width: 1px; 
         top:5px;
+        opacity: 0.5;
     }
     .logoHeader img{
         height: 27px;

@@ -31,6 +31,10 @@ Logic.prototype.start = function(){
 	}
 	self.resetTimer();
 	self.setCurrentColor();
+	//HEADER AND BUTTON ANIMATION
+	var gui = self.app.gui;
+	gui.toggleHeader(gui.logoHeader, gui.prepareHeader);
+	gui.toggleButton(gui.newGameButton, gui.readyButton);
 }
 
 Logic.prototype.resetTimer = function(){
@@ -38,21 +42,32 @@ Logic.prototype.resetTimer = function(){
 	if(self.gameTimer != null){
 		window.clearInterval(self.gameTimer);
 	}
+	var timerObject = null;
 	self.gameTimer = window.setInterval(function(){
 		if(self.gui == null){
 			console.log("Error self.gui is null in start class Logic");
 			return;
 		}
-		//GET DISPLAYED TIME
-		var time = parseInt(self.gui.getTime());
+		//GET CURRENT DISPLAYED TIMER VARIABLE AND VALUE -> SET THE REFERENCE FOR timerObject DEPENDING ON APPLICATION STATE
+		var time = null;
+		if( self.gameStarted == false){
+			timerObject = self.gui.prepTime;
+			time = parseInt(self.app.gui.getPrepTime());
+		} else {
+			timerObject = self.gui.curTime;
+			time = parseInt(self.app.gui.getPlayTime());
+		}
 		//REDUCE CURRENT TIME BY 1s
 		if(settings.debug){
-			console.log("updateTimer " + self.gui.curTime.html());
+			console.log(timerObject);
+			console.log("updateTimer " + timerObject.html());
 		}
+		//IF THE GAME STATE DIDNT START == IN PREPARE MODE OR THE TIME GETS 0 START THE GAME 
 		if( self.gameStarted==false && time == 0){
 			self.runGame();
 			return;
 		}
+		//IF TIME BECOMES 0 THE GAME ENDS
 		if( time == 0){
 			self.end();
 			self.gameStarted=false;
@@ -61,16 +76,23 @@ Logic.prototype.resetTimer = function(){
 		//REDUCE CURRENT TIME
 		time--;
 		//UPDATE LABEL TIME
-		self.gui.setTime(time);
+		if( self.gameStarted == false){
+			self.app.gui.setPrepTime(time);
+			return;
+		}
+		self.app.gui.setPlayTime(time);
 	}, 1000); // 1 second per count
 }
 
 Logic.prototype.runGame = function(){
 	var self = this;
 	if( self.gameStarted==false ){
+		var gui = self.app.gui;
+		//HEADER AND BUTTON ANIMATION
+		gui.toggleButton(gui.readyButton , gui.doneButton);
+		gui.toggleHeader(gui.prepareHeader, gui.gameHeader);
 		//remove cube colors;
-		self.gui.setTime(settings.initPlayTime);
-		self.gui.dismissButton($(".startButton"), $(".doneButton"));
+		gui.setPlayTime(settings.initPlayTime);
 		self.cube.hideColors();
 		self.gameStarted=true;
 	}
@@ -86,8 +108,6 @@ Logic.prototype.clearTimer = function(){
 
 Logic.prototype.done = function(){
 	var self = this;
-
-	self.clearTimer();
 	var score = self.calculatePoints();
 	self.gui.setScore(score);
 	console.log("score: "+score)
@@ -96,6 +116,12 @@ Logic.prototype.done = function(){
 
 Logic.prototype.end = function(){
 	var self = this;
+	self.clearTimer();
+	self.gameStarted = false;
+	//HEADER AND BUTTON ANIMATION
+	var gui = self.app.gui;
+	gui.toggleButton(gui.doneButton);
+	gui.toggleHeader(gui.gameHeader);
 	self.done();
 	console.log("Game Over TODO SHOW MENU");
 }
