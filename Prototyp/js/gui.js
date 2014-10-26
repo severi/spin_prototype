@@ -14,6 +14,7 @@ GUI.prototype.init = function(){
 	self.curColor = $(".curColor");
 	self.doneButton = $(".doneButton");
 	self.newGameButton = $(".newGameButton");
+	self.startButton = $(".startButton");
 	self.gameHeader = $(".gameHeader");
 	self.logoHeader = $(".logoHeader");
 	//CHECK REFERENCES
@@ -62,9 +63,21 @@ GUI.prototype.addEventListener = function(){
 				console.log("Error in addEventListener class GUI");
 				return;
 			}
-			self.translateObject(self.logoHeader, {x: "0px", y: "-200%", z: "0px" }, self.gameHeader);
-			self.translateObject(self.newGameButton, {x: "0px", y: "200%", z: "0px" }, self.doneButton);
+			self.translateObject(self.logoHeader, {x: "0px", y: "-250%", z: "0px" }, self.gameHeader);
+			self.translateObject(self.newGameButton, {x: "0px", y: "250%", z: "0px" }, self.startButton);
 			self.app.start();
+		});
+	}
+	//ADD EVENTLISTENER START BUTTON
+	if(self.startButton != null){
+		self.startButton.click(function(){
+			if(self.app == null){
+				console.log("Error in addEventListener class GUI");
+				return;
+			}
+			self.translateObject(self.startButton, {x: "0px", y: "250%", z: "0px" }, self.doneButton);
+			self.app.logic.runGame();
+
 		});
 	}
 	//ADD EVENTLISTENER DONE BUTTON
@@ -74,12 +87,17 @@ GUI.prototype.addEventListener = function(){
 				console.log("Error in method addEventListener class GUI");
 				return;
 			}
-			self.translateObject(self.gameHeader, {x: "0px", y: "-200%", z: "0px" }, null);
-			self.translateObject(self.doneButton, {x: "0px", y: "200%", z: "0px" }, null);
+			self.translateObject(self.gameHeader, {x: "0px", y: "-250%", z: "0px" }, null);
+			self.translateObject(self.doneButton, {x: "0px", y: "250%", z: "0px" }, null);
 			alert("TODO SHOW RESULT VIEW IN WHEN YOU CLICK ON DONEBUTTON -> need TO BE IMPLEMENDED IN GUI");
 			self.app.done();
 		});
 	}
+}
+
+GUI.prototype.dismissButton = function(object_1, object_2){
+	var self = this;
+	self.translateObject(object_1, {x: "0px", y: "250%", z: "0px" }, object_2);
 }
 
 GUI.prototype.removeEventListener = function(){

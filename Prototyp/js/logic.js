@@ -49,16 +49,10 @@ Logic.prototype.resetTimer = function(){
 		if(settings.debug){
 			console.log("updateTimer " + self.gui.curTime.html());
 		}
-
 		if( self.gameStarted==false && time == 0){
-			//remove cube colors;
-			self.gui.setTime(settings.initPlayTime);
-			self.cube.hideColors();
-			preGameTime=false;
-			self.gameStarted=true;
+			self.runGame();
 			return;
 		}
-
 		if( time == 0){
 			self.end();
 			self.gameStarted=false;
@@ -69,6 +63,17 @@ Logic.prototype.resetTimer = function(){
 		//UPDATE LABEL TIME
 		self.gui.setTime(time);
 	}, 1000); // 1 second per count
+}
+
+Logic.prototype.runGame = function(){
+	var self = this;
+	if( self.gameStarted==false ){
+		//remove cube colors;
+		self.gui.setTime(settings.initPlayTime);
+		self.gui.dismissButton($(".startButton"), $(".doneButton"));
+		self.cube.hideColors();
+		self.gameStarted=true;
+	}
 }
 
 Logic.prototype.clearTimer = function(){
@@ -91,7 +96,6 @@ Logic.prototype.done = function(){
 
 Logic.prototype.end = function(){
 	var self = this;
-
 	self.done();
 	console.log("Game Over TODO SHOW MENU");
 }
