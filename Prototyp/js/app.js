@@ -87,7 +87,6 @@ App.prototype.addEventListener = function(){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
 	}
 	self.controls.target.set( 0, 0, 0 );
-	console.log(self.center);
 	//CLICK EVENT HANDLER BASED ON SEVERI
 	self.renderer.domElement.addEventListener( 'click', function(event){
 		
