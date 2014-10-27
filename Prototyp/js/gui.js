@@ -117,7 +117,13 @@ GUI.prototype.removeEventListener = function(){
 
 GUI.prototype.setCurrentColor = function(color){
 	var self = this;
-	self.curColor.css("background-color","#"+color.toString(16));
+
+	var tmp = color.toString(16);
+	if (tmp.length!=6){
+		tmp = "0"+tmp;
+	}
+	color=tmp;
+	self.curColor.css("background-color","#"+color);
 }
 
 GUI.prototype.getCurrentColor = function(){

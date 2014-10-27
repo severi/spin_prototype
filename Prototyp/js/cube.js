@@ -17,13 +17,9 @@ function Cube(rows, scene, debug){
 	 */	
 	this.activeFaces = [];
 
-	/*
-	 *	2 dimensional array for keeping count of placed colors vs free colors
-	 *	structure:
-	 *		[0] = array of colors that are not yet placed on cube
-	 *		[1] = array of colors that are placed on cube
-	 */
-	self.cubeColors = [];
+	self.placedCubeColors = [];
+	self.freeCubeColors = [];
+	self.currentCubeColor = undefined;
 
 	self.scene = scene;
 	self.generateCube();
@@ -67,8 +63,6 @@ Cube.prototype.generateFaceColors = function(){
 		colorArray.push(colors[i%colors.length]);
 	}
 	colorArray=self.shuffleArray(colorArray);
-	self.cubeColors.push([]);
-	self.cubeColors.push([]);
 	
 	for (var i =0; i < self.activeFaces.length ; i++) {
 		var color=colorArray.pop();
@@ -76,11 +70,11 @@ Cube.prototype.generateFaceColors = function(){
 		self.activeFaces[i].push(true);
 		self.activeFaces[i][0].color.setHex(color);
 		self.activeFaces[i][1].color.setHex(color);
-		self.cubeColors[0].push(color);
+		self.freeCubeColors.push(color);
 	}
 
 	// Randomize order of colors
-	self.cubeColors[0] = self.shuffleArray(self.cubeColors[0]);
+	self.freeCubeColors = self.shuffleArray(self.freeCubeColors);
 }
 
 Cube.prototype.setRows = function(rows){
@@ -138,7 +132,12 @@ Cube.prototype.selectFaces = function(vertex){
 
 	var chosen = true; //true if square selected, false if deselected
 	var oldColor;
-	var color = self.cubeColors[1][self.cubeColors[1].length-1]
+	var color = self.currentCubeColor;
+
+	if (color==undefined){
+		throw "trying to place an undefined color on cube";
+	}
+
 	for (var i=0; i<this.activeFaces.length; i++){
 		if (this.activeFaces[i][0]==vertex.face || this.activeFaces[i][1]==vertex.face){
 			
@@ -275,18 +274,28 @@ Cube.prototype.destroy = function(){
 Cube.prototype.getNextColor = function(){
 	var self = this;
 
-	var color = self.cubeColors[0].pop();
-	self.cubeColors[1].push(color);
+	if (self.currentCubeColor!=undefined){
+		self.placedCubeColors.push(self.currentCubeColor);
+	}
+	if (self.freeCubeColors.length==0){
+		throw "error: no free colors available";
+	}
+
+	var color = self.freeCubeColors.pop();
+	self.currentCubeColor=color;
+	
 	return color;
 }
 
 Cube.prototype.revertColor = function(color){
 	var self = this;
 
-	var index = self.cubeColors[1].indexOf(color);
+	var index = self.placedCubeColors.indexOf(color);
 	if (index > -1) {
-    	self.cubeColors[1].splice(index, 1);
-    	self.cubeColors[0].splice(Math.floor(Math.random()*self.cubeColors[0].length), 0, color);
+    	self.placedCubeColors.splice(index, 1);
+    	self.freeCubeColors.splice(Math.floor(Math.random()*self.freeCubeColors.length), 0, color);
+    } else {
+    	throw "error: cannot revert undefined color";
     }
 }
 
@@ -301,6 +310,10 @@ Cube.prototype.hideColors = function(){
 	self.updateColors();
 }
 
+/**
+ * This function informs meshes that the colors need to be update
+ * @return {void}
+ */
 Cube.prototype.updateColors = function(){
 	var self = this;
 
@@ -311,6 +324,11 @@ Cube.prototype.updateColors = function(){
     });
 }
 
+/**
+ * Checks how many squares have the correct color and vice versa how many dont
+ * @return {[int,int]} 1st number describes amount of correct guesses
+ *                     2nd number defines amount of incorrect guesses
+ */
 Cube.prototype.getNumberOfCorrectAndWrongColors = function(){
 	var self = this;
 
