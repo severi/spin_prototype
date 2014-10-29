@@ -89,7 +89,7 @@ Logic.prototype.runGame = function(){
 	if( self.gameStarted==false ){
 		var gui = self.app.gui;
 		//HEADER AND BUTTON ANIMATION
-		gui.toggleButton(gui.readyButton , gui.doneButton);
+		gui.toggleButton(gui.readyButton , gui.submitButton);
 		gui.toggleHeader(gui.prepareHeader, gui.gameHeader);
 		//remove cube colors;
 		gui.setPlayTime(settings.initPlayTime);
@@ -120,8 +120,8 @@ Logic.prototype.end = function(){
 	self.gameStarted = false;
 	//HEADER AND BUTTON ANIMATION
 	var gui = self.app.gui;
-	gui.toggleButton(gui.doneButton);
-	gui.toggleHeader(gui.gameHeader);
+	gui.toggleButton(gui.submitButton, gui.actionButton);
+	gui.toggleHeader(gui.gameHeader, gui.statisticHeader);
 	self.done();
 	console.log("Game Over TODO SHOW MENU");
 }

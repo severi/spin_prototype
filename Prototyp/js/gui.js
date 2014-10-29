@@ -9,19 +9,25 @@ function GUI(app){
 
 GUI.prototype.init = function(){
 	var self = this;
-	//JQUERY REFERENCES
+	//NEW GAME SCREEN REF
+	self.logoHeader = $(".logoHeader");
+	self.newGameButton = $(".newGameButton");
+	//MEMORIZE SCREEN REF
+	self.prepareHeader = $(".prepareHeader");
+	self.readyButton = $(".readyButton");
+	//INGAME SCREEN REF
 	self.curTime = $(".curTime");
 	self.prepTime = $(".prepTime");
 	self.curScore = $(".curScore");
 	self.curColor = $(".curColor");
-	self.doneButton = $(".doneButton");
-	self.newGameButton = $(".newGameButton");
-	self.readyButton = $(".readyButton");
 	self.gameHeader = $(".gameHeader");
-	self.logoHeader = $(".logoHeader");
-	self.prepareHeader = $(".prepareHeader");
+	self.submitButton = $(".submitButton");
+	//STATISTIC SCREEN REF
+	self.statisticHeader = $(".statisticHeader");
+	self.actionButton = $(".actionButton");
+	self.statisticOverview = $(".statisticOverview");
 	//CHECK REFERENCES
-	if(self.curTime == null || self.curScore == null || self.doneButton == null || self.newGameButton == null || self.gameHeader == null || self.logoHeader == null){
+	if(self.logoHeader == null || self.newGameButton == null || self.prepareHeader == null || self.readyButton == null || self.curTime == null || self.prepTime == null || self.curScore == null || self.curColor == null || self.gameHeader == null || self.submitButton == null || self.statisticHeader == null || self.statisticOverview == null || self.actionButton == null){
 		console.log("Error ref is null in initValues class GUI");
 		return false;
 	}
@@ -61,8 +67,8 @@ GUI.prototype.addEventListener = function(){
 		});
 	}
 	//ADD EVENTLISTENER DONE BUTTON
-	if(self.doneButton != null){
-		self.doneButton.click(function(){
+	if(self.submitButton != null){
+		self.submitButton.click(function(){
 			if(self.app == null){
 				console.log("Error in method addEventListener class GUI");
 				return;
