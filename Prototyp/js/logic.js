@@ -122,6 +122,7 @@ Logic.prototype.end = function(){
 	var gui = self.app.gui;
 	gui.toggleButton(gui.submitButton, gui.actionButton);
 	gui.toggleHeader(gui.gameHeader, gui.statisticHeader);
+	gui.showView(gui.viewContainer);
 	self.done();
 	console.log("Game Over TODO SHOW MENU");
 }

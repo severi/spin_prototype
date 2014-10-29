@@ -112,6 +112,7 @@ App.prototype.addEventListener = function(){
 
 	window.addEventListener("resize", function(){
 
+		self.gui.resize();
 		self.camera.aspect = window.innerWidth / (window.innerHeight);
 		self.camera.updateProjectionMatrix();
 		self.renderer.setSize(window.innerWidth, window.innerHeight);

@@ -26,19 +26,18 @@ html {
 canvas{  position:absolute; bottom:0px; left:0px; }
 .marginAuto{ margin-left: auto; margin-right: auto; }
 .noMargin{ margin: 0 0 0 0; }
+.opacity{ opacity: 0.5 }
 .buttonRect {
     position: relative;
     width: 100%;
     padding: 5px 10px 5px 10px;
     text-align: center;
     font-family: "Lato-Regular";
-    opacity: 0.5;
 }
 .label{
     position: absolute;
     width: auto !important;
     font-family: "Lato-Regular";
-    opacity: 0.5;
     width: 50%;
     list-style: none;
     text-align: center !important ;
@@ -71,21 +70,47 @@ canvas{  position:absolute; bottom:0px; left:0px; }
     z-index: 10;
     pointer-events: none;
 }
-.overview{
+.overviewContainer{
     position: relative;
     width: 80%;
     height: 70%;
     max-width: 320px;
     max-height: 400px;
+    text-align: center;
+    font-family: "Lato-Regular";
+}
+.resultContainer{
+    position: relative;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding: 10px 20px 10px 20px;
+    margin-top:0px;
+    margin-bottom:0px;
+}
+.resultMultiple{ position: absolute; }
+.resultSingle{ position: relative; }
+.overviewContainer p{ position: relative; }
+.right{ right: 22%;}
+.left{ left: 22%;}
+.overview{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0px;
+    left:0px;
     border-style: solid;
     border-width: 1px;
     border-radius: 10px;
     background-color: white;
-    opacity: 0.9;
+    opacity: 0.95;
 }
 .canBeAnimated{
     -webkit-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out;
+}
+.canBeAnimatedView{
+    -webkit-transition: all 0.5s cubic-bezier(0, 1.1, 1, 1.05);
+    transition: all 0.5s cubic-bezier(0, 1.1, 1, 1.05);
 }
 .topOut{
     -webkit-transform: translate3d(0px, -250%, 0px);
@@ -95,16 +120,21 @@ canvas{  position:absolute; bottom:0px; left:0px; }
     -webkit-transform: translate3d(0px, 250%, 0px);
     transform: translate3d(0px, 250%, 0px);
 }
+.rightOut{
+    -webkit-transform: translate3d(100%, 0px, 0px);
+    transform: translate3d(100%, 0px, 0px);
+}
 .footer{ bottom:0px; border-top-style: solid; border-top-width: 1px; }
 .darkBorder{ border-color: #607282; }
 .darkFont{ color: #607282; }
 .blueBorder{ border-color: #19b5fe; }
 .blueFont{ color: #19b5fe; }
 .lightGrayBorderColor{ border-color: #b2b9c1; }
-.lightGrayFont{ color: #f7f8f9; };
+.lightGrayFont{ color: #f7f8f9; }
+.ultraLightGrayBorder{ border-color: #dfdfdf; }
 .lightGrayBackground{ background-color: #f7f8f9; }
 .greenFont{ color: #03c9a9; }
-
+.redFont{ color: #f64747; }
 
 @media screen and (max-height: 544px){
     .containerPadding{
@@ -122,10 +152,12 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         border-radius:4px; 
         border-width: 1px; 
         top:5px;
-        opacity: 0.5;
     }
-    .logoHeader img{
-        height: 27px;
+    .logoHeader img{ height: 27px; }
+    .resultSize{ width: 100px; height: 28px;}
+    .statisticTitle{
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
 }
 
@@ -146,8 +178,11 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         border-width: 2px; 
         top:10px;
     }
-    .logoHeader img{
-        height: 36px;
+    .logoHeader img{ height: 36px; }
+    .resultSize{ width: 150px; height: 40px;}
+    .statisticTitle{
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 }
 

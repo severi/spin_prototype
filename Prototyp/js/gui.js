@@ -24,8 +24,9 @@ GUI.prototype.init = function(){
 	self.submitButton = $(".submitButton");
 	//STATISTIC SCREEN REF
 	self.statisticHeader = $(".statisticHeader");
-	self.actionButton = $(".actionButton");
+	self.viewContainer = $(".viewContainer");
 	self.statisticOverview = $(".statisticOverview");
+	self.actionButton = $(".actionButton");
 	//CHECK REFERENCES
 	if(self.logoHeader == null || self.newGameButton == null || self.prepareHeader == null || self.readyButton == null || self.curTime == null || self.prepTime == null || self.curScore == null || self.curColor == null || self.gameHeader == null || self.submitButton == null || self.statisticHeader == null || self.statisticOverview == null || self.actionButton == null){
 		console.log("Error ref is null in initValues class GUI");
@@ -37,8 +38,24 @@ GUI.prototype.init = function(){
 	self.curScore.html( settings.initScore );
 	//ADD EVENT LISTENERS
 	self.addEventListener();
+	self.resize();
 	//INIT OK
 	return true;
+}
+
+GUI.prototype.resize = function(){
+	var self = this;
+	self.verticalAlignView(self.statisticOverview, $(".overviewContainer"));
+}
+
+GUI.prototype.verticalAlignView = function(container, object){
+	if(object == null){
+		return;
+	}
+	var heightContainer = parseInt(container.css("height"));
+	var heightObject = parseInt(object.css("height"));
+	var marginTop = (heightContainer - heightObject)*0.5;
+	object.css("margin-top", marginTop +"px");
 }
 
 GUI.prototype.addEventListener = function(){
@@ -111,6 +128,16 @@ GUI.prototype.toggleButton = function(object_1, object_2){
 GUI.prototype.toggleHeader = function(object_1, object_2){
 	var self = this;
 	self.translateObject(object_1, {x: "0px", y: "-250%", z: "0px" }, object_2);
+}
+
+GUI.prototype.showView = function(object){
+	var self = this;
+	self.translateObject(object, {x: "0px", y: "0%", z: "0px" }, null);
+}
+
+GUI.prototype.hideView = function(object, yValue){
+	var self = this;
+	self.translateObject(object_1, {x: "0px", y: yValue + "%", z: "0px" }, object_2);
 }
 
 GUI.prototype.removeEventListener = function(){
