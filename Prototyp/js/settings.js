@@ -10,7 +10,9 @@ var settings = {
 	initPreTime: 30,
 	initScore: 0,
 	stage: 2,
-	defaultColor : 0xececec
+	defaultColor : 0x607282,
+	requiredPercentage: 60,
+	scorePerFace : 5
 };
 
 var faceColors = {
@@ -19,5 +21,8 @@ var faceColors = {
 		green: 0x03c9a9,
 		blue: 0x4183D7,
 };
+
+var tBackToMenu = "back to menu";
+var tContinue = "continue";
 
 

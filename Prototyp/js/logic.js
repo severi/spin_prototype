@@ -108,10 +108,14 @@ Logic.prototype.clearTimer = function(){
 
 Logic.prototype.done = function(){
 	var self = this;
-	var score = self.calculatePoints();
-	self.gui.setScore(score);
-	console.log("score: "+score)
-	console.log("TODO SHOW SHOW RESULTS VIEW + HEADER (VIEW ANIMATION => SLIDE FROM SIDE) AND CALCULATE VALUES -> METHOD done in class LOGIC");
+	var result = self.calculateResult();
+	var gui = self.gui;
+	gui.setResult(result);
+	if(result.archievedPercentage <= result.requiredPercentage){
+		gui.setActionButtonText(tBackToMenu);
+		return;
+	}
+	gui.setActionButtonText(tContinue);
 }
 
 Logic.prototype.end = function(){
@@ -124,16 +128,32 @@ Logic.prototype.end = function(){
 	gui.toggleHeader(gui.gameHeader, gui.statisticHeader);
 	gui.showView(gui.viewContainer);
 	self.done();
-	console.log("Game Over TODO SHOW MENU");
 }
 
-Logic.prototype.calculatePoints = function(){
+Logic.prototype.calculateResult = function(){
 	var self = this;
-
+	var gui = self.app.gui;
 	var array = self.cube.getNumberOfCorrectAndWrongColors();
-	return array[0]-array[1];
-}
+	//RESULT JSON
+	var result = {
+					requiredPercentage : settings.requiredPercentage,
+					archievedPercentage : 0,
+					timeLeft : 0,
+					currentScore : 0,
+					bonus : 0,
+					total : 0
+				 };
 
+	result.archievedPercentage = parseInt(array[0]/self.cube.activeFaces.length*100);
+	result.timeLeft = gui.getPlayTime();
+	result.currentScore = gui.getScore() + array[0] * settings.scorePerFace;
+	result.bonus = parseInt(result.currentScore * (result.timeLeft / 100 + 1) - array[1] * settings.scorePerFace);
+	result.total = parseInt(result.currentScore) + parseInt(result.bonus);
+	if(result.total <= 0 ){
+		result.total = 0;
+	}
+	return result;
+}
 
 Logic.prototype.setCurrentColor = function(){
 	var self = this;

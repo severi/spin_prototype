@@ -16,11 +16,9 @@ function Cube(rows, scene, debug){
 	 * 										false:color is placed on this square
 	 */	
 	this.activeFaces = [];
-
 	self.placedCubeColors = [];
 	self.freeCubeColors = [];
 	self.currentCubeColor = undefined;
-
 	self.scene = scene;
 	self.generateCube();
 }
@@ -343,7 +341,6 @@ Cube.prototype.getNumberOfCorrectAndWrongColors = function(){
 			} else {
 				wrong++;
 			}
-
 		}
 	}
 	console.log("correct quesses: "+ correct + ", wrong guesses: "+wrong);

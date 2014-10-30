@@ -27,9 +27,22 @@ GUI.prototype.init = function(){
 	self.viewContainer = $(".viewContainer");
 	self.statisticOverview = $(".statisticOverview");
 	self.actionButton = $(".actionButton");
+	//VALUE FIELDS
+	self.requiredValue = $(".requiredValue");
+	self.archievedValue = $(".archievedValue");
+	self.timeLeftValue = $(".timeLeftValue");
+	self.currentScoreValue = $(".currentScoreValue");
+	self.bonusValue = $(".bonusValue");
+	self.totalValue = $(".totalValue");
+	//ACTION BUTTON TEXT
+	self.actionButtonText = $(".actionButton div");
 	//CHECK REFERENCES
 	if(self.logoHeader == null || self.newGameButton == null || self.prepareHeader == null || self.readyButton == null || self.curTime == null || self.prepTime == null || self.curScore == null || self.curColor == null || self.gameHeader == null || self.submitButton == null || self.statisticHeader == null || self.statisticOverview == null || self.actionButton == null){
 		console.log("Error ref is null in initValues class GUI");
+		return false;
+	}
+	if(self.requiredValue == null || self.archievedValue == null || self.timeLeftValue == null || self.currentScoreValue == null || self.bonusValue == null || self.totalValue == null){
+		console.log("Error ref is null in initValues class GUI --> value fields");
 		return false;
 	}
 	//INITAL SCORE AND TIMER VALUES
@@ -93,6 +106,25 @@ GUI.prototype.addEventListener = function(){
 			self.app.logic.end();
 		});
 	}
+
+	if(self.actionButton != null){
+		self.actionButton.click(function(){
+			if(self.actionButtonText == null){
+				return;
+			}
+			if(self.actionButtonText.hasClass(tContinue)){
+				self.actionButtonText.removeClass(tContinue);
+				self.toggleHeader(self.statisticHeader, self.prepareHeader);
+				self.toggleButton(self.actionButton , self.readyButton);
+				self.hideView(self.viewContainer, 100);
+			} else {
+				self.actionButtonText.removeClass(tBackToMenu);
+				self.toggleHeader(self.statisticHeader, self.logoHeader);
+				self.toggleButton(self.actionButton , self.newGameButton);
+				self.hideView(self.viewContainer, 100);
+			}
+		})
+	}
 }
 
 GUI.prototype.translateObject = function(object, position, otherObject, callback){
@@ -135,9 +167,9 @@ GUI.prototype.showView = function(object){
 	self.translateObject(object, {x: "0px", y: "0%", z: "0px" }, null);
 }
 
-GUI.prototype.hideView = function(object, yValue){
+GUI.prototype.hideView = function(object, xValue){
 	var self = this;
-	self.translateObject(object_1, {x: "0px", y: yValue + "%", z: "0px" }, object_2);
+	self.translateObject(object, {x: xValue + "%", y: "0px", z: "0px" }, null);
 }
 
 GUI.prototype.removeEventListener = function(){
@@ -209,4 +241,27 @@ GUI.prototype.getPrepTime = function(){
 		return null;
 	}
 	return this.prepTime.html();
+}
+
+GUI.prototype.setResult = function(result){
+	var self = this;
+	if(result == null){
+		return;
+	}
+	self.requiredValue.html(result.requiredPercentage);
+	self.archievedValue.html(result.archievedPercentage);
+	self.timeLeftValue.html(result.timeLeft);
+	self.currentScoreValue.html(result.currentScore);
+	self.bonusValue.html(result.bonus);
+	self.totalValue.html(result.total);
+}
+
+GUI.prototype.setActionButtonText = function(text){
+	var self = this;
+	if(self.actionButtonText == null){
+		console.log("actionButtonText is null in setActionButtonText");
+		return;
+	}
+	self.actionButton.addClass(text);
+	self.actionButtonText.html(text);
 }
