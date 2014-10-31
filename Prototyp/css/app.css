@@ -161,6 +161,7 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         margin-top: 1px;
         margin-bottom: 1px;
     }
+    .headerHeight{ height: 40px; }
 
 }
 @media screen and (min-height: 273px){
@@ -186,6 +187,7 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         margin-top: 5px;
         margin-bottom: 5px;
     }
+    .headerHeight{ height: 60px; }
 }
 
 @media screen and (min-height: 544px){
@@ -211,6 +213,7 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         margin-top: 10px;
         margin-bottom: 10px;
     }
+    .headerHeight{ height: 80px; }
 }
 
 

@@ -126,7 +126,7 @@ GUI.prototype.addEventListener = function(){
 				//LOAD NEXT LEVEL
 				self.app.nextLevel();
 				//SET SCORE LABEL
-				self.curScore.html(self.totalValue.html());
+				self.curScore.html(self.totalValue.text());
 			} else if(self.actionButton.hasClass(tBackToMenu)){
 				//REMOVE CSS CLASS
 				self.actionButton.removeClass(tBackToMenu);
@@ -140,7 +140,7 @@ GUI.prototype.addEventListener = function(){
 				//LOAD INIT LEVEL BASED ON INIT SETTINGS
 				self.app.nextLevel();
 				//RESET SCORE LABEL
-				self.curScore.html(self.totalValue.html(0));
+				self.curScore.html(0);
 			}
 		});
 	}
@@ -173,12 +173,12 @@ GUI.prototype.translateObject = function(object, position, otherObject, callback
 
 GUI.prototype.toggleButton = function(object_1, object_2){
 	var self = this;
-	self.translateObject(object_1, {x: "0px", y: "300%", z: "0px" }, object_2);
+	self.translateObject(object_1, {x: "0px", y: "200%", z: "0px" }, object_2);
 }
 
 GUI.prototype.toggleHeader = function(object_1, object_2){
 	var self = this;
-	self.translateObject(object_1, {x: "0px", y: "-300%", z: "0px" }, object_2);
+	self.translateObject(object_1, {x: "0px", y: "-200%", z: "0px" }, object_2);
 }
 
 GUI.prototype.showView = function(object){
