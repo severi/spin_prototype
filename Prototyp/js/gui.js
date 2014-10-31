@@ -112,26 +112,37 @@ GUI.prototype.addEventListener = function(){
 			if(self.actionButtonText == null){
 				return;
 			}
-			//SELECTION FOR NEXT STEP OF THE GAME
-			if(self.actionButton.hasClass(tContinue)){
-				self.actionButtonText.removeClass(tContinue);
-				self.toggleHeader(self.statisticHeader, self.prepareHeader);
-				self.toggleButton(self.actionButton , self.readyButton);
-				self.hideView(self.viewContainer, 100);
-				self.app.nextLevel();
-			} else if(self.actionButton.hasClass(tBackToMenu)){
-				self.actionButton.removeClass(tBackToMenu);
-				self.toggleHeader(self.statisticHeader, self.logoHeader);
-				self.toggleButton(self.actionButton , self.newGameButton);
-				self.hideView(self.viewContainer, 100);
-				self.app.loadSettings();
-				self.app.nextLevel();
-			}
 			if(self.currentScoreValue == null || self.curScore == null){
 				return;
 			}
-			self.curScore.html(self.totalValue.html());
-		})
+			//SELECTION FOR NEXT STEP OF THE GAME
+			if(self.actionButton.hasClass(tContinue)){
+				//REMOVE CSS CLASS
+				self.actionButtonText.removeClass(tContinue);
+				self.toggleHeader(self.statisticHeader, self.prepareHeader);
+				self.toggleButton(self.actionButton , self.readyButton);
+				//HIDE VIEW
+				self.hideView(self.viewContainer, 100);
+				//LOAD NEXT LEVEL
+				self.app.nextLevel();
+				//SET SCORE LABEL
+				self.curScore.html(self.totalValue.html());
+			} else if(self.actionButton.hasClass(tBackToMenu)){
+				//REMOVE CSS CLASS
+				self.actionButton.removeClass(tBackToMenu);
+				//CHANGE HEADER AND BUTTON
+				self.toggleHeader(self.statisticHeader, self.logoHeader);
+				self.toggleButton(self.actionButton , self.newGameButton);
+				//HIDE VIEW
+				self.hideView(self.viewContainer, 100);
+				//LOAD INIT SETTINGS
+				self.app.loadSettings();
+				//LOAD INIT LEVEL BASED ON INIT SETTINGS
+				self.app.nextLevel();
+				//RESET SCORE LABEL
+				self.curScore.html(self.totalValue.html(0));
+			}
+		});
 	}
 }
 
