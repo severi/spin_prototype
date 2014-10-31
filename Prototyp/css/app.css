@@ -136,7 +136,34 @@ canvas{  position:absolute; bottom:0px; left:0px; }
 .greenFont{ color: #03c9a9; }
 .redFont{ color: #f64747; }
 
-@media screen and (max-height: 544px){
+
+@media screen and (max-height: 272px){
+
+    .containerPadding{
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+    .fontSizeButton { font-size: 10px; }
+    .fontSizeLabelSmall { font-size: 6px; }
+    .fontSizeLabelBig { font-size: 10px; }
+    .colorBox{
+        position: relative; 
+        width:10px; 
+        height:10px; 
+        border-style:solid; 
+        border-radius:2px; 
+        border-width: 1px; 
+        top:2px;
+    }
+    .logoHeader img{ height: 27px; }
+    .resultSize{ width: 60px; height: 14px;}
+    .statisticTitle{
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+
+}
+@media screen and (min-height: 273px){
     .containerPadding{
         padding-top: 5px;
         padding-bottom: 5px;
