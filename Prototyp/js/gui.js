@@ -127,6 +127,10 @@ GUI.prototype.addEventListener = function(){
 				self.app.loadSettings();
 				self.app.nextLevel();
 			}
+			if(self.currentScoreValue == null || self.curScore == null){
+				return;
+			}
+			self.curScore.html(self.totalValue.html());
 		})
 	}
 }
@@ -158,12 +162,12 @@ GUI.prototype.translateObject = function(object, position, otherObject, callback
 
 GUI.prototype.toggleButton = function(object_1, object_2){
 	var self = this;
-	self.translateObject(object_1, {x: "0px", y: "250%", z: "0px" }, object_2);
+	self.translateObject(object_1, {x: "0px", y: "300%", z: "0px" }, object_2);
 }
 
 GUI.prototype.toggleHeader = function(object_1, object_2){
 	var self = this;
-	self.translateObject(object_1, {x: "0px", y: "-250%", z: "0px" }, object_2);
+	self.translateObject(object_1, {x: "0px", y: "-300%", z: "0px" }, object_2);
 }
 
 GUI.prototype.showView = function(object){
