@@ -45,10 +45,6 @@ GUI.prototype.init = function(){
 		console.log("Error ref is null in initValues class GUI --> value fields");
 		return false;
 	}
-	//INITAL SCORE AND TIMER VALUES
-	self.prepTime.html( settings.initPreTime);
-	self.curTime.html( settings.initPlayTime );
-	self.curScore.html( settings.initScore );
 	//ADD EVENT LISTENERS
 	self.addEventListener();
 	self.resize();
@@ -71,6 +67,12 @@ GUI.prototype.verticalAlignView = function(container, object){
 	object.css("margin-top", marginTop +"px");
 }
 
+GUI.prototype.resetTimerValues = function(){
+	var self = this;
+	self.prepTime.html( settings.initPreTime);
+	self.curTime.html( settings.initPlayTime );
+}
+
 GUI.prototype.addEventListener = function(){
 	var self = this;
 	//MAKE SURE ALL LISTENERS ARE REMOVED BEFORE NEW ONE ARE ADDED
@@ -83,6 +85,13 @@ GUI.prototype.addEventListener = function(){
 				console.log("Error in addEventListener class GUI");
 				return;
 			}
+			//HEADER AND BUTTON ANIMATION
+			self.toggleHeader(self.logoHeader, self.prepareHeader);
+			self.toggleButton(self.newGameButton, self.readyButton);
+			//INITAL SCORE AND TIMER VALUES
+			self.resetTimerValues();
+			self.curScore.html( settings.initScore );
+			//START GAME
 			self.app.start();
 		});
 	}
@@ -118,21 +127,24 @@ GUI.prototype.addEventListener = function(){
 			//SELECTION FOR NEXT STEP OF THE GAME
 			if(self.actionButton.hasClass(tContinue)){
 				//REMOVE CSS CLASS
-				self.actionButtonText.removeClass(tContinue);
-				self.toggleHeader(self.statisticHeader, self.prepareHeader);
-				self.toggleButton(self.actionButton , self.readyButton);
+				self.actionButton.removeClass(tContinue);
 				//HIDE VIEW
 				self.hideView(self.viewContainer, 100);
-				//LOAD NEXT LEVEL
-				self.app.nextLevel();
 				//SET SCORE LABEL
 				self.curScore.html(self.totalValue.text());
-			} else if(self.actionButton.hasClass(tBackToMenu)){
+				//RESET TIMER VALUES
+				self.resetTimerValues();
+				//LOAD NEXT LEVEL
+				self.app.nextLevel();
+				//TOOGLE HEADER AND BUTTON
+				self.toggleHeader(self.statisticHeader, self.prepareHeader);
+				self.toggleButton(self.actionButton , self.readyButton);
+				//CONTINUE GAME
+				self.app.start();
+			} 
+			else if(self.actionButton.hasClass(tBackToMenu)){
 				//REMOVE CSS CLASS
 				self.actionButton.removeClass(tBackToMenu);
-				//CHANGE HEADER AND BUTTON
-				self.toggleHeader(self.statisticHeader, self.logoHeader);
-				self.toggleButton(self.actionButton , self.newGameButton);
 				//HIDE VIEW
 				self.hideView(self.viewContainer, 100);
 				//LOAD INIT SETTINGS
@@ -141,6 +153,11 @@ GUI.prototype.addEventListener = function(){
 				self.app.nextLevel();
 				//RESET SCORE LABEL
 				self.curScore.html(0);
+				//RESET TIMER VALUES
+				self.resetTimerValues();
+				//CHANGE HEADER AND BUTTON
+				self.toggleHeader(self.statisticHeader, self.logoHeader);
+				self.toggleButton(self.actionButton , self.newGameButton);
 			}
 		});
 	}

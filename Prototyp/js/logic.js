@@ -31,10 +31,6 @@ Logic.prototype.start = function(){
 	}
 	self.resetTimer();
 	self.setCurrentColor();
-	//HEADER AND BUTTON ANIMATION
-	var gui = self.app.gui;
-	gui.toggleHeader(gui.logoHeader, gui.prepareHeader);
-	gui.toggleButton(gui.newGameButton, gui.readyButton);
 }
 
 Logic.prototype.resetTimer = function(){
