@@ -144,7 +144,7 @@ Logic.prototype.calculateResult = function(){
 					total : 0
 				 };
 
-	result.archievedPercentage = parseInt(array[0]/self.cube.activeFaces.length*100);
+	result.archievedPercentage = parseInt(array[0] / self.cube.activeFaces.length * 100);
 	result.timeLeft = gui.getPlayTime();
 	result.currentScore = gui.getScore() + array[0] * settings.scorePerFace;
 	result.bonus = parseInt(result.currentScore * (result.timeLeft / 100 + 1) - array[1] * settings.scorePerFace);

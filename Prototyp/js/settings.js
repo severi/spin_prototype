@@ -1,10 +1,10 @@
 var settings = {
 	fps : 60,
-	rows : 3,
+	rows : 0,
 	cubeSize : 1,
 	debug: false,
 	colors: 4,
-	maxRows: 5,
+	maxRows: 4,
 	percentage: 0.8,
 	initPlayTime: 60,
 	initPreTime: 30,

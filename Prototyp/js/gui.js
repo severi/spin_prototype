@@ -112,16 +112,20 @@ GUI.prototype.addEventListener = function(){
 			if(self.actionButtonText == null){
 				return;
 			}
-			if(self.actionButtonText.hasClass(tContinue)){
+			//SELECTION FOR NEXT STEP OF THE GAME
+			if(self.actionButton.hasClass(tContinue)){
 				self.actionButtonText.removeClass(tContinue);
 				self.toggleHeader(self.statisticHeader, self.prepareHeader);
 				self.toggleButton(self.actionButton , self.readyButton);
 				self.hideView(self.viewContainer, 100);
-			} else {
-				self.actionButtonText.removeClass(tBackToMenu);
+				self.app.nextLevel();
+			} else if(self.actionButton.hasClass(tBackToMenu)){
+				self.actionButton.removeClass(tBackToMenu);
 				self.toggleHeader(self.statisticHeader, self.logoHeader);
 				self.toggleButton(self.actionButton , self.newGameButton);
 				self.hideView(self.viewContainer, 100);
+				self.app.loadSettings();
+				self.app.nextLevel();
 			}
 		})
 	}

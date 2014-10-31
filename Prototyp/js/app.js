@@ -139,16 +139,15 @@ App.prototype.removePreviousLevel = function(){
 App.prototype.nextLevel = function(){
 	var self = this;
 	//MAX ROWS ARCHIEVED
-	if(self.rows >= settings.maxRows){
-		console.log("MAX ROWS ARCHIEVED");
-		return;
+	if(self.rows < settings.maxRows){
+		//ADD NEW ROW TO CUBE
+		self.rows+=1;
+		console.log("rows: " + self.rows + " max: "+settings.maxRows);
 	}
 	//CREATE NEW CUBE
 	var cube = new Cube(self.rows, self.scene, self.debug);
 	self.levelCubes.push(cube);
-	//ADD NEW ROW TO CUBE
-	self.rows+=1;
-	// destroy old level
+	//DESTROY PREVIOUS CUBE
 	self.removePreviousLevel();
 }
 
