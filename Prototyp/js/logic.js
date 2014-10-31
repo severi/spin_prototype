@@ -144,6 +144,9 @@ Logic.prototype.calculateResult = function(){
 	result.timeLeft = gui.getPlayTime();
 	result.currentScore = gui.getScore() + array[0] * settings.scorePerFace;
 	result.bonus = parseInt(result.currentScore * (result.timeLeft / 100 + 1) - array[1] * settings.scorePerFace);
+	if(result.bonus <= 0 ){
+		result.bonus = 0;
+	}
 	result.total = parseInt(result.currentScore) + parseInt(result.bonus);
 	if(result.total <= 0 ){
 		result.total = 0;

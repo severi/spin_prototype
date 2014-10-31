@@ -83,15 +83,15 @@ canvas{  position:absolute; bottom:0px; left:0px; }
     position: relative;
     border-bottom-style: solid;
     border-bottom-width: 1px;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 20px 12px 20px;
     margin-top:0px;
     margin-bottom:0px;
 }
 .resultMultiple{ position: absolute; }
 .resultSingle{ position: relative; }
 .overviewContainer p{ position: relative; }
-.right{ right: 22%;}
-.left{ left: 22%;}
+.right{ right: 5%;}
+.left{ left: 5%;}
 .overview{
     position: absolute;
     width: 100%;
@@ -137,15 +137,15 @@ canvas{  position:absolute; bottom:0px; left:0px; }
 .redFont{ color: #f64747; }
 
 
-@media screen and (max-height: 272px){
+@media screen and (max-height: 296px){
 
     .containerPadding{
         padding-top: 2px;
         padding-bottom: 2px;
     }
-    .fontSizeButton { font-size: 10px; }
-    .fontSizeLabelSmall { font-size: 6px; }
-    .fontSizeLabelBig { font-size: 10px; }
+    .fontSizeButton { font-size: 11px; }
+    .fontSizeLabelSmall { font-size: 8px; }
+    .fontSizeLabelBig { font-size: 11px; }
     .colorBox{
         position: relative; 
         width:10px; 
@@ -158,20 +158,20 @@ canvas{  position:absolute; bottom:0px; left:0px; }
     .logoHeader img{ height: 18px; }
     .resultSize{ width: 60px; height: 14px;}
     .statisticTitle{
-        margin-top: 1px;
-        margin-bottom: 1px;
+        margin-top: 2px;
+        margin-bottom: 2px;
     }
     .headerHeight{ height: 40px; }
 
 }
-@media screen and (min-height: 273px){
+@media screen and (min-height: 297px){
     .containerPadding{
         padding-top: 5px;
         padding-bottom: 5px;
     }
-    .fontSizeButton { font-size: 14px; }
-    .fontSizeLabelSmall { font-size: 8px; }
-    .fontSizeLabelBig { font-size: 14px; }
+    .fontSizeButton { font-size: 16px; }
+    .fontSizeLabelSmall { font-size: 12px; }
+    .fontSizeLabelBig { font-size: 16px; }
     .colorBox{
         position: relative; 
         width:15px; 
@@ -182,7 +182,7 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         top:5px;
     }
     .logoHeader img{ height: 27px; }
-    .resultSize{ width: 100px; height: 28px;}
+    .resultSize{ width: 100px; height: 32px;}
     .statisticTitle{
         margin-top: 5px;
         margin-bottom: 5px;
@@ -190,14 +190,14 @@ canvas{  position:absolute; bottom:0px; left:0px; }
     .headerHeight{ height: 60px; }
 }
 
-@media screen and (min-height: 544px){
+@media screen and (min-height: 592px){
     .containerPadding{
         padding-top: 10px;
         padding-bottom: 10px;
     }
-    .fontSizeButton { font-size: 20px; }
+    .fontSizeButton { font-size: 18px; }
     .fontSizeLabelSmall { font-size: 12px; }
-    .fontSizeLabelBig { font-size: 20px; }
+    .fontSizeLabelBig { font-size: 18px; }
     .colorBox{
         position: relative; 
         width:20px; 
@@ -208,7 +208,7 @@ canvas{  position:absolute; bottom:0px; left:0px; }
         top:10px;
     }
     .logoHeader img{ height: 36px; }
-    .resultSize{ width: 150px; height: 40px;}
+    .resultSize{ width: 150px; height: 44px;}
     .statisticTitle{
         margin-top: 10px;
         margin-bottom: 10px;
