@@ -14,6 +14,7 @@ App.prototype.loadSettings = function(){
 	self.fps = settings.fps;
 	self.rows = settings.rows;
 	self.cubeSize = settings.cubeSize;
+	self.usedColors = settings.colors;
 	tCubeRadius = self.rows *0.5 * self.cubeSize;
 	self.center = { x: tCubeRadius, y: tCubeRadius, z:-tCubeRadius };
 }
@@ -138,14 +139,28 @@ App.prototype.removePreviousLevel = function(){
 
 App.prototype.nextLevel = function(){
 	var self = this;
-	//MAX ROWS ARCHIEVED
-	if(self.rows < settings.maxRows){
-		//ADD NEW ROW TO CUBE
-		self.rows+=1;
-		console.log("rows: " + self.rows + " max: "+settings.maxRows);
+	//ADD NEW ROW TO CUBE
+	if(self.usedColors == settings.maxColors && self.rows == settings.maxRows){
+		self.usedColors = settings.maxColors;
+		self.rows = settings.maxRows;
+	} else {
+		self.rows++
+		if(self.rows > settings.maxRows){
+			self.rows = settings.rows + 1;
+		}
+		//INCREASE COLOR WITH EACH ROUND -> setting.row + 1 BECAUSE IT STARTS IN SETTINGS WITH 0
+		if(self.rows == settings.rows + 1){
+			self.usedColors++;
+			if(self.usedColors > settings.maxColors){
+				self.usedColors = settings.colors + 1;
+			}
+		}
 	}
+
+	console.log("colornr. " + self.usedColors + " rows" + self.rows );
+
 	//CREATE NEW CUBE
-	var cube = new Cube(self.rows, self.scene, self.debug);
+	var cube = new Cube(self.rows, self.scene, self.usedColors, self.debug);
 	self.levelCubes.push(cube);
 	//DESTROY PREVIOUS CUBE
 	self.removePreviousLevel();

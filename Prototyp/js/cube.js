@@ -1,7 +1,8 @@
-function Cube(rows, scene, debug){
+function Cube(rows, scene, colors, debug){
 	var self=this;
 	this.rows = rows;
 	this.cubes = [];
+	self.colors = colors;
 	self.percentage = settings.percentage;
 	self.debug=debug;
 
@@ -48,12 +49,15 @@ Cube.prototype.generateFaceColors = function(){
 	var self = this;
 	var colors = [faceColors.red,faceColors.blue,faceColors.yellow,faceColors.green];
 	colors = self.shuffleArray(colors);
-	if (settings.colors>colors.length){
+	if(self.colors == null){
+		console.log("color Ref is null in class Cube -> make sure it was set in the constructor");
+	}
+	if (self.colors>colors.length){
 		console.log("ERROR: Amount of colors too big - define more colors in settings.js");
 		console.log("setting color amount to: "+colors.length);
-		settings.colors=colors.length;
+		self.colors=colors.length;
 	}
-	while (colors.length>settings.colors){
+	while (colors.length>self.colors){
 		colors.pop();
 	}
 	colorArray=[];
