@@ -299,14 +299,10 @@ GUI.prototype.setActionButtonText = function(text){
 		console.log("actionButtonText is null in setActionButtonText");
 		return;
 	}
-
-	console.log(self.statisticTitle);
-
+	//SET HEADER TEXT
 	if(text == tContinue){ self.summaryDescription.html(tStatistic); }
 	else { self.summaryDescription.html(tGameOver);} 
-	//SET BUTTON LABELS
+	//SET BUTTON TEXT
 	self.actionButton.addClass(text);
 	self.actionButtonText.html(text);
-
-
 }
