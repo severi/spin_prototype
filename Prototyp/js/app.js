@@ -102,12 +102,8 @@ App.prototype.addEventListener = function(){
 		//CHANGE COLOR BASED ON INTERSECTION WITH ELEMENT
 		if ( intersects.length > 0 && self.logic.gameStarted==true) {
 			//SELECTED OBJECT
-			var retAr = self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]);
-			if(retAr[0]==true){
-				self.logic.setCurrentColor();
-			} else {
-				self.logic.revertColor(retAr[1]);
-			}
+			self.levelCubes[self.levelCubes.length-1].selectFaces(intersects[0]);
+			self.logic.updateColor();
 		}
 	}, false );
 
@@ -140,6 +136,7 @@ App.prototype.removePreviousLevel = function(){
 App.prototype.nextLevel = function(){
 	var self = this;
 	//ADD NEW ROW TO CUBE
+	
 	if(self.usedColors == settings.maxColors && self.rows == settings.maxRows){
 		self.usedColors = settings.maxColors;
 		self.rows = settings.maxRows;
@@ -157,7 +154,7 @@ App.prototype.nextLevel = function(){
 		}
 	}
 
-	console.log("colornr. " + self.usedColors + " rows" + self.rows );
+	console.log("colors " + self.usedColors + " rows" + self.rows );
 
 	//CREATE NEW CUBE
 	var cube = new Cube(self.rows, self.scene, self.usedColors, self.debug);

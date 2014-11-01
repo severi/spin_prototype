@@ -117,6 +117,17 @@ GUI.prototype.addEventListener = function(){
 		});
 	}
 
+	//ADD EVENTLISTENER COLOR BUTTON
+	if(self.curColor != null){
+		self.curColor.click(function(){
+			if(self.app == null){
+				console.log("Error in method addEventListener class GUI");
+				return;
+			}
+			self.app.logic.showNewColor();
+		});
+	}
+
 	if(self.actionButton != null){
 		self.actionButton.click(function(){
 			if(self.actionButtonText == null){

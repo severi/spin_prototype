@@ -17,9 +17,20 @@ function Cube(rows, scene, colors, debug){
 	 * 										false:color is placed on this square
 	 */	
 	this.activeFaces = [];
-	self.placedCubeColors = [];
-	self.freeCubeColors = [];
+	self.placedCubeColors = {};
+	self.freeCubeColors = {};
 	self.currentCubeColor = undefined;
+
+	self.freeCubeColors[faceColors.red]=0;
+	self.freeCubeColors[faceColors.blue]=0;
+	self.freeCubeColors[faceColors.yellow]=0;
+	self.freeCubeColors[faceColors.green]=0;
+
+	self.placedCubeColors[faceColors.red]=0;
+	self.placedCubeColors[faceColors.blue]=0;
+	self.placedCubeColors[faceColors.yellow]=0;
+	self.placedCubeColors[faceColors.green]=0;
+
 	self.scene = scene;
 	self.generateCube();
 }
@@ -72,11 +83,8 @@ Cube.prototype.generateFaceColors = function(){
 		self.activeFaces[i].push(true);
 		self.activeFaces[i][0].color.setHex(color);
 		self.activeFaces[i][1].color.setHex(color);
-		self.freeCubeColors.push(color);
+		self.freeCubeColors[color]++;
 	}
-
-	// Randomize order of colors
-	self.freeCubeColors = self.shuffleArray(self.freeCubeColors);
 }
 
 Cube.prototype.setRows = function(rows){
@@ -158,7 +166,19 @@ Cube.prototype.selectFaces = function(vertex){
 			vertex.object.geometry.colorsNeedUpdate = true;
 		}
 	}
-	return [chosen, oldColor];
+
+	if(chosen==true){
+		self.freeCubeColors[self.currentCubeColor]--;
+		self.placedCubeColors[self.currentCubeColor]++;
+
+		if(self.freeCubeColors[self.currentCubeColor]<=0){
+			self.getNextColor();
+		}
+	}
+	else {
+		self.freeCubeColors[oldColor]++;
+		self.placedCubeColors[oldColor]--;
+	}
 }
 
 
@@ -276,29 +296,34 @@ Cube.prototype.destroy = function(){
 Cube.prototype.getNextColor = function(){
 	var self = this;
 
-	if (self.currentCubeColor!=undefined){
-		self.placedCubeColors.push(self.currentCubeColor);
+	var colors=[];
+
+	for (var key in self.freeCubeColors) {
+		if (self.freeCubeColors[key]>0){
+			colors.push(parseInt(key));
+		}
 	}
-	if (self.freeCubeColors.length==0){
+	
+
+	var index = colors.indexOf(self.currentCubeColor);
+	if (index > -1) {
+		index++;
+		var color = colors[index%colors.length];
+		self.currentCubeColor=color;
+		return color;
+	}
+	if (colors.length==0){
+		self.currentCubeColor=undefined;
 		return settings.defaultColor;
 	}
 
-	var color = self.freeCubeColors.pop();
-	self.currentCubeColor=color;
-	
-	return color;
+	self.currentCubeColor=colors[0];
+	return colors[0];
 }
 
-Cube.prototype.revertColor = function(color){
-	var self = this;
-
-	var index = self.placedCubeColors.indexOf(color);
-	if (index > -1) {
-    	self.placedCubeColors.splice(index, 1);
-    	self.freeCubeColors.splice(Math.floor(Math.random()*self.freeCubeColors.length), 0, color);
-    } else {
-    	throw "error: cannot revert undefined color";
-    }
+Cube.prototype.getCurrentColor = function(){
+	var self=this;
+	return self.currentCubeColor==undefined?settings.defaultColor:self.currentCubeColor;
 }
 
 Cube.prototype.hideColors = function(){

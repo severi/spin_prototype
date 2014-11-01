@@ -30,7 +30,7 @@ Logic.prototype.start = function(){
 		return;
 	}
 	self.resetTimer();
-	self.setCurrentColor();
+	self.showNewColor();
 }
 
 Logic.prototype.resetTimer = function(){
@@ -154,13 +154,13 @@ Logic.prototype.calculateResult = function(){
 	return result;
 }
 
-Logic.prototype.setCurrentColor = function(){
+Logic.prototype.updateColor = function(){
 	var self = this;
-
-	self.gui.setCurrentColor(self.cube.getNextColor());
+	self.gui.setCurrentColor(self.cube.getCurrentColor());
 }
 
-Logic.prototype.revertColor = function(color){
-	var self=this;
-	self.cube.revertColor(color);
+Logic.prototype.showNewColor = function(){
+	var self = this;
+	var color = self.cube.getNextColor();
+	self.gui.setCurrentColor(color);
 }
