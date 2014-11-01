@@ -26,6 +26,7 @@ GUI.prototype.init = function(){
 	self.statisticHeader = $(".statisticHeader");
 	self.viewContainer = $(".viewContainer");
 	self.statisticOverview = $(".statisticOverview");
+	self.summaryDescription = $(".summaryDescription");
 	self.actionButton = $(".actionButton");
 	//VALUE FIELDS
 	self.requiredValue = $(".requiredValue");
@@ -298,6 +299,14 @@ GUI.prototype.setActionButtonText = function(text){
 		console.log("actionButtonText is null in setActionButtonText");
 		return;
 	}
+
+	console.log(self.statisticTitle);
+
+	if(text == tContinue){ self.summaryDescription.html(tStatistic); }
+	else { self.summaryDescription.html(tGameOver);} 
+	//SET BUTTON LABELS
 	self.actionButton.addClass(text);
 	self.actionButtonText.html(text);
+
+
 }
