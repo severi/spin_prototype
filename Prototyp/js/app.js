@@ -83,6 +83,7 @@ App.prototype.addEventListener = function(){
 	self.controls = new THREE.TrackballControls( self.camera, self.renderer.domElement );
 	//DEACTIVATE USER ZOOM
 	self.controls.noZoom = true;
+	self.controls.noPan = true;
 	//SET THE CENTER TO TRACK
 	if(self.center == null){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));

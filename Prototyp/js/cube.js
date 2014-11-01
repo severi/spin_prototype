@@ -71,6 +71,26 @@ Cube.prototype.generateFaceColors = function(){
 	while (colors.length>self.colors){
 		colors.pop();
 	}
+
+	
+
+	/*
+	 *  Update color frequency
+	 *  Instead of always having the same amount of each color,
+	 *  some variation is randomly added
+	 */
+	var original = colors.slice();
+	var c = (self.rows*self.rows*6)/self.colors;
+	var max = Math.ceil(c*0.3);
+	var num = Math.floor(Math.random()*(max+1));
+	for (var i = 0; i < num; i++) {
+		var tmp = original.slice();
+		var idx=Math.floor(Math.random()*tmp.length)
+		tmp[idx]=tmp[(idx+1) %tmp.length];
+		colors=colors.concat(tmp);
+	}
+
+
 	colorArray=[];
 	for (var i =0; i < 6*self.rows*self.rows ; i++) {
 		colorArray.push(colors[i%colors.length]);
@@ -102,9 +122,12 @@ Cube.prototype.setRows = function(rows){
  * http://bost.ocks.org/mike/shuffle/
  */
 Cube.prototype.shuffleArray = function(array){
-	console.log("----------------------------------------------------------------------")
+/*	console.log("----------------------------------------------------------------------")
 	console.log("FIXME: does not work properly, sometimes whole side has the same color")
 	console.log("----------------------------------------------------------------------")
+
+	removed old randomnes check as it was really shitty, gonna implement a better one soon.. :)
+	*/
 
 	var self=this;
     for (var i = array.length - 1; i > 0; i--) {
@@ -113,29 +136,7 @@ Cube.prototype.shuffleArray = function(array){
         array[i] = array[j];
         array[j] = temp;
     }
-    if (!self.checkArrayRandomness(array)){
-    	self.shuffleArray(array);
-    }
     return array;
-}
-
-Cube.prototype.checkArrayRandomness = function(array){
-	var self = this;
-	var counter=0;
-	var currentColor=undefined;
-	for (var i=0; i<array.length;i++){
-		if (array[i]==currentColor){
-			counter++;
-		}
-		else {
-			counter=0;
-		}
-		if (counter>=Math.ceil(self.rows*self.rows*self.percentage)){
-			return false;
-		}
-		currentColor=array[i];
-	}
-	return true;
 }
 
 /*
