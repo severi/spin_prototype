@@ -102,6 +102,10 @@ Cube.prototype.setRows = function(rows){
  * http://bost.ocks.org/mike/shuffle/
  */
 Cube.prototype.shuffleArray = function(array){
+	console.log("----------------------------------------------------------------------")
+	console.log("FIXME: does not work properly, sometimes whole side has the same color")
+	console.log("----------------------------------------------------------------------")
+
 	var self=this;
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
