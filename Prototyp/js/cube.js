@@ -280,7 +280,7 @@ Cube.prototype.getNextColor = function(){
 		self.placedCubeColors.push(self.currentCubeColor);
 	}
 	if (self.freeCubeColors.length==0){
-		throw "error: no free colors available";
+		return settings.defaultColor;
 	}
 
 	var color = self.freeCubeColors.pop();
