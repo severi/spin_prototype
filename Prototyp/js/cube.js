@@ -78,14 +78,17 @@ Cube.prototype.generateFaceColors = function(){
 	 *  Update color frequency
 	 *  Instead of always having the same amount of each color,
 	 *  some variation is randomly added
+	 *
+	 *  The algorithm might need some finetuning still :)
+	 *
 	 */
 	var original = colors.slice();
 	var c = (self.rows*self.rows*6)/self.colors;
-	var max = Math.ceil(c*0.3);
+	var max = Math.max(Math.floor(c*0.1),1);
 	var num = Math.floor(Math.random()*(max+1));
 	for (var i = 0; i < num; i++) {
 		var tmp = original.slice();
-		var idx=Math.floor(Math.random()*tmp.length)
+		var idx=Math.floor(Math.random()*tmp.length);
 		tmp[idx]=tmp[(idx+1) %tmp.length];
 		colors=colors.concat(tmp);
 	}
