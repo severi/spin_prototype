@@ -200,11 +200,6 @@ App.prototype.renderScene = function(){
 		}
 	}
 	render();
-
-	var tRepeat = 1000/ self.fps;
-	self.updateTimer = window.setInterval(function(){
-		self.update();
-	}, tRepeat);
 }
 
 App.prototype.update = function(){
