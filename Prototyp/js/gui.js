@@ -239,7 +239,15 @@ GUI.prototype.setCurrentColor = function(color){
 
 GUI.prototype.getCurrentColor = function(){
 	var self = this;
-	return self.curColor.css("background-color"); //rgb(x,y,z)
+	var color;
+	color = self.curColor.css("background-color"); //rgb(x,y,z)
+	if( color.substring(0,3) === "rgb" ){
+		color = color.substring(4,color.length-1);
+		color = color.split(", ");
+		return (""+color[0] +""+ color[1] +""+ color[2]).toString(16);
+	}
+	color = color.substring(1,color.length-1);
+	return parseInt(color, 16);
 }
 
 GUI.prototype.getScore = function(){

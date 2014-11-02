@@ -162,5 +162,9 @@ Logic.prototype.updateColor = function(){
 Logic.prototype.showNewColor = function(){
 	var self = this;
 	var color = self.cube.getNextColor();
+	var curColor = self.gui.getCurrentColor();
+	while(curColor === color){
+		color = self.cube.getNextColor();
+	}
 	self.gui.setCurrentColor(color);
 }

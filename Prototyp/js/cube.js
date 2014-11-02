@@ -270,8 +270,6 @@ Cube.prototype.addCube = function(position, location){
 	box.position.set(position.x, position.y, position.z);
 	self.addFacesFromBox(box, location);
 	//IF PARENT CUBE EXISTS AND DEBUG MODE IS ACTIVE ADD NEW CUBE TO PARENT CUBE
-	
-	
 	if( !settings.debug && self.debug.cube != null){
 		self.debug.cube.add(box);
 		console.log("box added to parent Cube for debugging")
@@ -308,8 +306,6 @@ Cube.prototype.getNextColor = function(){
 			colors.push(parseInt(key));
 		}
 	}
-	
-
 	var index = colors.indexOf(self.currentCubeColor);
 	if (index > -1) {
 		index++;
