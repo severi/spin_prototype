@@ -13,7 +13,9 @@ var settings = {
 	stage: 1,
 	defaultColor : 0x607282,
 	requiredPercentage: 60,
-	scorePerFace : 5
+	scorePerFace : 5,
+	introRows : 3,
+	introColors : 4
 };
 
 var faceColors = {

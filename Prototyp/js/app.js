@@ -4,7 +4,7 @@ function App(){
     if(self.init()){
 		self.addEventListener();
 		self.renderScene();
-		self.nextLevel();
+		self.introLevel();
 	}
 }
 
@@ -134,10 +134,22 @@ App.prototype.removePreviousLevel = function(){
 	}
 }
 
+App.prototype.removeIntro = function(){
+	var self = this;
+	if (self.introCube!=null){
+		self.introCube.destroy();
+	}
+}
+
+App.prototype.introLevel = function(){
+	var self = this;
+
+	self.introCube = new Cube(settings.introRows, self.scene, settings.introColors, self.debug);
+}
+
 App.prototype.nextLevel = function(){
 	var self = this;
 	//ADD NEW ROW TO CUBE
-	
 	if(self.usedColors == settings.maxColors && self.rows == settings.maxRows){
 		self.usedColors = settings.maxColors;
 		self.rows = settings.maxRows;
@@ -201,6 +213,8 @@ App.prototype.update = function(){
 
 App.prototype.start = function(){
 	var self = this;
+	self.removeIntro();
+	self.nextLevel();
 	self.logic.start();
 }
 

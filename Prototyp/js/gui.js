@@ -146,8 +146,6 @@ GUI.prototype.addEventListener = function(){
 				self.curScore.html(self.totalValue.text());
 				//RESET TIMER VALUES
 				self.resetTimerValues();
-				//LOAD NEXT LEVEL
-				self.app.nextLevel();
 				//TOOGLE HEADER AND BUTTON
 				self.toggleHeader(self.statisticHeader, self.prepareHeader);
 				self.toggleButton(self.actionButton , self.readyButton);
@@ -161,8 +159,8 @@ GUI.prototype.addEventListener = function(){
 				self.hideView(self.viewContainer, 100);
 				//LOAD INIT SETTINGS
 				self.app.loadSettings();
-				//LOAD INIT LEVEL BASED ON INIT SETTINGS
-				self.app.nextLevel();
+				//LOAD INTRO LEVEL
+				self.app.introLevel();
 				//RESET SCORE LABEL
 				self.curScore.html(0);
 				//RESET TIMER VALUES
