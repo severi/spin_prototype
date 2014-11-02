@@ -20,6 +20,7 @@ GUI.prototype.init = function(){
 	self.prepTime = $(".prepTime");
 	self.curScore = $(".curScore");
 	self.curColor = $(".curColor");
+	self.colorBox = $(".colorBox");
 	self.gameHeader = $(".gameHeader");
 	self.submitButton = $(".submitButton");
 	//STATISTIC SCREEN REF
@@ -46,6 +47,8 @@ GUI.prototype.init = function(){
 		console.log("Error ref is null in initValues class GUI --> value fields");
 		return false;
 	}
+	//RESET SCORES
+	self.resetScoreTable();
 	//ADD EVENT LISTENERS
 	self.addEventListener();
 	self.resize();
@@ -66,6 +69,12 @@ GUI.prototype.verticalAlignView = function(container, object){
 	var heightObject = parseInt(object.css("height"));
 	var marginTop = (heightContainer - heightObject)*0.5;
 	object.css("margin-top", marginTop +"px");
+}
+
+GUI.prototype.resetScoreTable = function(){
+	var self = this;
+	self.curScore.html('0');
+	self.currentScoreValue.html('0');
 }
 
 GUI.prototype.resetTimerValues = function(){
@@ -89,6 +98,8 @@ GUI.prototype.addEventListener = function(){
 			//HEADER AND BUTTON ANIMATION
 			self.toggleHeader(self.logoHeader, self.prepareHeader);
 			self.toggleButton(self.newGameButton, self.readyButton);
+			//RESET SCORE TABLES
+			self.resetScoreTable();
 			//INITAL SCORE AND TIMER VALUES
 			self.resetTimerValues();
 			self.curScore.html( settings.initScore );
@@ -118,8 +129,8 @@ GUI.prototype.addEventListener = function(){
 	}
 
 	//ADD EVENTLISTENER COLOR BUTTON
-	if(self.curColor != null){
-		self.curColor.click(function(){
+	if(self.colorBox != null){
+		self.colorBox.click(function(){
 			if(self.app == null){
 				console.log("Error in method addEventListener class GUI");
 				return;
@@ -162,7 +173,7 @@ GUI.prototype.addEventListener = function(){
 				//LOAD INTRO LEVEL
 				self.app.introLevel();
 				//RESET SCORE LABEL
-				self.curScore.html(0);
+				self.resetScoreTable();
 				//RESET TIMER VALUES
 				self.resetTimerValues();
 				//CHANGE HEADER AND BUTTON

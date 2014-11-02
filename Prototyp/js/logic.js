@@ -142,8 +142,8 @@ Logic.prototype.calculateResult = function(){
 
 	result.archievedPercentage = parseInt(array[0] / self.cube.activeFaces.length * 100);
 	result.timeLeft = gui.getPlayTime();
-	result.currentScore = gui.getScore() + array[0] * settings.scorePerFace;
-	result.bonus = parseInt(result.currentScore * (result.timeLeft / 100 + 1) - array[1] * settings.scorePerFace);
+	result.currentScore = parseInt(gui.getScore()) + parseInt(array[0] * settings.scorePerFace);
+	result.bonus = result.timeLeft * settings.scorePerFace - (array[1] * settings.scorePerFace);
 	if(result.bonus <= 0 ){
 		result.bonus = 0;
 	}
@@ -151,6 +151,9 @@ Logic.prototype.calculateResult = function(){
 	if(result.total <= 0 ){
 		result.total = 0;
 	}
+
+	console.log(result);
+
 	return result;
 }
 

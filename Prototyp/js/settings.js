@@ -13,7 +13,7 @@ var settings = {
 	stage: 1,
 	defaultColor : 0x607282,
 	requiredPercentage: 60,
-	scorePerFace : 5,
+	scorePerFace : 1,
 	introRows : 3,
 	introColors : 4
 };
@@ -22,7 +22,7 @@ var faceColors = {
 		red: 0xf64747,
 		yellow: 0xf9bf3b,
 		green: 0x03c9a9,
-		blue: 0x4183D7,
+		blue: 0x19b5fe,
 };
 
 var tBackToMenu = "back to menu";
