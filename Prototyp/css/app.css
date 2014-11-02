@@ -26,7 +26,7 @@ html {
 canvas{  position:absolute; bottom:0px; left:0px; }
 .marginAuto{ margin-left: auto; margin-right: auto; }
 .noMargin{ margin: 0 0 0 0; }
-.opacity{ opacity: 0.5 }
+.opacity{ opacity: 0.6 }
 .buttonRect {
     position: relative;
     width: 100%;

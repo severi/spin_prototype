@@ -26,7 +26,7 @@ var faceColors = {
 };
 
 var tBackToMenu = "back to menu";
-var tContinue = "next stage";
+var tContinue = "next level";
 var tStatistic = "statistic";
 var tGameOver = "game over";
 
