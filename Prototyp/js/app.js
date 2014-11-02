@@ -62,7 +62,7 @@ App.prototype.init3dView = function(){
 	self.loadSettings();
 	
 	//SETUP RENDERER
-	self.renderer = new THREE.WebGLRenderer({antialias: true});
+	self.renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: 1});
 	self.renderer.setSize(window.innerWidth, window.innerHeight*hScale);
 	self.renderer.setClearColor(0xffffff, 1);
 	document.body.appendChild(self.renderer.domElement);
