@@ -93,7 +93,6 @@ Cube.prototype.generateFaceColors = function(){
 		colors=colors.concat(tmp);
 	}
 
-
 	colorArray=[];
 	for (var i =0; i < 6*self.rows*self.rows ; i++) {
 		colorArray.push(colors[i%colors.length]);
