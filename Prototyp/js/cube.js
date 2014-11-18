@@ -1,10 +1,11 @@
-function Cube(rows, scene, colors, debug){
+function Cube(rows, scene, colors, debug, helpColors){
 	var self=this;
 	this.rows = rows;
 	this.cubes = [];
 	self.colors = colors;
 	self.percentage = settings.percentage;
 	self.debug=debug;
+	self.helpColors = helpColors;
 
 	/*
 	 * 	2 dimensional list including all outer faces
@@ -15,7 +16,7 @@ function Cube(rows, scene, colors, debug){
 	 * 							[3]		= boolean value telling whether square has been selected or not
 	 * 										true: no color has been placed on square
 	 * 										false:color is placed on this square
-	 */	
+	 */
 	this.activeFaces = [];
 	self.placedCubeColors = {};
 	self.freeCubeColors = {};
@@ -72,7 +73,7 @@ Cube.prototype.generateFaceColors = function(){
 		colors.pop();
 	}
 
-	
+
 
 	/*
 	 *  Update color frequency
@@ -93,20 +94,34 @@ Cube.prototype.generateFaceColors = function(){
 		colors=colors.concat(tmp);
 	}
 
+	// create color array that is used in inserting colors to the cube
 	colorArray=[];
 	for (var i =0; i < 6*self.rows*self.rows ; i++) {
 		colorArray.push(colors[i%colors.length]);
 	}
 	colorArray=self.shuffleArray(colorArray);
-	
+
+	// Add color to faces and set state
+	var helpColorIndexArray = [];
 	for (var i =0; i < self.activeFaces.length ; i++) {
 		var color=colorArray.pop();
 		self.activeFaces[i].push(color);
-		self.activeFaces[i].push(true);
+		self.activeFaces[i].push(STATE.HIDDEN);
 		self.activeFaces[i][0].color.setHex(color);
 		self.activeFaces[i][1].color.setHex(color);
 		self.freeCubeColors[color]++;
+
+		helpColorIndexArray.push(i);
 	}
+
+	// get indexes of faces to be shown as help faces
+	helpColorIndexArray = self.shuffleArray(helpColorIndexArray).slice(0,self.helpColors);
+	for (var i = 0; i < helpColorIndexArray.length; i++) {
+		var idx = helpColorIndexArray[i];
+		self.activeFaces[idx][3]=STATE.ALWAYS_VISIBLE;
+		self.freeCubeColors[self.activeFaces[idx][2]]--;
+	};
+
 }
 
 Cube.prototype.setRows = function(rows){
@@ -157,14 +172,16 @@ Cube.prototype.selectFaces = function(vertex){
 
 	for (var i=0; i<this.activeFaces.length; i++){
 		if (this.activeFaces[i][0]==vertex.face || this.activeFaces[i][1]==vertex.face){
-			
-			if (this.activeFaces[i][3]==false){
+			if (this.activeFaces[i][3]==STATE.ALWAYS_VISIBLE){
+				continue;
+			}
+			else if (this.activeFaces[i][3]==STATE.VISIBLE){
 				color=settings.defaultColor;
-				this.activeFaces[i][3]=true;
+				this.activeFaces[i][3]=STATE.HIDDEN;
 				chosen=false;
 			}
-			else {
-				this.activeFaces[i][3]=false;
+			else if (this.activeFaces[i][3]==STATE.HIDDEN){
+				this.activeFaces[i][3]=STATE.VISIBLE;
 			}
 			color = new THREE.Color(color);
 			oldColor = this.activeFaces[i][0].color.getHex();
@@ -194,10 +211,10 @@ Cube.prototype.generateCube = function(){
 	if(self.rows == null){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
 	}
-	
+
 	/*
 	 * The correct size for a hollow cube is:
-	 * 		amount of boxes in a solid cube 
+	 * 		amount of boxes in a solid cube
 	 * 			minus
 	 * 		amount of boxes in a smaller solid cube that precicely fits inside of the bigger cube
 	 *
@@ -213,7 +230,7 @@ Cube.prototype.generateCube = function(){
 
 				//self.levelCubes.push(new Cube(settings.rows));
 				//self.cube = self.levelCubes[self.levelCubes.length - 1];
-	
+
 	//INITPOS IS CALCULATED BECAUSE OF THE MESH ORIGIN WHICH IS NORMALY [0.5, 0.5] SO YOU NEED TO CALCULATED BASED ON THE FORMULAR BELLOW
 	var initPos = -self.rows * settings.cubeSize *0.5 + settings.cubeSize*0.5;
 	//SET INITPOS
@@ -228,22 +245,21 @@ Cube.prototype.generateCube = function(){
 				if ((x==0 || x==self.rows-1) || (y==0 || y==self.rows-1) || (z==0 || z==self.rows-1)) {
 					amount++;
 					//ADD A NEW CUBE Z-AXIS
-					
+
 					self.addCube( self.setOffset(position, 0, y*settings.cubeSize, -z*settings.cubeSize), [x,y,z]);
 				}
 			}
 		}
 		//UPDATE THE POSITION OF X-AXIS BASED ON CUBE SIZE
-	
+
 		position = self.setOffset(position, settings.cubeSize, 0 , 0);
-		
 	}
 
 	var minus = (self.rows>2)?Math.pow(self.rows-2,3):0;
 	console.log("amount: "+amount+ " - should be: "+( Math.pow(self.rows,3) - minus));
 	self.generateFaceColors();
 	self.updateColors();
-   	
+
 }
 
 
@@ -255,13 +271,13 @@ Cube.prototype.setOffset = function(curValue, x, y, z){
 	var rValue = curValue;
 	if(curValue == null){
 		rValue = {x: x, y: y, z:z };
-	}	
+	}
 	return {x: (rValue.x + x), y: (rValue.y + y), z: (rValue.z + z) }
 }
 
 Cube.prototype.addCube = function(position, location){
 	var self = this;
-	
+
 	if(position == null){
 		position = { x: 0, y: 0, z: 0};
 	}
@@ -333,8 +349,10 @@ Cube.prototype.hideColors = function(){
 	var self = this;
 
 	for (var i=0; i<this.activeFaces.length; i++){
-		this.activeFaces[i][0].color.setHex(settings.defaultColor);
-		this.activeFaces[i][1].color.setHex(settings.defaultColor);
+		if (this.activeFaces[i][3]!=STATE.ALWAYS_VISIBLE){
+			this.activeFaces[i][0].color.setHex(settings.defaultColor);
+			this.activeFaces[i][1].color.setHex(settings.defaultColor);
+		}
 	}
 
 	self.updateColors();
@@ -367,7 +385,7 @@ Cube.prototype.getNumberOfCorrectAndWrongColors = function(){
 	for (var i=0; i<this.activeFaces.length; i++){
 		var square = this.activeFaces[i];
 		var color = new THREE.Color(square[2]);
-		if (square[3]==false){
+		if (square[3]==STATE.VISIBLE){
 			if (square[0].color.getHex()==color.getHex()){
 				correct++;
 			} else {
@@ -377,4 +395,9 @@ Cube.prototype.getNumberOfCorrectAndWrongColors = function(){
 	}
 	console.log("correct quesses: "+ correct + ", wrong guesses: "+wrong);
 	return [correct,wrong];
+}
+
+Cube.prototype.getTotalNumberPlayableColors = function(){
+	var total =  this.rows*this.rows*6-this.helpColors;
+	return total
 }

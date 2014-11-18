@@ -3,6 +3,7 @@ var settings = {
 	rows : 0,
 	cubeSize : 1,
 	debug: false,
+	alwaysWin: false,
 	colors: 1,
 	maxColors: 4,
 	maxRows: 4,
@@ -29,4 +30,10 @@ var tBackToMenu = "back to menu";
 var tContinue = "next level";
 var tStatistic = "statistic";
 var tGameOver = "game over";
+
+var STATE = {
+  HIDDEN : {value: 0, name: "HIDDEN"},
+  VISIBLE: {value: 1, name: "VISIBLE"},
+  ALWAYS_VISIBLE : {value: 2, name: "Always visible"}
+};
 

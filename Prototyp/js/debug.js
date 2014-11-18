@@ -19,7 +19,7 @@ Debug.prototype.init = function(){
 }
 
 Debug.prototype.debugAxis = function(){
-	
+
 	if(settings.debug == false){
 		console.log("Debug deactivated");
 		return;

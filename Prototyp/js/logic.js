@@ -107,7 +107,7 @@ Logic.prototype.done = function(){
 	var result = self.calculateResult();
 	var gui = self.gui;
 	gui.setResult(result);
-	if(result.archievedPercentage <= result.requiredPercentage){
+	if(result.archievedPercentage <= result.requiredPercentage && settings.alwaysWin==false){
 		gui.setActionButtonText(tBackToMenu);
 		return;
 	}
@@ -129,6 +129,7 @@ Logic.prototype.end = function(){
 Logic.prototype.calculateResult = function(){
 	var self = this;
 	var gui = self.app.gui;
+	var maxNumber = self.cube.getTotalNumberPlayableColors();
 	var array = self.cube.getNumberOfCorrectAndWrongColors();
 	//RESULT JSON
 	var result = {
@@ -140,7 +141,7 @@ Logic.prototype.calculateResult = function(){
 					total : 0
 				 };
 
-	result.archievedPercentage = parseInt(array[0] / self.cube.activeFaces.length * 100);
+	result.archievedPercentage = parseInt(array[0] / maxNumber * 100);
 	result.timeLeft = gui.getPlayTime();
 	result.currentScore = parseInt(gui.getScore()) + parseInt(array[0] * settings.scorePerFace);
 	result.bonus = result.timeLeft * settings.scorePerFace - (array[1] * settings.scorePerFace);

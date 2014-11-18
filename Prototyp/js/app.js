@@ -54,19 +54,19 @@ App.prototype.init3dView = function(){
 	self.levelCubes = new Array();
 	//USED TO SET THE HEIGHT OF THE CANVAS VALUES IN % [0-1] e.g 0.5 means 50%;
 	var hScale = 1;
-	if(hScale <= 0 || hScale > 1) { 
-		alert("ERROR: hScale IS OUT OF EXPECTED RANGE [0.1 - 1]"); 
+	if(hScale <= 0 || hScale > 1) {
+		alert("ERROR: hScale IS OUT OF EXPECTED RANGE [0.1 - 1]");
 		return false;
 	}
 	//LOADING REQUIRED SETTINGS
 	self.loadSettings();
-	
+
 	//SETUP RENDERER
 	self.renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: 1});
 	self.renderer.setSize(window.innerWidth, window.innerHeight*hScale);
 	self.renderer.setClearColor(0xffffff, 1);
 	document.body.appendChild(self.renderer.domElement);
-	
+
 	//SETUP SCENE AND CAMERA
 	self.scene = new THREE.Scene();
 	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(100));
@@ -91,7 +91,7 @@ App.prototype.addEventListener = function(){
 	self.controls.target.set( 0, 0, 0 );
 	//CLICK EVENT HANDLER BASED ON SEVERI
 	self.renderer.domElement.addEventListener( 'click', function(event){
-		
+
 		event.preventDefault();
 		//CONVERT MOUSE POSITION TO CORRECT VECTOR
 		var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
@@ -169,8 +169,10 @@ App.prototype.nextLevel = function(){
 
 	console.log("colors " + self.usedColors + " rows" + self.rows );
 
+	var helpColors=2; // TODO dummy, replace with logic
+
 	//CREATE NEW CUBE
-	var cube = new Cube(self.rows, self.scene, self.usedColors, self.debug);
+	var cube = new Cube(self.rows, self.scene, self.usedColors, self.debug, helpColors);
 	self.levelCubes.push(cube);
 	//DESTROY PREVIOUS CUBE
 	self.removePreviousLevel();
@@ -190,11 +192,11 @@ App.prototype.renderScene = function(){
 	if(self.fps == null){
 		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
 	}
-	//RENDER FUNCTION NEED TO BE CALLED THIS WAY OTHERWISE ERROR occurs 
+	//RENDER FUNCTION NEED TO BE CALLED THIS WAY OTHERWISE ERROR occurs
 	var render = function () {
 		requestAnimationFrame(render);
 		self.renderer.render(self.scene, self.camera);
-		
+
 		if(self.controls != null){
 			self.controls.update();
 		}

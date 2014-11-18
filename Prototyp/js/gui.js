@@ -329,7 +329,7 @@ GUI.prototype.setActionButtonText = function(text){
 	}
 	//SET HEADER TEXT
 	if(text == tContinue){ self.summaryDescription.html(tStatistic); }
-	else { self.summaryDescription.html(tGameOver);} 
+	else { self.summaryDescription.html(tGameOver);}
 	//SET BUTTON TEXT
 	self.actionButton.addClass(text);
 	self.actionButtonText.html(text);
