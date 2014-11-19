@@ -144,7 +144,7 @@ App.prototype.removeIntro = function(){
 App.prototype.introLevel = function(){
 	var self = this;
 
-	self.introCube = new Cube(settings.introRows, self.scene, settings.introColors, self.debug);
+	self.introCube = new Cube(settings.introRows, self.scene, settings.introColors, self.debug, 0);
 }
 
 App.prototype.nextLevel = function(){
@@ -169,7 +169,10 @@ App.prototype.nextLevel = function(){
 
 	console.log("colors " + self.usedColors + " rows" + self.rows );
 
-	var helpColors=2; // TODO dummy, replace with logic
+	//dummy algorithm, shouldnt invest more time on prototype coz its anyway gonna change for the real produkt
+	var squareNum = self.rows*self.rows*6;
+	var maxHelpNum = squareNum-self.usedColors;
+	var helpColors=Math.min(Math.ceil(squareNum*self.usedColors*0.05),maxHelpNum);
 
 	//CREATE NEW CUBE
 	var cube = new Cube(self.rows, self.scene, self.usedColors, self.debug, helpColors);

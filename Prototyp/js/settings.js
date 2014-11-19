@@ -16,7 +16,8 @@ var settings = {
 	requiredPercentage: 60,
 	scorePerFace : 1,
 	introRows : 3,
-	introColors : 4
+	introColors : 4,
+	helpColor : 0x9b59b6
 };
 
 var faceColors = {

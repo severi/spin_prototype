@@ -43,7 +43,7 @@ Cube.prototype.addFacesFromBox = function(box, location){
 	var self=this;
 	for (var j =0; j < box.geometry.faces.length ; j++) {
 		var face = box.geometry.faces[j];
-		if ((location[0]==0 && face.normal.x==-1) || 
+		if ((location[0]==0 && face.normal.x==-1) ||
 			(location[0]==self.rows -1 && face.normal.x==1) ||
 			(location[1]==0 && face.normal.y==-1) ||
 			(location[1]==self.rows -1 && face.normal.y==1) ||
@@ -120,6 +120,9 @@ Cube.prototype.generateFaceColors = function(){
 		var idx = helpColorIndexArray[i];
 		self.activeFaces[idx][3]=STATE.ALWAYS_VISIBLE;
 		self.freeCubeColors[self.activeFaces[idx][2]]--;
+		self.activeFaces[idx][0].color.setHex(settings.helpColor);
+		self.activeFaces[idx][1].color.setHex(settings.helpColor);
+		self.activeFaces[idx][2]=settings.helpColor;
 	};
 
 }
