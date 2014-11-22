@@ -255,36 +255,38 @@ App.prototype.done = function(){
  *		correctly
  */
 App.prototype.rotateCamera = function(direction){
-	var angle = Math.PI/4;
+	var angle = Math.PI/8;
 	var axis = new THREE.Vector3();
 	var quaternion = new THREE.Quaternion();
 
 	var target = new THREE.Vector3( 0, 0, 0 );
-	var eye = new THREE.Vector3()
+	var eye = new THREE.Vector3();
 	eye.subVectors( this.camera.position, target );
+	axis.copy(this.camera.up);
 
 	if (direction==ROTATION.DOWN){
-		axis.z=0;
+		/*axis.z=0;
 		axis.y=0;
-		axis.x=1;
+		axis.x=1;*/ //DOES NOT WORK PROPERLY
 	}
 	else if (direction==ROTATION.UP){
-		axis.z=0;
+		/*axis.z=0;
 		axis.y=0;
-		axis.x=-1;
+		axis.x=-1;*/ //DOES NOT WORK PROPERLY
 	}
 	else if (direction==ROTATION.LEFT){
-		axis.z=0;
-		axis.y=-1;
-		axis.x=0;
+		// negate all values, works vor left rotation
+		axis.negate();
 	}
 	else if (direction==ROTATION.RIGHT){
-		axis.z=0;
-		axis.y=1;
-		axis.x=0;
+		//DO NOTHING BECAUSE AXIS = CAMERA.UP WORKS JUST FINE
 	}
-
-
+	/*
+	 *
+	 * http://en.wikipedia.org/wiki/Cross_product
+	 */
+	//axis.crossVectors( _rotateStart, _rotateEnd ).normalize();
+	//
 	quaternion.setFromAxisAngle( axis, -angle );
 	eye.applyQuaternion( quaternion );
 	this.camera.up.applyQuaternion( quaternion );
