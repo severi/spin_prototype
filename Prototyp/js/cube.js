@@ -106,7 +106,7 @@ Cube.prototype.generateFaceColors = function(){
 	for (var i =0; i < self.activeFaces.length ; i++) {
 		var color=colorArray.pop();
 		self.activeFaces[i].push(color);
-		self.activeFaces[i].push(STATE.HIDDEN);
+		self.activeFaces[i].push(CUBESTATE.HIDDEN);
 		self.activeFaces[i][0].color.setHex(color);
 		self.activeFaces[i][1].color.setHex(color);
 		self.freeCubeColors[color]++;
@@ -118,7 +118,7 @@ Cube.prototype.generateFaceColors = function(){
 	helpColorIndexArray = self.shuffleArray(helpColorIndexArray).slice(0,self.helpColors);
 	for (var i = 0; i < helpColorIndexArray.length; i++) {
 		var idx = helpColorIndexArray[i];
-		self.activeFaces[idx][3]=STATE.ALWAYS_VISIBLE;
+		self.activeFaces[idx][3]=CUBESTATE.ALWAYS_VISIBLE;
 		self.freeCubeColors[self.activeFaces[idx][2]]--;
 		self.activeFaces[idx][0].color.setHex(settings.helpColor);
 		self.activeFaces[idx][1].color.setHex(settings.helpColor);
@@ -175,16 +175,16 @@ Cube.prototype.selectFaces = function(vertex){
 
 	for (var i=0; i<this.activeFaces.length; i++){
 		if (this.activeFaces[i][0]==vertex.face || this.activeFaces[i][1]==vertex.face){
-			if (this.activeFaces[i][3]==STATE.ALWAYS_VISIBLE){
+			if (this.activeFaces[i][3]==CUBESTATE.ALWAYS_VISIBLE){
 				continue;
 			}
-			else if (this.activeFaces[i][3]==STATE.VISIBLE){
+			else if (this.activeFaces[i][3]==CUBESTATE.VISIBLE){
 				color=settings.defaultColor;
-				this.activeFaces[i][3]=STATE.HIDDEN;
+				this.activeFaces[i][3]=CUBESTATE.HIDDEN;
 				chosen=false;
 			}
-			else if (this.activeFaces[i][3]==STATE.HIDDEN){
-				this.activeFaces[i][3]=STATE.VISIBLE;
+			else if (this.activeFaces[i][3]==CUBESTATE.HIDDEN){
+				this.activeFaces[i][3]=CUBESTATE.VISIBLE;
 			}
 			color = new THREE.Color(color);
 			oldColor = this.activeFaces[i][0].color.getHex();
@@ -352,7 +352,7 @@ Cube.prototype.hideColors = function(){
 	var self = this;
 
 	for (var i=0; i<this.activeFaces.length; i++){
-		if (this.activeFaces[i][3]!=STATE.ALWAYS_VISIBLE){
+		if (this.activeFaces[i][3]!=CUBESTATE.ALWAYS_VISIBLE){
 			this.activeFaces[i][0].color.setHex(settings.defaultColor);
 			this.activeFaces[i][1].color.setHex(settings.defaultColor);
 		}
@@ -388,7 +388,7 @@ Cube.prototype.getNumberOfCorrectAndWrongColors = function(){
 	for (var i=0; i<this.activeFaces.length; i++){
 		var square = this.activeFaces[i];
 		var color = new THREE.Color(square[2]);
-		if (square[3]==STATE.VISIBLE){
+		if (square[3]==CUBESTATE.VISIBLE){
 			if (square[0].color.getHex()==color.getHex()){
 				correct++;
 			} else {

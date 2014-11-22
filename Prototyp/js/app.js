@@ -79,6 +79,30 @@ App.prototype.init3dView = function(){
 
 App.prototype.addEventListener = function(){
 	var self = this;
+
+	function keydown( event ) {
+		window.removeEventListener( 'keydown', keydown );
+
+		if (event.keyCode==65){ //a
+			self.rotateCamera(ROTATION.LEFT);
+		}
+		else if (event.keyCode==68){ //d
+			self.rotateCamera(ROTATION.RIGHT);
+		}
+		else if (event.keyCode==83){ //s
+			self.rotateCamera(ROTATION.DOWN);
+		}
+		else if (event.keyCode==87){ //w
+			self.rotateCamera(ROTATION.UP);
+		}
+	}
+
+	function keyup( event ) {
+		window.addEventListener( 'keydown', keydown, false );
+	}
+
+	window.addEventListener( 'keydown', keydown, false );
+	window.addEventListener( 'keyup', keyup, false );
 	//ADD CONTROLLS ATTENTION THAT CONTROLLS WORK PROPERLY YOU NEED TO CALL controls.update() WITHIN RENDER METHOD
 	self.controls = new THREE.TrackballControls( self.camera, self.renderer.domElement );
 	//DEACTIVATE USER ZOOM
@@ -222,3 +246,50 @@ App.prototype.done = function(){
 	var self = this;
 	self.logic.done();
 }
+
+/*
+ *	Rotates the camera around the cube according.
+ *	FIXME:
+ *		Does only turn the camera from the beginning perspective, so
+ *		for example combination "left"+"up" does not work
+ *		correctly
+ */
+App.prototype.rotateCamera = function(direction){
+	var angle = Math.PI/4;
+	var axis = new THREE.Vector3();
+	var quaternion = new THREE.Quaternion();
+
+	var target = new THREE.Vector3( 0, 0, 0 );
+	var eye = new THREE.Vector3()
+	eye.subVectors( this.camera.position, target );
+
+	if (direction==ROTATION.DOWN){
+		axis.z=0;
+		axis.y=0;
+		axis.x=1;
+	}
+	else if (direction==ROTATION.UP){
+		axis.z=0;
+		axis.y=0;
+		axis.x=-1;
+	}
+	else if (direction==ROTATION.LEFT){
+		axis.z=0;
+		axis.y=-1;
+		axis.x=0;
+	}
+	else if (direction==ROTATION.RIGHT){
+		axis.z=0;
+		axis.y=1;
+		axis.x=0;
+	}
+
+
+	quaternion.setFromAxisAngle( axis, -angle );
+	eye.applyQuaternion( quaternion );
+	this.camera.up.applyQuaternion( quaternion );
+
+	this.camera.position.addVectors(target, eye);
+	this.camera.lookAt( target );
+}
+

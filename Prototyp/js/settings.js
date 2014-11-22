@@ -32,9 +32,16 @@ var tContinue = "next level";
 var tStatistic = "statistic";
 var tGameOver = "game over";
 
-var STATE = {
+var CUBESTATE = {
   HIDDEN : {value: 0, name: "HIDDEN"},
   VISIBLE: {value: 1, name: "VISIBLE"},
   ALWAYS_VISIBLE : {value: 2, name: "Always visible"}
 };
+
+var ROTATION = {
+	LEFT : 0,
+	RIGHT: 1,
+	UP : 2,
+	DOWN : 3
+}
 
