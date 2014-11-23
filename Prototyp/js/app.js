@@ -167,8 +167,7 @@ App.prototype.removeIntro = function(){
 
 App.prototype.introLevel = function(){
 	var self = this;
-
-	self.introCube = new Cube(settings.introRows, self.scene, settings.introColors, self.debug, 0);
+	self.introCube = new Level(settings.introRows, self.scene, settings.introColors, self.debug, 0);
 }
 
 App.prototype.nextLevel = function(){
@@ -199,8 +198,8 @@ App.prototype.nextLevel = function(){
 	var helpColors=Math.min(Math.ceil(squareNum*self.usedColors*0.05),maxHelpNum);
 
 	//CREATE NEW CUBE
-	var cube = new Cube(self.rows, self.scene, self.usedColors, self.debug, helpColors);
-	self.levelCubes.push(cube);
+	var levelCube = new Level(self.rows, self.scene, self.usedColors, self.debug, helpColors);
+	self.levelCubes.push(levelCube);
 	//DESTROY PREVIOUS CUBE
 	self.removePreviousLevel();
 }
