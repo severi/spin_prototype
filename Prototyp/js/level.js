@@ -280,8 +280,7 @@ Level.prototype.addCube = function(position, location){
 		position = { x: 0, y: 0, z: 0};
 	}
 	//SETUP GEOMETRY AND CUBE SIZE FOR TESTING CUBE SIZE OF 1 is OK
-	var cube = new Cube();
-	cube.position.set(position.x, position.y, position.z);
+	var cube = new Cube(position);
 	self.addFacesFromBox(cube, location);
 	//IF PARENT CUBE EXISTS AND DEBUG MODE IS ACTIVE ADD NEW CUBE TO PARENT CUBE
 	if( !settings.debug && self.debug.cube != null){

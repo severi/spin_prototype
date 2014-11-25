@@ -107,7 +107,7 @@ Logic.prototype.done = function(){
 	var result = self.calculateResult();
 	var gui = self.gui;
 	gui.setResult(result);
-	if(result.archievedPercentage <= result.requiredPercentage && settings.alwaysWin==false){
+	if(result.archievedPercentage < result.requiredPercentage && settings.alwaysWin==false){
 		gui.setActionButtonText(tBackToMenu);
 		return;
 	}
@@ -152,9 +152,7 @@ Logic.prototype.calculateResult = function(){
 	if(result.total <= 0 ){
 		result.total = 0;
 	}
-
 	console.log(result);
-
 	return result;
 }
 
