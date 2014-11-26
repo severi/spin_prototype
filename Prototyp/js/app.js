@@ -10,8 +10,6 @@ function App(){
 
 App.prototype.loadSettings = function(){
 	var self = this;
-	self.cameraX = new THREE.Vector3();
-	self.cameraX.x=1;
 	var tCubeRadius;
 	self.fps = settings.fps;
 	self.rows = settings.rows;
@@ -55,8 +53,8 @@ App.prototype.init3dView = function(){
 	var self = this;
 	self.levelCubes = new Array();
 	//USED TO SET THE HEIGHT OF THE CANVAS VALUES IN % [0-1] e.g 0.5 means 50%;
-	var hScale = 1;
-	if(hScale <= 0 || hScale > 1) {
+	self.hScale = 1;
+	if(self.hScale <= 0 || self.hScale > 1) {
 		alert("ERROR: hScale IS OUT OF EXPECTED RANGE [0.1 - 1]");
 		return false;
 	}
@@ -65,18 +63,39 @@ App.prototype.init3dView = function(){
 
 	//SETUP RENDERER
 	self.renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: 1});
-	self.renderer.setSize(window.innerWidth, window.innerHeight*hScale);
+	self.renderer.setSize(window.innerWidth, window.innerHeight*self.hScale);
 	self.renderer.setClearColor(0xffffff, 1);
 	document.body.appendChild(self.renderer.domElement);
 
 	//SETUP SCENE AND CAMERA
 	self.scene = new THREE.Scene();
-	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * hScale), 0.1, parseInt(100));
-	self.camera.position.z =  self.cubeSize * 8;
+
+	self.initCamera();
 
 	self.projector = new THREE.Projector();
 	//INIT SUCCESSFUL
 	return true;
+}
+
+
+App.prototype.initCamera = function(){
+	var self = this;
+	self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * self.hScale), 0.1, parseInt(100));
+	self.camera.position.z =  self.cubeSize * 8;
+
+	self.cameraX = new THREE.Vector3();
+	self.cameraX.x=1;
+
+	//ADD CONTROLLS ATTENTION THAT CONTROLLS WORK PROPERLY YOU NEED TO CALL controls.update() WITHIN RENDER METHOD
+	self.controls = new THREE.TrackballControls( self.camera, self.renderer.domElement );
+	//DEACTIVATE USER ZOOM
+	self.controls.noZoom = true;
+	self.controls.noPan = true;
+	//SET THE CENTER TO TRACK
+	if(self.center == null){
+		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
+	}
+	self.controls.target.set( 0, 0, 0 );
 }
 
 App.prototype.addEventListener = function(){
@@ -105,16 +124,7 @@ App.prototype.addEventListener = function(){
 
 	window.addEventListener( 'keydown', keydown, false );
 	window.addEventListener( 'keyup', keyup, false );
-	//ADD CONTROLLS ATTENTION THAT CONTROLLS WORK PROPERLY YOU NEED TO CALL controls.update() WITHIN RENDER METHOD
-	self.controls = new THREE.TrackballControls( self.camera, self.renderer.domElement );
-	//DEACTIVATE USER ZOOM
-	self.controls.noZoom = true;
-	self.controls.noPan = true;
-	//SET THE CENTER TO TRACK
-	if(self.center == null){
-		return (alert("CALL METHOD 'LOADING SETTINGS' TO INITIAL REQUIRED VALUES"));
-	}
-	self.controls.target.set( 0, 0, 0 );
+
 	//CLICK EVENT HANDLER BASED ON SEVERI
 	self.renderer.domElement.addEventListener( 'click', function(event){
 
@@ -204,6 +214,7 @@ App.prototype.nextLevel = function(){
 	self.levelCubes.push(levelCube);
 	//DESTROY PREVIOUS CUBE
 	self.removePreviousLevel();
+	self.initCamera();
 }
 
 //CALL THIS METHOD IF THE APPLICATION GET DESTROYED
