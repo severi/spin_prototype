@@ -10,6 +10,8 @@ function App(){
 
 App.prototype.loadSettings = function(){
 	var self = this;
+	self.cameraX = new THREE.Vector3();
+	self.cameraX.x=1;
 	var tCubeRadius;
 	self.fps = settings.fps;
 	self.rows = settings.rows;
@@ -264,31 +266,43 @@ App.prototype.rotateCamera = function(direction){
 	axis.copy(this.camera.up);
 
 	if (direction==ROTATION.DOWN){
-		/*axis.z=0;
-		axis.y=0;
-		axis.x=1;*/ //DOES NOT WORK PROPERLY
+		/*
+		axis.z= 0;
+		axis.y= 0;
+		axis.x= 1;
+		*/ //USE camera X-axis
+		axis.copy(this.cameraX);
 	}
 	else if (direction==ROTATION.UP){
-		/*axis.z=0;
-		axis.y=0;
-		axis.x=-1;*/ //DOES NOT WORK PROPERLY
+		/*
+		axis.z= 0;
+		axis.y= 0;
+		axis.x=-1;
+		*/ // USE negate of camera X-axis
+		axis.copy(this.cameraX).negate();
 	}
 	else if (direction==ROTATION.LEFT){
+		/*
+		axis.z= 0;
++		axis.y=-1;
++		axis.x= 0;
+		 */
 		// negate all values, works vor left rotation
 		axis.negate();
 	}
 	else if (direction==ROTATION.RIGHT){
+		/*
+		axis.z= 0;
++		axis.y= 1;
++		axis.x= 0;
+		 */
 		//DO NOTHING BECAUSE AXIS = CAMERA.UP WORKS JUST FINE
 	}
-	/*
-	 *
-	 * http://en.wikipedia.org/wiki/Cross_product
-	 */
-	//axis.crossVectors( _rotateStart, _rotateEnd ).normalize();
-	//
+
 	quaternion.setFromAxisAngle( axis, -angle );
 	eye.applyQuaternion( quaternion );
 	this.camera.up.applyQuaternion( quaternion );
+	this.cameraX.applyQuaternion(quaternion);
 
 	this.camera.position.addVectors(target, eye);
 	this.camera.lookAt( target );
