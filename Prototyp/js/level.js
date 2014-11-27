@@ -289,7 +289,7 @@ Level.prototype.addCube = function(position, location){
 		return;
 	}
 	self.scene.add(cube);
-	self.cubes.push(cube)
+	self.cubes.push(cube);
 }
 
 Level.prototype.destroy = function(){

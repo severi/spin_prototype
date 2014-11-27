@@ -243,6 +243,15 @@ App.prototype.renderScene = function(){
 		if(self.rotationOngoing==true){
 			self.rotateCamera(self.rotationDirection);
 		}
+		if(self.levelCubes[0] != null && self.levelCubes[0].cubes != null && self.logic.gameStarted){
+			var cubes = self.levelCubes[0].cubes;
+			for(var i=0; i<cubes.length; i++ ){
+				var object = cubes[i];
+				if(object instanceof Cube){
+					cubes[i].moveIn();
+				}
+			}
+		}
 	}
 	render();
 }
