@@ -17,7 +17,8 @@ var settings = {
 	scorePerFace : 1,
 	introRows : 3,
 	introColors : 4,
-	helpColor : 0x9b59b6
+	helpColor : 0x9b59b6,
+	rotationSpeed : 0.25
 };
 
 var faceColors = {

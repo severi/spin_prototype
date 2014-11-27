@@ -22,6 +22,10 @@ App.prototype.loadSettings = function(){
 App.prototype.init = function(){
 	var self = this;
 
+	self.rotationOngoing=false;
+	this.rotationDirection=null;
+	this.currentAngle=0;
+
 	if(!self.init3dView()){
 		console.log("Error during init in class app method init -> initedView returnt false");
 		return false;
@@ -102,28 +106,25 @@ App.prototype.addEventListener = function(){
 	var self = this;
 
 	function keydown( event ) {
-		window.removeEventListener( 'keydown', keydown );
+		if (!self.rotationOngoing){
 
-		if (event.keyCode==65){ //a
-			self.rotateCamera(ROTATION.LEFT);
-		}
-		else if (event.keyCode==68){ //d
-			self.rotateCamera(ROTATION.RIGHT);
-		}
-		else if (event.keyCode==83){ //s
-			self.rotateCamera(ROTATION.DOWN);
-		}
-		else if (event.keyCode==87){ //w
-			self.rotateCamera(ROTATION.UP);
-		}
-	}
+			if (event.keyCode==65){ //a
+				self.rotateCamera(ROTATION.LEFT);
+			}
+			else if (event.keyCode==68){ //d
+				self.rotateCamera(ROTATION.RIGHT);
+			}
+			else if (event.keyCode==83){ //s
+				self.rotateCamera(ROTATION.DOWN);
+			}
+			else if (event.keyCode==87){ //w
+				self.rotateCamera(ROTATION.UP);
+			}
 
-	function keyup( event ) {
-		window.addEventListener( 'keydown', keydown, false );
+		}
 	}
 
 	window.addEventListener( 'keydown', keydown, false );
-	window.addEventListener( 'keyup', keyup, false );
 
 	//CLICK EVENT HANDLER BASED ON SEVERI
 	self.renderer.domElement.addEventListener( 'click', function(event){
@@ -239,6 +240,9 @@ App.prototype.renderScene = function(){
 		if(self.controls != null){
 			self.controls.update();
 		}
+		if(self.rotationOngoing==true){
+			self.rotateCamera(self.rotationDirection);
+		}
 	}
 	render();
 }
@@ -267,7 +271,16 @@ App.prototype.done = function(){
  *		correctly
  */
 App.prototype.rotateCamera = function(direction){
-	var angle = Math.PI/8;
+	this.rotationDirection=direction;
+	this.rotationOngoing = true;
+
+	var angle = settings.rotationSpeed;
+	this.currentAngle+=angle;
+
+	if (this.currentAngle>Math.PI/4){
+		angle-=this.currentAngle-Math.PI/4;
+	}
+
 	var axis = new THREE.Vector3();
 	var quaternion = new THREE.Quaternion();
 
@@ -317,5 +330,10 @@ App.prototype.rotateCamera = function(direction){
 
 	this.camera.position.addVectors(target, eye);
 	this.camera.lookAt( target );
+	if (this.currentAngle>=Math.PI/4){
+		this.rotationOngoing=false;
+		this.currentAngle=0;
+		this.rotationDirection=null;
+	}
 }
 
