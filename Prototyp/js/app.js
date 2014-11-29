@@ -1,3 +1,19 @@
+var target1 = new THREE.Vector3();
+target1.x=-4;
+target1.y=5.656854249492377;
+target1.z=4;
+
+var start1 = new THREE.Vector3();
+start1.x= 0;
+start1.y= 5.656854249492381;
+start1.z=5.65685424949238;
+
+var angle1=0.5480284076203126;
+
+var location1=false;
+var location2=false;
+var lastVerticalDirection=null;
+
 function App(){
 	var self = this;
     //INIT 3D SCENE
@@ -21,7 +37,6 @@ App.prototype.loadSettings = function(){
 
 App.prototype.init = function(){
 	var self = this;
-
 	self.rotationOngoing=false;
 	this.rotationDirection=null;
 	this.currentAngle=0;
@@ -109,15 +124,23 @@ App.prototype.addEventListener = function(){
 		if (!self.rotationOngoing){
 
 			if (event.keyCode==65){ //a
+				self.camera_start = new THREE.Vector3();
+				self.camera_start.copy(self.camera.position);
 				self.rotateCamera(ROTATION.LEFT);
 			}
 			else if (event.keyCode==68){ //d
+				self.camera_start = new THREE.Vector3();
+				self.camera_start.copy(self.camera.position);
 				self.rotateCamera(ROTATION.RIGHT);
 			}
 			else if (event.keyCode==83){ //s
+				self.camera_start = new THREE.Vector3();
+				self.camera_start.copy(self.camera.position);
 				self.rotateCamera(ROTATION.DOWN);
 			}
 			else if (event.keyCode==87){ //w
+				self.camera_start = new THREE.Vector3();
+				self.camera_start.copy(self.camera.position);
 				self.rotateCamera(ROTATION.UP);
 			}
 
@@ -240,9 +263,9 @@ App.prototype.renderScene = function(){
 		if(self.controls != null){
 			self.controls.update();
 		}
-		if(self.rotationOngoing==true){
+		/*if(self.rotationOngoing==true){
 			self.rotateCamera(self.rotationDirection);
-		}
+		}*/
 		if(self.levelCubes[0] != null && self.levelCubes[0].cubes != null && self.logic.gameStarted){
 			var cubes = self.levelCubes[0].cubes;
 			for(var i=0; i<cubes.length; i++ ){
@@ -285,6 +308,9 @@ App.prototype.rotateCamera = function(direction){
 
 	var angle = settings.rotationSpeed;
 	this.currentAngle+=angle;
+	this.currentAngle=Math.PI/4;
+	angle=Math.PI/4;
+
 
 	if (this.currentAngle>Math.PI/4){
 		angle-=this.currentAngle-Math.PI/4;
@@ -299,38 +325,30 @@ App.prototype.rotateCamera = function(direction){
 	axis.copy(this.camera.up);
 
 	if (direction==ROTATION.DOWN){
-		/*
-		axis.z= 0;
-		axis.y= 0;
-		axis.x= 1;
-		*/ //USE camera X-axis
-		axis.copy(this.cameraX);
+		location1=!location1;
+		lastVerticalDirection=direction;
 	}
 	else if (direction==ROTATION.UP){
-		/*
-		axis.z= 0;
-		axis.y= 0;
-		axis.x=-1;
-		*/ // USE negate of camera X-axis
-		axis.copy(this.cameraX).negate();
+		location1=!location1;
+		lastVerticalDirection=direction;
+	}else if (direction==ROTATION.LEFT){
+		location2!=location2;
+	}else if (direction==ROTATION.RIGHT){
+		location2!=location2;
 	}
-	else if (direction==ROTATION.LEFT){
-		/*
-		axis.z= 0;
-+		axis.y=-1;
-+		axis.x= 0;
-		 */
-		// negate all values, works vor left rotation
-		axis.negate();
-	}
-	else if (direction==ROTATION.RIGHT){
-		/*
-		axis.z= 0;
-+		axis.y= 1;
-+		axis.x= 0;
-		 */
-		//DO NOTHING BECAUSE AXIS = CAMERA.UP WORKS JUST FINE
-	}
+
+	var target_array =  this.calculateTarget(direction, location1);
+	var target_new = target_array[0];
+	var target_up = target_array[1];
+	var target_x = target_array[2];
+
+	axis.crossVectors(this.camera_start, target_new).normalize().negate();
+
+	angle=this.camera_start.angleTo(target_new);
+
+	console.log("isbetween: ");
+	console.log(Math.abs(location1%2)==1);
+	console.log('\n');
 
 	quaternion.setFromAxisAngle( axis, -angle );
 	eye.applyQuaternion( quaternion );
@@ -339,10 +357,96 @@ App.prototype.rotateCamera = function(direction){
 
 	this.camera.position.addVectors(target, eye);
 	this.camera.lookAt( target );
+
+	if (true){
+		this.camera.lookAt( target );
+		// this.camera.up.x=0.5;
+		// this.camera.up.y=0.7071067811865475;
+		// this.camera.up.z=-0.5;
+		this.camera.up=target_up;
+		this.cameraX = target_x;
+		//console.log("hop1");
+		this.rotationOngoing=false;
+		this.currentAngle=0;
+		this.rotationDirection=null;
+		return;
+	}
+
 	if (this.currentAngle>=Math.PI/4){
 		this.rotationOngoing=false;
 		this.currentAngle=0;
 		this.rotationDirection=null;
+		//console.log(this.camera.up)
+		//console.log(this.camera.position)
+		//console.log(this.camera.position.angleTo(this.camera_start))
+		//console.log(axis)
+		var vec = new THREE.Vector3();
+		//console.log(vec.crossVectors(this.camera_start,this.camera.position).normalize())
 	}
 }
 
+App.prototype.calculateTarget = function(direction, isBetween){
+	var self = this;
+
+	rotate = function(dir, cameraPos, cameraUp, cameraX, num, callback){
+			num+=1;
+			var angle = Math.PI/4;
+			var axis = new THREE.Vector3();
+			var quaternion = new THREE.Quaternion();
+			var target = new THREE.Vector3( 0, 0, 0 );
+			var eye = new THREE.Vector3();
+			eye.subVectors( cameraPos, target );
+			axis.copy(cameraUp);
+
+			if (dir == ROTATION.DOWN){
+				axis.copy(cameraX);
+			} else if (dir == ROTATION.LEFT){
+				axis.negate();
+			} else if (dir == ROTATION.UP){
+				axis.copy(cameraX).negate();
+			}
+			//
+			quaternion.setFromAxisAngle( axis, -angle );
+			eye.applyQuaternion( quaternion );
+			cameraUp.applyQuaternion( quaternion );
+			cameraX.applyQuaternion(quaternion);
+
+			cameraPos.addVectors(target, eye);
+			// this.camera.lookAt( target );
+			//return [cameraPos,cameraUp,cameraX];
+
+			if (num==1){
+				callback(direction, cameraPos, cameraUp, cameraX, num, callback);
+			} else if (num==2){
+				callback(lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
+			}
+			return cameraPos;
+		}
+
+	var cameraPos = new THREE.Vector3();
+	var cameraUp = new THREE.Vector3();
+	var cameraX = new THREE.Vector3();
+	cameraPos.copy(self.camera.position);
+	cameraUp.copy(self.camera.up);
+	cameraX.copy(self.cameraX);
+
+	if (isBetween && (direction==ROTATION.LEFT || direction==ROTATION.RIGHT) ){
+		cameraPos = rotate(invertDirection(lastVerticalDirection),cameraPos,cameraUp, cameraX, 0, rotate);
+	} else {
+		cameraPos = rotate(direction,cameraPos,cameraUp, cameraX, -1, null);
+	}
+	return [cameraPos, cameraUp, cameraX];
+}
+
+function invertDirection (direction) {
+	if (direction==ROTATION.LEFT){
+		return ROTATION.RIGTH;
+	}else if (direction==ROTATION.RIGHT){
+		return ROTATION.LEFT;
+	}else if (direction==ROTATION.UP){
+		return ROTATION.DOWN;
+	}else if (direction==ROTATION.DOWN){
+		return ROTATION.UP;
+	}
+	return null;
+}
