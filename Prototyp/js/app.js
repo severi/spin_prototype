@@ -40,6 +40,7 @@ App.prototype.init = function(){
 	self.rotationOngoing=false;
 	this.rotationDirection=null;
 	this.currentAngle=0;
+	this.currentUpAngle=0;
 
 	if(!self.init3dView()){
 		console.log("Error during init in class app method init -> initedView returnt false");
@@ -327,52 +328,55 @@ App.prototype.rotateCamera = function(){
 	var axis = new THREE.Vector3();
 	var quaternion = new THREE.Quaternion();
 
+	var axis_cam_up = new THREE.Vector3();
+	var quaternion_cam_up = new THREE.Quaternion();
+
 	var target = new THREE.Vector3( 0, 0, 0 );
 	var eye = new THREE.Vector3();
 	eye.subVectors( this.camera.position, target );
-	axis.copy(this.camera.up);
 
 
 	var target_new = self.target_position;
 	var target_up = self.target_up;
 	var target_x = self.target_x;
 
-	var angle = settings.rotationSpeed;
-	this.currentAngle+=angle;
+	var angleBetweenPositions = this.camera_start.angleTo(target_new);
+	var angleBetweenUp = this.camera_start_up.angleTo(target_up);
 
-	if (this.currentAngle>this.camera_start.angleTo(target_new)){
-		angle-=this.currentAngle-this.camera_start.angleTo(target_new);
+	var angle = settings.rotationSpeed;
+
+	//probably unneccessary to use different angle for cam_up but added just in case.. :)
+	var angle_cam_up = settings.rotationSpeed*(angleBetweenUp/angleBetweenPositions);
+
+	this.currentAngle+=angle;
+	this.currentUpAngle+=angle_cam_up;
+
+	if (this.currentAngle>angleBetweenPositions){
+		angle-=this.currentAngle-angleBetweenPositions;
+	}
+	if (this.currentUpAngle>angleBetweenPositions){
+		angle_cam_up-=this.currentUpAngle-angleBetweenUp;
 	}
 
 	axis.crossVectors(this.camera_start, target_new).normalize().negate();
+	axis_cam_up.crossVectors(this.camera_start_up, target_up).normalize().negate();
 
 	quaternion.setFromAxisAngle( axis, -angle );
+	quaternion_cam_up.setFromAxisAngle( axis_cam_up, -angle_cam_up );
+
 	eye.applyQuaternion( quaternion );
-	this.camera.up.applyQuaternion( quaternion );
-	this.cameraX.applyQuaternion(quaternion);
+	this.camera.up.applyQuaternion( quaternion_cam_up );
+	this.cameraX.applyQuaternion(quaternion_cam_up);
 
 	this.camera.position.addVectors(target, eye);
 	this.camera.lookAt( target );
-
-	if (false){
-		this.camera.lookAt( target );
-		// this.camera.up.x=0.5;
-		// this.camera.up.y=0.7071067811865475;
-		// this.camera.up.z=-0.5;
-		this.camera.up=target_up;
-		this.cameraX = target_x;
-		//console.log("hop1");
-		this.rotationOngoing=false;
-		this.currentAngle=0;
-		this.rotationDirection=null;
-		return;
-	}
 
 	if (this.currentAngle>=this.camera_start.angleTo(target_new)){
 		this.camera.up=target_up;
 		this.cameraX = target_x;
 		this.rotationOngoing=false;
 		this.currentAngle=0;
+		this.currentUpAngle=0;
 		this.rotationDirection=null;
 		//console.log(this.camera.up)
 		//console.log(this.camera.position)
