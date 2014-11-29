@@ -123,26 +123,43 @@ App.prototype.addEventListener = function(){
 	function keydown( event ) {
 		if (!self.rotationOngoing){
 
+			self.camera_start = new THREE.Vector3();
+			self.camera_start_up = new THREE.Vector3();
+			self.camera_start_x = new THREE.Vector3();
+
+			self.camera_start.copy(self.camera.position);
+			self.camera_start_up.copy(self.camera.up);
+			self.camera_start_x.copy(self.cameraX);
+
+			var direction=null;
 			if (event.keyCode==65){ //a
-				self.camera_start = new THREE.Vector3();
-				self.camera_start.copy(self.camera.position);
-				self.rotateCamera(ROTATION.LEFT);
+				direction= ROTATION.LEFT;
+				location2!=location2;
 			}
 			else if (event.keyCode==68){ //d
-				self.camera_start = new THREE.Vector3();
-				self.camera_start.copy(self.camera.position);
-				self.rotateCamera(ROTATION.RIGHT);
+				direction= ROTATION.RIGHT;
+				location2!=location2;
 			}
 			else if (event.keyCode==83){ //s
-				self.camera_start = new THREE.Vector3();
-				self.camera_start.copy(self.camera.position);
-				self.rotateCamera(ROTATION.DOWN);
+				direction= ROTATION.DOWN;
+				location1=!location1;
+				lastVerticalDirection=direction;
 			}
 			else if (event.keyCode==87){ //w
-				self.camera_start = new THREE.Vector3();
-				self.camera_start.copy(self.camera.position);
-				self.rotateCamera(ROTATION.UP);
+				direction= ROTATION.UP;
+				location1=!location1;
+				lastVerticalDirection=direction;
+			} else {
+				return;
 			}
+
+			var target_array =  self.calculateTarget(direction, location1);
+			self.target_position = target_array[0];
+			self.target_up = target_array[1];
+			self.target_x = target_array[2];
+
+			self.rotationDirection = direction;
+			self.rotateCamera();
 
 		}
 	}
@@ -263,9 +280,9 @@ App.prototype.renderScene = function(){
 		if(self.controls != null){
 			self.controls.update();
 		}
-		/*if(self.rotationOngoing==true){
-			self.rotateCamera(self.rotationDirection);
-		}*/
+		if(self.rotationOngoing==true){
+			self.rotateCamera();
+		}
 		if(self.levelCubes[0] != null && self.levelCubes[0].cubes != null && self.logic.gameStarted){
 			var cubes = self.levelCubes[0].cubes;
 			for(var i=0; i<cubes.length; i++ ){
@@ -302,19 +319,10 @@ App.prototype.done = function(){
  *		for example combination "left"+"up" does not work
  *		correctly
  */
-App.prototype.rotateCamera = function(direction){
-	this.rotationDirection=direction;
+App.prototype.rotateCamera = function(){
+	var self = this;
+	direction = this.rotationDirection;
 	this.rotationOngoing = true;
-
-	var angle = settings.rotationSpeed;
-	this.currentAngle+=angle;
-	this.currentAngle=Math.PI/4;
-	angle=Math.PI/4;
-
-
-	if (this.currentAngle>Math.PI/4){
-		angle-=this.currentAngle-Math.PI/4;
-	}
 
 	var axis = new THREE.Vector3();
 	var quaternion = new THREE.Quaternion();
@@ -324,31 +332,19 @@ App.prototype.rotateCamera = function(direction){
 	eye.subVectors( this.camera.position, target );
 	axis.copy(this.camera.up);
 
-	if (direction==ROTATION.DOWN){
-		location1=!location1;
-		lastVerticalDirection=direction;
-	}
-	else if (direction==ROTATION.UP){
-		location1=!location1;
-		lastVerticalDirection=direction;
-	}else if (direction==ROTATION.LEFT){
-		location2!=location2;
-	}else if (direction==ROTATION.RIGHT){
-		location2!=location2;
-	}
 
-	var target_array =  this.calculateTarget(direction, location1);
-	var target_new = target_array[0];
-	var target_up = target_array[1];
-	var target_x = target_array[2];
+	var target_new = self.target_position;
+	var target_up = self.target_up;
+	var target_x = self.target_x;
+
+	var angle = settings.rotationSpeed;
+	this.currentAngle+=angle;
+
+	if (this.currentAngle>this.camera_start.angleTo(target_new)){
+		angle-=this.currentAngle-this.camera_start.angleTo(target_new);
+	}
 
 	axis.crossVectors(this.camera_start, target_new).normalize().negate();
-
-	angle=this.camera_start.angleTo(target_new);
-
-	console.log("isbetween: ");
-	console.log(Math.abs(location1%2)==1);
-	console.log('\n');
 
 	quaternion.setFromAxisAngle( axis, -angle );
 	eye.applyQuaternion( quaternion );
@@ -358,7 +354,7 @@ App.prototype.rotateCamera = function(direction){
 	this.camera.position.addVectors(target, eye);
 	this.camera.lookAt( target );
 
-	if (true){
+	if (false){
 		this.camera.lookAt( target );
 		// this.camera.up.x=0.5;
 		// this.camera.up.y=0.7071067811865475;
@@ -372,7 +368,9 @@ App.prototype.rotateCamera = function(direction){
 		return;
 	}
 
-	if (this.currentAngle>=Math.PI/4){
+	if (this.currentAngle>=this.camera_start.angleTo(target_new)){
+		this.camera.up=target_up;
+		this.cameraX = target_x;
 		this.rotationOngoing=false;
 		this.currentAngle=0;
 		this.rotationDirection=null;
