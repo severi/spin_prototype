@@ -1,18 +1,7 @@
-var target1 = new THREE.Vector3();
-target1.x=-4;
-target1.y=5.656854249492377;
-target1.z=4;
-
-var start1 = new THREE.Vector3();
-start1.x= 0;
-start1.y= 5.656854249492381;
-start1.z=5.65685424949238;
-
-var angle1=0.5480284076203126;
-
-var location1=false;
-var location2=false;
+var isBetweenY=false;
+var isBetweenX=false;
 var lastVerticalDirection=null;
+var lastHorizontalDirection=null;
 
 function App(){
 	var self = this;
@@ -136,28 +125,21 @@ App.prototype.addEventListener = function(){
 			var direction=null;
 			if (event.keyCode==65){ //a
 				direction= ROTATION.LEFT;
-				location2!=location2;
 			}
 			else if (event.keyCode==68){ //d
 				direction= ROTATION.RIGHT;
-				location2!=location2;
 			}
 			else if (event.keyCode==83){ //s
 				direction= ROTATION.DOWN;
-				location1=!location1;
-				lastVerticalDirection=direction;
 			}
 			else if (event.keyCode==87){ //w
 				direction= ROTATION.UP;
-				location1=!location1;
-				lastVerticalDirection=direction;
 			} else {
 				self.rotationOngoing = false;
 				return;
 			}
 			self.rotationDirection = direction;
-
-			var target_array =  self.calculateTarget(direction, location1);
+			var target_array =  self.calculateTarget(direction);
 		}
 	}
 
@@ -385,7 +367,7 @@ App.prototype.rotateCamera = function(){
 	}
 }
 
-App.prototype.calculateTarget = function(direction, isBetween){
+App.prototype.calculateTarget = function(direction){
 	var self = this;
 
 	rotate = function(dir, cameraPos, cameraUp, cameraX, num, callback){
@@ -417,6 +399,12 @@ App.prototype.calculateTarget = function(direction, isBetween){
 				callback(direction, cameraPos, cameraUp, cameraX, num, callback);
 			} else if (num==2){
 				callback(lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
+			} else if (num==11){
+				callback(lastHorizontalDirection, cameraPos, cameraUp, cameraX, num, callback);
+			}else if (num==12){
+				callback(lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
+			} else if (num==13){
+				callback(lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
 			} else {
 				self.target_position = cameraPos;
 
@@ -434,11 +422,21 @@ App.prototype.calculateTarget = function(direction, isBetween){
 	cameraPos.copy(self.camera.position);
 	cameraUp.copy(self.camera.up);
 	cameraX.copy(self.cameraX);
-
-	if (isBetween && (direction==ROTATION.LEFT || direction==ROTATION.RIGHT) ){
+	if (isBetweenY && (direction==ROTATION.LEFT || direction==ROTATION.RIGHT) ){
 		rotate(invertDirection(lastVerticalDirection),cameraPos,cameraUp, cameraX, 0, rotate);
+	} else if (isBetweenY && isBetweenX && (direction==lastVerticalDirection) ){
+		rotate(invertDirection(lastVerticalDirection),cameraPos,cameraUp, cameraX, 10, rotate);
+		isBetweenX=false;
 	} else {
 		rotate(direction,cameraPos,cameraUp, cameraX, -1, null);
+	}
+
+	if (direction==ROTATION.UP || direction==ROTATION.DOWN){
+		isBetweenY=!isBetweenY;
+		lastVerticalDirection=direction;
+	} else {
+		isBetweenX=!isBetweenX;
+		lastHorizontalDirection=direction;
 	}
 }
 
