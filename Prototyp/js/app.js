@@ -1,8 +1,3 @@
-var isBetweenY=false;
-var isBetweenX=false;
-var lastVerticalDirection=null;
-var lastHorizontalDirection=null;
-
 function App(){
 	var self = this;
     //INIT 3D SCENE
@@ -94,7 +89,11 @@ App.prototype.initCamera = function(){
 
 	self.cameraX = new THREE.Vector3();
 	self.cameraX.x=1;
-	self.camera_distance= self.camera.position.length();
+	self.isBetweenY=false;
+	self.isBetweenX=false;
+	self.lastVerticalDirection=null;
+	self.lastHorizontalDirection=null;
+	self.camera_up_ready = false;
 
 	//ADD CONTROLLS ATTENTION THAT CONTROLLS WORK PROPERLY YOU NEED TO CALL controls.update() WITHIN RENDER METHOD
 	self.controls = new THREE.TrackballControls( self.camera, self.renderer.domElement );
@@ -321,8 +320,6 @@ App.prototype.rotateCamera = function(){
 	var angleBetweenUp = this.camera_start_up.angleTo(target_up);
 
 	var angle = settings.rotationSpeed;
-
-	//probably unneccessary to use different angle for cam_up but added just in case.. :)
 	var angle_cam_up = settings.rotationSpeed*(angleBetweenUp/angleBetweenPositions);
 
 	this.currentAngle+=angle;
@@ -331,24 +328,27 @@ App.prototype.rotateCamera = function(){
 	if (this.currentAngle>angleBetweenPositions){
 		angle-=this.currentAngle-angleBetweenPositions;
 	}
-	if (this.currentUpAngle>angleBetweenPositions){
-		angle_cam_up-=this.currentUpAngle-angleBetweenUp;
+	if (self.camera_up_ready==false && this.currentUpAngle>angleBetweenPositions){
+		self.camera_up_ready=true;
+		this.camera.up.copy(target_up);
+		this.cameraX.copy(target_x);
 	}
 
 	axis.crossVectors(this.camera_start, target_new).normalize().negate();
-	axis_cam_up.crossVectors(this.camera_start_up, target_up).normalize().negate();
-
 	quaternion.setFromAxisAngle( axis, -angle );
-	quaternion_cam_up.setFromAxisAngle( axis_cam_up, -angle_cam_up );
-
 	eye.applyQuaternion( quaternion );
-	this.camera.up.applyQuaternion( quaternion_cam_up );
-	this.cameraX.applyQuaternion(quaternion_cam_up);
+
+	if (self.camera_up_ready==false){
+		axis_cam_up.crossVectors(this.camera_start_up, target_up).normalize().negate();
+		quaternion_cam_up.setFromAxisAngle( axis_cam_up, -angle_cam_up );
+		this.camera.up.applyQuaternion( quaternion_cam_up );
+		this.cameraX.applyQuaternion(quaternion_cam_up);
+	}
 
 	this.camera.position.addVectors(target, eye);
 	this.camera.lookAt( target );
 
-	if (this.currentAngle>=this.camera_start.angleTo(target_new)){
+	if (this.currentAngle>=angleBetweenPositions){
 		this.camera.up.copy(target_up);
 		this.cameraX.copy(target_x);
 		this.camera.position.copy(target_new);
@@ -364,9 +364,14 @@ App.prototype.rotateCamera = function(){
 		this.currentUpAngle=0;
 		this.rotationDirection=null;
 		this.rotationOngoing=false;
+		self.camera_up_ready=false;
 	}
 }
 
+
+/*
+	TODO: MAKE THIS FUNCTION CLEAN AND READABLE... :P
+ */
 App.prototype.calculateTarget = function(direction){
 	var self = this;
 
@@ -398,13 +403,13 @@ App.prototype.calculateTarget = function(direction){
 			if (num==1){
 				callback(direction, cameraPos, cameraUp, cameraX, num, callback);
 			} else if (num==2){
-				callback(lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
+				callback(self.lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
 			} else if (num==11){
-				callback(lastHorizontalDirection, cameraPos, cameraUp, cameraX, num, callback);
+				callback(self.lastHorizontalDirection, cameraPos, cameraUp, cameraX, num, callback);
 			}else if (num==12){
-				callback(lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
+				callback(self.lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
 			} else if (num==13){
-				callback(lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
+				callback(self.lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
 			} else {
 				self.target_position = cameraPos;
 
@@ -422,21 +427,21 @@ App.prototype.calculateTarget = function(direction){
 	cameraPos.copy(self.camera.position);
 	cameraUp.copy(self.camera.up);
 	cameraX.copy(self.cameraX);
-	if (isBetweenY && (direction==ROTATION.LEFT || direction==ROTATION.RIGHT) ){
-		rotate(invertDirection(lastVerticalDirection),cameraPos,cameraUp, cameraX, 0, rotate);
-	} else if (isBetweenY && isBetweenX && (direction==lastVerticalDirection) ){
-		rotate(invertDirection(lastVerticalDirection),cameraPos,cameraUp, cameraX, 10, rotate);
-		isBetweenX=false;
+	if (self.isBetweenY && (direction==ROTATION.LEFT || direction==ROTATION.RIGHT) ){
+		rotate(invertDirection(self.lastVerticalDirection),cameraPos,cameraUp, cameraX, 0, rotate);
+	} else if (self.isBetweenY && self.isBetweenX && (direction==self.lastVerticalDirection) ){
+		rotate(invertDirection(self.lastVerticalDirection),cameraPos,cameraUp, cameraX, 10, rotate);
+		self.isBetweenX=false;
 	} else {
 		rotate(direction,cameraPos,cameraUp, cameraX, -1, null);
 	}
 
 	if (direction==ROTATION.UP || direction==ROTATION.DOWN){
-		isBetweenY=!isBetweenY;
-		lastVerticalDirection=direction;
+		self.isBetweenY=!self.isBetweenY;
+		self.lastVerticalDirection=direction;
 	} else {
-		isBetweenX=!isBetweenX;
-		lastHorizontalDirection=direction;
+		self.isBetweenX=!self.isBetweenX;
+		self.lastHorizontalDirection=direction;
 	}
 }
 
