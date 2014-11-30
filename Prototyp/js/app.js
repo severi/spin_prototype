@@ -105,6 +105,7 @@ App.prototype.initCamera = function(){
 
 	self.cameraX = new THREE.Vector3();
 	self.cameraX.x=1;
+	self.camera_distance= self.camera.position.length();
 
 	//ADD CONTROLLS ATTENTION THAT CONTROLLS WORK PROPERLY YOU NEED TO CALL controls.update() WITHIN RENDER METHOD
 	self.controls = new THREE.TrackballControls( self.camera, self.renderer.domElement );
@@ -123,7 +124,7 @@ App.prototype.addEventListener = function(){
 
 	function keydown( event ) {
 		if (!self.rotationOngoing){
-
+			self.rotationOngoing = true;
 			self.camera_start = new THREE.Vector3();
 			self.camera_start_up = new THREE.Vector3();
 			self.camera_start_x = new THREE.Vector3();
@@ -151,17 +152,12 @@ App.prototype.addEventListener = function(){
 				location1=!location1;
 				lastVerticalDirection=direction;
 			} else {
+				self.rotationOngoing = false;
 				return;
 			}
+			self.rotationDirection = direction;
 
 			var target_array =  self.calculateTarget(direction, location1);
-			self.target_position = target_array[0];
-			self.target_up = target_array[1];
-			self.target_x = target_array[2];
-
-			self.rotationDirection = direction;
-			self.rotateCamera();
-
 		}
 	}
 
@@ -323,7 +319,6 @@ App.prototype.done = function(){
 App.prototype.rotateCamera = function(){
 	var self = this;
 	direction = this.rotationDirection;
-	this.rotationOngoing = true;
 
 	var axis = new THREE.Vector3();
 	var quaternion = new THREE.Quaternion();
@@ -372,18 +367,21 @@ App.prototype.rotateCamera = function(){
 	this.camera.lookAt( target );
 
 	if (this.currentAngle>=this.camera_start.angleTo(target_new)){
-		this.camera.up=target_up;
-		this.cameraX = target_x;
+		this.camera.up.copy(target_up);
+		this.cameraX.copy(target_x);
+		this.camera.position.copy(target_new);
+
+		// this is needed because the length gets smaller
+		// with when doing multiple turns and eventually
+		// camera comes closer to the cube
+		// EDIT: not needed after axis is normalized before quaternion
+		//this.camera.position.setLength(self.camera_distance);
+
 		this.rotationOngoing=false;
 		this.currentAngle=0;
 		this.currentUpAngle=0;
 		this.rotationDirection=null;
-		//console.log(this.camera.up)
-		//console.log(this.camera.position)
-		//console.log(this.camera.position.angleTo(this.camera_start))
-		//console.log(axis)
-		var vec = new THREE.Vector3();
-		//console.log(vec.crossVectors(this.camera_start,this.camera.position).normalize())
+		this.rotationOngoing=false;
 	}
 }
 
@@ -408,21 +406,26 @@ App.prototype.calculateTarget = function(direction, isBetween){
 				axis.copy(cameraX).negate();
 			}
 			//
-			quaternion.setFromAxisAngle( axis, -angle );
+			quaternion.setFromAxisAngle( axis.normalize(), -angle );
 			eye.applyQuaternion( quaternion );
 			cameraUp.applyQuaternion( quaternion );
 			cameraX.applyQuaternion(quaternion);
 
 			cameraPos.addVectors(target, eye);
-			// this.camera.lookAt( target );
-			//return [cameraPos,cameraUp,cameraX];
 
 			if (num==1){
 				callback(direction, cameraPos, cameraUp, cameraX, num, callback);
 			} else if (num==2){
 				callback(lastVerticalDirection, cameraPos, cameraUp, cameraX, num, callback);
+			} else {
+				self.target_position = cameraPos;
+
+				// not needed after axis is normalized before quaternion
+				//self.target_position.setLength(8);
+				self.target_up = cameraUp;
+				self.target_x = cameraX;
+				self.rotateCamera();
 			}
-			return cameraPos;
 		}
 
 	var cameraPos = new THREE.Vector3();
@@ -433,11 +436,10 @@ App.prototype.calculateTarget = function(direction, isBetween){
 	cameraX.copy(self.cameraX);
 
 	if (isBetween && (direction==ROTATION.LEFT || direction==ROTATION.RIGHT) ){
-		cameraPos = rotate(invertDirection(lastVerticalDirection),cameraPos,cameraUp, cameraX, 0, rotate);
+		rotate(invertDirection(lastVerticalDirection),cameraPos,cameraUp, cameraX, 0, rotate);
 	} else {
-		cameraPos = rotate(direction,cameraPos,cameraUp, cameraX, -1, null);
+		rotate(direction,cameraPos,cameraUp, cameraX, -1, null);
 	}
-	return [cameraPos, cameraUp, cameraX];
 }
 
 function invertDirection (direction) {
