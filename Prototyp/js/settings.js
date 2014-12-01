@@ -18,7 +18,8 @@ var settings = {
 	introRows : 3,
 	introColors : 4,
 	helpColor : 0x9b59b6,
-	rotationSpeed : 0.25
+	rotationSpeed : 0.25,
+	outlineColor: 0xecf0f1
 };
 
 var faceColors = {

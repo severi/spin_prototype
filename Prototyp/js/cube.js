@@ -32,7 +32,7 @@ function Cube(position){
 	self.outlineGeometry.vertices.push(new THREE.Vector3(-halfSize, halfSize, 	halfSize));
 	//SETUP THE USED MATERIAL FOR THE OUTLINE GEOMETRY
 	self.outlineMaterial = new THREE.LineBasicMaterial({
-	    color: 0xecf0f1,
+	    color: settings.outlineColor
 	});
 	//GENERATE AND ADD THE OUTLINE MESH TO THE CUBE MESH ITSELF
 	self.outlineMesh = new THREE.Line(self.outlineGeometry, self.outlineMaterial);
