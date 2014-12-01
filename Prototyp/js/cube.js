@@ -8,7 +8,7 @@ function Cube(position){
 		self.position.set(position.x, position.y, position.z);
 	}
 	//GET THE SIZE FROM SETTINGS -> CENTER IS IN THE MIDDLE THATS WHY WE NEED THE HALF WIDTH + SOME TOLERANCE TO MAKE THE LINE VISIBLE
-	var halfSize = settings.cubeSize * 0.5 + 0.01;
+	var halfSize = settings.cubeSize * 0.5 + 0.005;
 	//SETUP THE CUBE
 	self.outlineGeometry = new THREE.Geometry();
 	self.outlineGeometry.vertices.push(new THREE.Vector3(halfSize,  halfSize, 	halfSize));
