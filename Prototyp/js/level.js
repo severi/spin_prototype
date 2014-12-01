@@ -166,15 +166,10 @@ Level.prototype.selectFaces = function(vertex){
 	var chosen = true; //true if square selected, false if deselected
 	var oldColor;
 	var color = self.currentCubeColor;
-
-	if (color==undefined){
-		throw "trying to place an undefined color on cube";
-	}
-
 	for (var i=0; i<this.activeFaces.length; i++){
 		if (this.activeFaces[i][0]==vertex.face || this.activeFaces[i][1]==vertex.face){
 			if (this.activeFaces[i][3]==CUBESTATE.ALWAYS_VISIBLE){
-				continue;
+				return;
 			}
 			else if (this.activeFaces[i][3]==CUBESTATE.VISIBLE){
 				color=settings.defaultColor;
@@ -184,11 +179,15 @@ Level.prototype.selectFaces = function(vertex){
 			else if (this.activeFaces[i][3]==CUBESTATE.HIDDEN){
 				this.activeFaces[i][3]=CUBESTATE.VISIBLE;
 			}
+			if (color==undefined){
+				throw "trying to place an undefined color on cube";
+			}
 			color = new THREE.Color(color);
 			oldColor = this.activeFaces[i][0].color.getHex();
 			this.activeFaces[i][0].color=color;
 			this.activeFaces[i][1].color=color;
 			vertex.object.geometry.colorsNeedUpdate = true;
+			break;
 		}
 	}
 
@@ -203,6 +202,9 @@ Level.prototype.selectFaces = function(vertex){
 	else {
 		self.freeCubeColors[oldColor]++;
 		self.placedCubeColors[oldColor]--;
+		if (self.currentCubeColor==undefined){
+			self.getNextColor();
+		}
 	}
 }
 
