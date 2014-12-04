@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Spin - A minimal style memory game</title>
-		<meta charset="utf-8"/>	
+		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -19,38 +19,39 @@
 		<script type="text/javascript" src="./js/debug.js"></script>
 		<script type="text/javascript" src="./js/logic.js"></script>
 		<script type="text/javascript" src="./js/gui.js"></script>
+		<script type="text/javascript" src="./js/utils.js"></script>
 		<!-- SHARED STYLESHEET -->
         <link rel="stylesheet" type="text/css" href="./css/app.css" />
 	</head>
 	<body>
-		<!-- START NEW GAME SCREEN -->	
-		<div class="container canBeAnimated logoHeader" style="top: 15px; text-align: center;"> 
+		<!-- START NEW GAME SCREEN -->
+		<div class="container canBeAnimated logoHeader" style="top: 15px; text-align: center;">
 			<img src="./css/img/logo.png">
 		</div>
-		<div class="button container canBeAnimated newGameButton" style="bottom: 10px;"> 
-			<div class="buttonRect opacity canBeAnimated marginAuto darkFont fontSizeButton">new game</div> 
+		<div class="button container canBeAnimated newGameButton" style="bottom: 10px;">
+			<div class="buttonRect opacity canBeAnimated marginAuto darkFont fontSizeButton">new game</div>
 		</div>
-		<!-- PREPARE SCREEN -->	
-		<div class="container canBeAnimated topOut headerHeight prepareHeader" style="top: 10px;"> 
-			<li class="label opacity darkFont" style="text-align: center; position:relative;" ><p class="fontSizeLabelBig prepTime"></p><p class="fontSizeLabelSmall">time to<BR>memorize</p></li> 
+		<!-- PREPARE SCREEN -->
+		<div class="container canBeAnimated topOut headerHeight prepareHeader" style="top: 10px;">
+			<li class="label opacity darkFont" style="text-align: center; position:relative;" ><p class="fontSizeLabelBig prepTime"></p><p class="fontSizeLabelSmall">time to<BR>memorize</p></li>
 		</div>
-		<div class="button container canBeAnimated bottomOut readyButton" style="bottom: 10px;"> 
-			<div class="buttonRect opacity marginAuto darkFont fontSizeButton">ready?</div> 
+		<div class="button container canBeAnimated bottomOut readyButton" style="bottom: 10px;">
+			<div class="buttonRect opacity marginAuto darkFont fontSizeButton">ready?</div>
 		</div>
-		<!-- GAME SCREEN -->	
-		<div class="container canBeAnimated topOut headerHeight gameHeader" style="top: 10px;"> 
-			<li class="label opacity darkFont" style="text-align:left; left:0px; padding-left:10%;"><p class="fontSizeLabelBig curTime"></p><p class="fontSizeLabelSmall">time</p></li> 
-			<li class="label opacity darkFont" style="text-align:right; right:0px; padding-right:10%"><p class="fontSizeLabelBig curScore"></p><p class="fontSizeLabelSmall">current<BR>score</p></li> 
+		<!-- GAME SCREEN -->
+		<div class="container canBeAnimated topOut headerHeight gameHeader" style="top: 10px;">
+			<li class="label opacity darkFont" style="text-align:left; left:0px; padding-left:10%;"><p class="fontSizeLabelBig curTime"></p><p class="fontSizeLabelSmall">time</p></li>
+			<li class="label opacity darkFont" style="text-align:right; right:0px; padding-right:10%"><p class="fontSizeLabelBig curScore"></p><p class="fontSizeLabelSmall">current<BR>score</p></li>
 			<div class="colorBox opacity marginAuto lightGrayBorderColor"><p class="curColor"></p></div>
 		</div>
-		<div class="button container canBeAnimated bottomOut submitButton" style="bottom: 10px;"> 
-			<div class="buttonRect opacity marginAuto darkFont fontSizeButton">submit</div> 
+		<div class="button container canBeAnimated bottomOut submitButton" style="bottom: 10px;">
+			<div class="buttonRect opacity marginAuto darkFont fontSizeButton">submit</div>
 		</div>
-		<!-- STATISTIC SCREEN -->		
-		<div class="container canBeAnimated topOut statisticHeader" style="top: 10px;"> 
-			<li class="label opacity darkFont" style="text-align: center; position:relative;" ><p class="fontSizeLabelBig summaryDescription"></p></li> 
+		<!-- STATISTIC SCREEN -->
+		<div class="container canBeAnimated topOut statisticHeader" style="top: 10px;">
+			<li class="label opacity darkFont" style="text-align: center; position:relative;" ><p class="fontSizeLabelBig summaryDescription"></p></li>
 		</div>
-		<div class="viewContainer canBeAnimatedView statisticOverview rightOut"> 
+		<div class="viewContainer canBeAnimatedView statisticOverview rightOut">
 			<div class="overviewContainer marginAuto containerPadding darkFont fontSizeButton">
 				<div class="overview opacity ultraLightGrayBorder"></div>
 				<p class="statisticTitle">percentage</p>
@@ -58,18 +59,18 @@
 					<li class="label darkFont resultMultiple left redFont">
 						<p class="fontSizeLabelBig requiredValue">0</p>
 						<p class="fontSizeLabelSmall">required</p>
-					</li> 
+					</li>
 					<li class="label darkFont resultMultiple right greenFont">
 						<p class="fontSizeLabelBig archievedValue">0</p>
 						<p class="fontSizeLabelSmall">archieved</p>
-					</li> 
+					</li>
 				</ul>
 				<p class="statisticTitle">time bonus</p>
 				<ul class="resultContainer resultSize text-align marginAuto ultraLightGrayBorder">
 					<li class="label resultSingle greenFont marginAuto">
 						<p class="fontSizeLabelBig timeLeftValue">0</p>
 						<p class="fontSizeLabelSmall">seconds</p>
-					</li> 
+					</li>
 				</ul>
 				<p class="statisticTitle">score</p>
 				<ul class="resultContainer resultSize text-align marginAuto ultraLightGrayBorder">
@@ -80,16 +81,16 @@
 					<li class="label resultMultiple right greenFont">
 						<p class="fontSizeLabelBig bonusValue">0</p>
 						<p class="fontSizeLabelSmall">bonus</p>
-					</li> 
+					</li>
 				</ul>
 				<p class="statisticTitle">total</p>
 				<p class="statisticTitle blueFont totalValue" style="font-size: 24px"></p>
 			</div>
 		</div>
-		<div class="button container canBeAnimated bottomOut actionButton" style="bottom: 10px;"> 
-			<div class="buttonRect opacity marginAuto darkFont fontSizeButton"></div> 
+		<div class="button container canBeAnimated bottomOut actionButton" style="bottom: 10px;">
+			<div class="buttonRect opacity marginAuto darkFont fontSizeButton"></div>
 		</div>
-		<!-- INIT APPLICATION -->	
+		<!-- INIT APPLICATION -->
 		<script type="text/javascript">
 			var app = new App();
 		</script>
