@@ -10,3 +10,11 @@ function invertDirection (direction) {
 	}
 	return null;
 }
+
+function isVerticalRotation(rotation){
+	return rotation==ROTATION.UP || rotation==ROTATION.DOWN;
+}
+
+function isHorizontalRotation(rotation){
+	return rotation==ROTATION.LEFT || rotation==ROTATION.RIGHT;
+}
