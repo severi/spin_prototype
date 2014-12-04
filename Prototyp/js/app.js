@@ -357,7 +357,7 @@ App.prototype.calculateTargetAndStartRotation = function(){
 
 	var currentVerticalDirection=self.lastVerticalDirection;
 	var currentHorizontalDirection=self.lastHorizontalDirection;
-	if (self.rotationDirection==ROTATION.UP || self.rotationDirection==ROTATION.DOWN){
+	if (isVerticalRotation(self.rotationDirection)==true){
 		currentVerticalDirection=self.rotationDirection;
 	} else {
 		currentHorizontalDirection=self.rotationDirection;
