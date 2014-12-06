@@ -115,7 +115,7 @@ App.prototype.addEventListener = function(){
 	var self = this;
 
 	function keydown( event ) {
-		if (!self.rotationOngoing){
+		if (self.startUpMenuOpen==false && !self.rotationOngoing){
 			if (event.keyCode==65){ //a
 				self.rotationDirection= ROTATION.LEFT;
 			}
@@ -195,11 +195,13 @@ App.prototype.removeIntro = function(){
 	if (self.introCube!=null){
 		self.introCube.destroy();
 	}
+	self.startUpMenuOpen=false;
 }
 
 App.prototype.introLevel = function(){
 	var self = this;
 	self.introCube = new Level(settings.introRows, self.scene, settings.introColors, self.debug, 0);
+	self.startUpMenuOpen=true;
 }
 
 App.prototype.nextLevel = function(){
@@ -256,11 +258,13 @@ App.prototype.renderScene = function(){
 		requestAnimationFrame(render);
 		self.renderer.render(self.scene, self.camera);
 
-		if(self.controls != null){
+		if(self.controls != null && self.startUpMenuOpen==false){
 			self.controls.update();
 		}
 		if(self.rotationOngoing==true){
 			self.rotateCamera();
+		} else if(self.startUpMenuOpen==true) {
+			self.startUpScreenRotation();
 		}
 		if(self.levelCubes[0] != null && self.levelCubes[0].cubes != null && self.logic.gameStarted){
 			var cubes = self.levelCubes[0].cubes;
@@ -291,9 +295,21 @@ App.prototype.done = function(){
 	self.logic.done();
 }
 
-/*
- *	Rotates the camera around the cube according.
- */
+App.prototype.startUpScreenRotation = function() {
+	var angle = settings.introRotationSpeed;
+	var axis = new THREE.Vector3();
+	var quaternion = new THREE.Quaternion();
+	var target = new THREE.Vector3( 0, 0, 0 );
+	var eye = new THREE.Vector3();
+	eye.subVectors( this.camera.position, target );
+	axis.copy(this.camera.up);
+	quaternion.setFromAxisAngle( axis, -angle );
+	eye.applyQuaternion( quaternion );
+	this.camera.up.applyQuaternion( quaternion );
+	this.camera.position.addVectors(target, eye);
+	this.camera.lookAt( target );
+};
+
 App.prototype.rotateCamera = function(){
 	var self = this;
 
