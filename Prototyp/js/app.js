@@ -299,7 +299,9 @@ App.prototype.startUpScreenRotation = function() {
 	var axis = new THREE.Vector3();
 	var target = new THREE.Vector3( 0, 0, 0 );
 	var quaternion = new THREE.Quaternion();
+
 	axis.copy(this.camera.up);
+	self.applyRotationToCameraVectorsAtStartUpMenu(new THREE.Vector3(1,0,0), angle);
 	self.applyRotationToCameraVectorsAtStartUpMenu(axis, angle);
 	this.camera.lookAt( target );
 };

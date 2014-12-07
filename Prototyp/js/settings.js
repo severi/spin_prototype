@@ -20,7 +20,7 @@ var settings = {
 	helpColor : 0x9b59b6,
 	rotationSpeed : 0.25,
 	outlineColor: 0xecf0f1,
-	introRotationSpeed : 0.01
+	introRotationSpeed : 0.005
 };
 
 var faceColors = {
