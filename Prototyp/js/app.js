@@ -357,14 +357,13 @@ App.prototype.rotateAxisVectorsTowardsTargetLocation = function() {
 	this.currentUpAngle+=angle_cam_up;
 	var axis_cam_up = new THREE.Vector3();
 
-	var axisVectorsHaveReachedTargetLocation = this.currentUpAngle>angleToTargetVerticalAxis;
-	if (axisVectorsHaveReachedTargetLocation==false) {
+	self.haveAxisVectorsReachedTargetLocation = this.currentUpAngle>angleToTargetVerticalAxis;
+	if (self.haveAxisVectorsReachedTargetLocation==false) {
 		axis_cam_up.crossVectors(this.camera_start_up, self.targetVerticalAxis).normalize().negate();
 		self.applyRotationToPositionVector(this.camera.up, axis_cam_up, angle_cam_up);
 		self.applyRotationToPositionVector(this.camera_x, axis_cam_up, angle_cam_up);
 	}
 	else {
-		self.haveAxisVectorsReachedTargetLocation=true;
 		this.camera.up.copy(self.targetVerticalAxis);
 		this.camera_x.copy(self.targetHorizontalAxis);
 	}
