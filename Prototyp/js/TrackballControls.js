@@ -14,7 +14,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 	// API
 
 	this.enabled = true;
-
+	//INDICATES THAT THE CAMERA IS MOVING
+	_this.isMoving = false;
 	this.screen = { left: 0, top: 0, width: 0, height: 0 };
 
 	this.rotateSpeed = 1.0;
@@ -403,6 +404,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		event.preventDefault();
 		event.stopPropagation();
+_this.isMoving = false;
 
 		if ( _state === STATE.NONE ) {
 
@@ -441,6 +443,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 		event.preventDefault();
 		event.stopPropagation();
 
+		_this.isMoving = true;
 		if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
 			_rotateEnd.copy( getMouseProjectionOnBall( event.pageX, event.pageY ) );

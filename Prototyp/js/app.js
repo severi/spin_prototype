@@ -114,7 +114,7 @@ App.prototype.initCamera = function(){
 App.prototype.addEventListener = function(){
 	var self = this;
 
-	function keydown( event ) {
+	window.addEventListener( 'keydown', 	function ( event ) {
 		if (self.startUpMenuOpen==false && !self.rotationOngoing){
 			if (event.keyCode==65){ //a
 				self.rotationDirection= ROTATION.LEFT;
@@ -139,14 +139,21 @@ App.prototype.addEventListener = function(){
 
 			self.calculateTargetLocationForCameraAndAxises();
 		}
-	}
-
-	window.addEventListener( 'keydown', keydown, false );
+	}, false );
 
 	//CLICK EVENT HANDLER BASED ON SEVERI
 	self.renderer.domElement.addEventListener( 'click', function(event){
 
 		event.preventDefault();
+		if(self.controls == null){
+			console.log("ERROR in addEventListener app.js");
+			return;
+		}
+		if(self.controls.isMoving == true){
+			return;
+		}
+
+
 		//CONVERT MOUSE POSITION TO CORRECT VECTOR
 		var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
 		//TRANSLATES A 2D POINT FROM Normalized Device Coordinates TO RAYCASTER THAT CAN BE USED FOR PICKING
@@ -244,6 +251,7 @@ App.prototype.terminateApplication = function(){
 		window.clearInterval(self.updateTimer);
 		self.updateTimer = null;
 	}
+	$(window).off();
 }
 
 App.prototype.renderScene = function(){
