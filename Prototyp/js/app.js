@@ -93,7 +93,7 @@ App.prototype.initCamera = function(){
 	self.horizontalPositionIsOblique=false;
 	self.lastVerticalDirection=null;
 	self.lastHorizontalDirection=null;
-	self.isCameraUpAtTarget = false;
+	self.haveAxisVectorsReachedTargetLocation = false;
 
 	self.targetPosition = new THREE.Vector3();
 	self.targetVerticalAxis = new THREE.Vector3();
@@ -296,64 +296,87 @@ App.prototype.done = function(){
 }
 
 App.prototype.startUpScreenRotation = function() {
+	var self = this;
 	var angle = settings.introRotationSpeed;
 	var axis = new THREE.Vector3();
-	var quaternion = new THREE.Quaternion();
 	var target = new THREE.Vector3( 0, 0, 0 );
-	var eye = new THREE.Vector3();
-	eye.subVectors( this.camera.position, target );
+	var quaternion = new THREE.Quaternion();
 	axis.copy(this.camera.up);
-	quaternion.setFromAxisAngle( axis, -angle );
-	eye.applyQuaternion( quaternion );
-	this.camera.up.applyQuaternion( quaternion );
-	this.camera.position.addVectors(target, eye);
+	self.applyRotationToCameraVectorsAtStartUpMenu(axis, angle);
 	this.camera.lookAt( target );
+};
+
+App.prototype.applyRotationToCameraVectorsAtStartUpMenu = function(axis, angle) {
+	var self = this;
+	self.applyRotationToPositionVector(this.camera.position, axis, angle);
+	self.applyRotationToPositionVector(this.camera.up, axis, angle);
+	self.applyRotationToPositionVector(this.camera_x, axis, angle);
+};
+
+App.prototype.applyRotationToPositionVector = function(position, axis, angle) {
+	var quaternion = new THREE.Quaternion();
+	quaternion.setFromAxisAngle( axis, -angle );
+	position.applyQuaternion(quaternion);
 };
 
 App.prototype.rotateCamera = function(){
 	var self = this;
 
-	var axis = new THREE.Vector3();
-	var quaternion = new THREE.Quaternion();
-	var axis_cam_up = new THREE.Vector3();
-	var quaternion_cam_up = new THREE.Quaternion();
-	var target = new THREE.Vector3( 0, 0, 0 );
+	if (self.haveAxisVectorsReachedTargetLocation==false ){
+		self.rotateAxisVectorsTowardsTargetLocation();
+	}
+	self.rotateCameraTowardsTargetLocation();
+}
 
+App.prototype.rotateCameraTowardsTargetLocation = function() {
+	var self =this;
 	var angleToTargetPosition = this.camera_start.angleTo(self.targetPosition);
-	var angleToTargetVerticalAxis = this.camera_start_up.angleTo(self.targetVerticalAxis);
 	var angle = settings.rotationSpeed;
-	var angle_cam_up = settings.rotationSpeed*(angleToTargetVerticalAxis/angleToTargetPosition);
 	this.currentAngle+=angle;
-	this.currentUpAngle+=angle_cam_up;
-
 	if (this.currentAngle>angleToTargetPosition){
 		angle-=this.currentAngle-angleToTargetPosition;
 	}
-	if (self.isCameraUpAtTarget==false && this.currentUpAngle>angleToTargetPosition){
-		self.isCameraUpAtTarget=true;
-		this.camera.up.copy(self.targetVerticalAxis);
-		this.camera_x.copy(self.targetHorizontalAxis);
-	}
 
+	var axis = new THREE.Vector3();
 	axis.crossVectors(this.camera_start, self.targetPosition).normalize().negate();
-	quaternion.setFromAxisAngle( axis, -angle );
-	this.camera.position.applyQuaternion( quaternion );
+	self.applyRotationToPositionVector(this.camera.position, axis, angle);
 
-	if (self.isCameraUpAtTarget==false){
-		axis_cam_up.crossVectors(this.camera_start_up, self.targetVerticalAxis).normalize().negate();
-		quaternion_cam_up.setFromAxisAngle( axis_cam_up, -angle_cam_up );
-		this.camera.up.applyQuaternion( quaternion_cam_up );
-		this.camera_x.applyQuaternion(quaternion_cam_up);
-	}
-	this.camera.lookAt( target );
-
-	if (this.currentAngle>=angleToTargetPosition){
-		this.camera.up.copy(self.targetVerticalAxis);
-		this.camera_x.copy(self.targetHorizontalAxis);
-		this.camera.position.copy(self.targetPosition);
+	var cameraHasReachedTargetPosition = this.currentAngle>=angleToTargetPosition;
+	if (cameraHasReachedTargetPosition==true){
+		this.setPositionVectorsToTargetPosition();
 		this.resetRotationVariables();
 	}
-}
+	var target = new THREE.Vector3( 0, 0, 0 );
+	this.camera.lookAt( target );
+};
+
+App.prototype.rotateAxisVectorsTowardsTargetLocation = function() {
+	var self=this;
+	var angleToTargetVerticalAxis = this.camera_start_up.angleTo(self.targetVerticalAxis);
+	var angle_cam_up = settings.rotationSpeed;
+	this.currentUpAngle+=angle_cam_up;
+	var axis_cam_up = new THREE.Vector3();
+
+	var axisVectorsHaveReachedTargetLocation = this.currentUpAngle>angleToTargetVerticalAxis;
+	if (axisVectorsHaveReachedTargetLocation==false) {
+		axis_cam_up.crossVectors(this.camera_start_up, self.targetVerticalAxis).normalize().negate();
+		self.applyRotationToPositionVector(this.camera.up, axis_cam_up, angle_cam_up);
+		self.applyRotationToPositionVector(this.camera_x, axis_cam_up, angle_cam_up);
+	}
+	else {
+		self.haveAxisVectorsReachedTargetLocation=true;
+		this.camera.up.copy(self.targetVerticalAxis);
+		this.camera_x.copy(self.targetHorizontalAxis);
+	}
+
+};
+
+App.prototype.setPositionVectorsToTargetPosition = function() {
+	var self=this;
+	this.camera.up.copy(self.targetVerticalAxis);
+	this.camera_x.copy(self.targetHorizontalAxis);
+	this.camera.position.copy(self.targetPosition);
+};
 
 App.prototype.resetRotationVariables = function(){
 	this.rotationOngoing=false;
@@ -361,7 +384,7 @@ App.prototype.resetRotationVariables = function(){
 	this.currentUpAngle=0;
 	this.rotationDirection=null;
 	this.rotationOngoing=false;
-	this.isCameraUpAtTarget=false;
+	this.haveAxisVectorsReachedTargetLocation=false;
 }
 
 App.prototype.calculateTargetAndStartRotation = function(){
