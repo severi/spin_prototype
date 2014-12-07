@@ -149,11 +149,13 @@ App.prototype.addEventListener = function(){
 			console.log("ERROR in addEventListener app.js");
 			return;
 		}
+		//IF TRACKBALL CONTROLLS ARE USED TO MOVE THE CAMERA DO NOT ALLOW FACE SELECTING OR DESELECTING
 		if(self.controls.isMoving == true){
 			return;
 		}
-
-
+		if(settings.debug){
+			console.log("click Event in app.js");
+		}
 		//CONVERT MOUSE POSITION TO CORRECT VECTOR
 		var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
 		//TRANSLATES A 2D POINT FROM Normalized Device Coordinates TO RAYCASTER THAT CAN BE USED FOR PICKING

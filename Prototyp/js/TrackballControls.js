@@ -404,7 +404,12 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		event.preventDefault();
 		event.stopPropagation();
-_this.isMoving = false;
+		//EVERY CLICK SHOULD RESET THE MOVING VARIABLE
+		_this.isMoving = false;
+		//DEBUG INFORMATION
+		if(settings.debug){
+			console.log("TrackballControls: mouse down");
+		}
 
 		if ( _state === STATE.NONE ) {
 
@@ -442,8 +447,12 @@ _this.isMoving = false;
 
 		event.preventDefault();
 		event.stopPropagation();
-
+		//MOUSE IS MOVING SO SET IT TRUE
 		_this.isMoving = true;
+		//DEBUG INFORMATION
+		if(settings.debug){
+			console.log("TrackballControls: mouse moving");
+		}
 		if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
 			_rotateEnd.copy( getMouseProjectionOnBall( event.pageX, event.pageY ) );
@@ -468,6 +477,11 @@ _this.isMoving = false;
 		event.stopPropagation();
 
 		_state = STATE.NONE;
+
+		//DEBUG INFORMATION
+		if(settings.debug){
+			console.log("TrackballControls: mouse up");
+		}
 
 		document.removeEventListener( 'mousemove', mousemove );
 		document.removeEventListener( 'mouseup', mouseup );
