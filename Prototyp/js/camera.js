@@ -168,7 +168,7 @@ Camera.prototype.rotateCameraTowardsTargetLocation = function() {
 
 Camera.prototype.rotateAxisVectorsTowardsTargetLocation = function() {
 	var self=this;
-	this.currentUpAngle+=settings.rotationSpeed;
+	self.currentUpAngle+=settings.rotationSpeed;
 	self.applyRotationToPositionVector(self.up, self.rotationAxisForCameraAxises, settings.rotationSpeed);
 	self.applyRotationToPositionVector(self.xAxisVector, self.rotationAxisForCameraAxises, settings.rotationSpeed);
 

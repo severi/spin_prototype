@@ -264,10 +264,6 @@ App.prototype.renderScene = function(){
 	render();
 }
 
-App.prototype.update = function(){
-	var self = this;
-}
-
 App.prototype.start = function(){
 	var self = this;
 	self.removeIntro();
