@@ -21,7 +21,6 @@ App.prototype.loadSettings = function(){
 
 App.prototype.init = function(){
 	var self = this;
-	self.rotationOngoing=false;
 	this.rotationDirection=null;
 	this.currentAngle=0;
 	this.currentUpAngle=0;
@@ -99,7 +98,7 @@ App.prototype.addEventListener = function(){
 	var self = this;
 
 	window.addEventListener( 'keydown', 	function ( event ) {
-		if (self.startUpMenuOpen==false && !self.rotationOngoing){
+		if (self.startUpMenuOpen==false && !self.camera.rotationOngoing){
 			if (event.keyCode==65){ //a
 				self.camera.rotationDirection = ROTATION.LEFT;
 			}
