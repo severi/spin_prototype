@@ -25,6 +25,7 @@ function Camera(app, hScale){
 	self.lastVerticalDirection=null;
 	self.lastHorizontalDirection=null;
 	self.angle = settings.rotationSpeed;
+	self.isLockActive = false;
 	//SETUP CAMERA SETTINGS
 	self.fov = 75;
 	self.aspect = window.innerWidth / window.innerHeight;
@@ -202,6 +203,20 @@ Camera.prototype.resize = function(){
 	var self = this;
 	self.aspect = window.innerWidth / (window.innerHeight);
 	self.updateProjectionMatrix();
+}
+
+Camera.prototype.lockToGridFromVector = function(vector){
+	var self = this;
+	
+	if(self.isLockActive == false){
+		var angle = Math.acos( self.up.dot(vector) );
+		var quaternion = new THREE.Quaternion();
+		quaternion.setFromAxisAngle(self.up, angle);
+		self.position.applyQuaternion(quaternion);
+		self.lookAt( self.target );
+	}
+	//USED TO PREVENT 2 TIMES CALL -> TRACKBALL.JS IS SENDING FEEDBACK TWICE BUT IT SHOULD BE ONLY 1 TIME
+	self.isLockActive = self.isLockActive ? false : true;
 }
 
 

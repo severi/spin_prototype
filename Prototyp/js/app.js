@@ -83,7 +83,7 @@ App.prototype.initCamera = function(){
 	self.camera = new Camera(self, self.hScale);
 	self.camera.position.z =  self.cubeSize * 8;
 	//ADD CONTROLLS ATTENTION THAT CONTROLLS WORK PROPERLY YOU NEED TO CALL controls.update() WITHIN RENDER METHOD
-	self.controls = new THREE.TrackballControls( self.camera, self.renderer.domElement );
+	self.controls = new THREE.TrackballControls(self ,self.camera, self.renderer.domElement );
 	//DEACTIVATE USER ZOOM
 	self.controls.noZoom = true;
 	self.controls.noPan = true;

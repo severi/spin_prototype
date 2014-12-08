@@ -3,7 +3,7 @@
  * @author Mark Lundin 	/ http://mark-lundin.com
  */
 
-THREE.TrackballControls = function ( object, domElement ) {
+THREE.TrackballControls = function (app ,object, domElement ) {
 
 	var _this = this;
 	var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
@@ -12,6 +12,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
 
 	// API
+	this.app = app;
 
 	this.enabled = true;
 	//INDICATES THAT THE CAMERA IS MOVING
@@ -483,9 +484,14 @@ THREE.TrackballControls = function ( object, domElement ) {
 			console.log("TrackballControls: mouse up");
 		}
 
+		
+
 		document.removeEventListener( 'mousemove', mousemove );
 		document.removeEventListener( 'mouseup', mouseup );
 		_this.dispatchEvent( endEvent );
+		if(_this.app != null && _this.app.camera != null && _this.isMoving == true){
+			_this.app.camera.lockToGridFromVector(_rotateEnd);
+		}
 
 	}
 
