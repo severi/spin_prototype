@@ -263,7 +263,6 @@ Level.prototype.generateCube = function(){
 	self.updateColors();
 }
 
-
 Level.prototype.setOffset = function(curValue, x, y, z){
 	if(x == null){ x = 0; }
 	if(y == null ){ y = 0; }

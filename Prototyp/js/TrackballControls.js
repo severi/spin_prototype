@@ -17,6 +17,7 @@ THREE.TrackballControls = function (app ,object, domElement ) {
 	this.enabled = true;
 	//INDICATES THAT THE CAMERA IS MOVING
 	_this.isMoving = false;
+
 	this.screen = { left: 0, top: 0, width: 0, height: 0 };
 
 	this.rotateSpeed = 1.0;
@@ -309,7 +310,6 @@ THREE.TrackballControls = function (app ,object, domElement ) {
 		if ( !_this.noRotate ) {
 
 			_this.rotateCamera();
-
 		}
 
 		if ( !_this.noZoom ) {
@@ -455,7 +455,6 @@ THREE.TrackballControls = function (app ,object, domElement ) {
 			console.log("TrackballControls: mouse moving");
 		}
 		if ( _state === STATE.ROTATE && !_this.noRotate ) {
-
 			_rotateEnd.copy( getMouseProjectionOnBall( event.pageX, event.pageY ) );
 
 		} else if ( _state === STATE.ZOOM && !_this.noZoom ) {
@@ -484,15 +483,12 @@ THREE.TrackballControls = function (app ,object, domElement ) {
 			console.log("TrackballControls: mouse up");
 		}
 
-		
-
 		document.removeEventListener( 'mousemove', mousemove );
 		document.removeEventListener( 'mouseup', mouseup );
 		_this.dispatchEvent( endEvent );
 		if(_this.app != null && _this.app.camera != null && _this.isMoving == true){
-			_this.app.camera.lockToGridFromVector(_rotateEnd);
+			_this.app.camera.lockToGrid();
 		}
-
 	}
 
 	function mousewheel( event ) {

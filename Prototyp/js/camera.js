@@ -17,6 +17,9 @@ function Camera(app, hScale){
 	self.targetPosition = new THREE.Vector3();
 	self.targetVerticalAxis = new THREE.Vector3();
 	self.targetHorizontalAxis = new THREE.Vector3();
+	//GRID
+	self.gridVectors = new Array();
+
 	//ANIMATION REQUIRED VARIABLES
 	self.haveAxisVectorsReachedTargetLocation = false;
 	self.cameraHasReachedTargetPosition = false;
@@ -34,6 +37,7 @@ function Camera(app, hScale){
 	self.updateProjectionMatrix();
 	//RESET ROTATION VARIABLES	
 	self.resetRotationVariables();
+	self.initGrid();
 }
 
 Camera.prototype.constructor = Camera;
@@ -46,6 +50,83 @@ Camera.prototype.resetRotationVariables = function(){
 	self.currentUpAngle=0;
 	self.rotationDirection=null;
 	self.haveAxisVectorsReachedTargetLocation=false;
+}
+
+Camera.prototype.initGrid = function(){
+	var self = this;
+	if(self.app == null || self.gridVectors == null){
+		return;
+	}
+	if(self.gridVectors){
+		self.gridVectors.slice(0, self.gridVectors.length-1);
+	}
+	//LOCAL VARIABLES
+	var value = settings.cubeSize * settings.cameraZOffeset;
+	var rows = self.app.rows;
+	var radius = settings.cubeSize * self.app.rows;
+	var angle = 45*Math.PI/180;
+
+	//X AXIS RELATIED
+	self.gridVectors.push( new THREE.Vector3(value,0,0));
+	self.gridVectors.push( new THREE.Vector3(-value,0,0));
+	self.gridVectors.push( new THREE.Vector3(value,0,0).applyAxisAngle(self.xAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(-value,0,0).applyAxisAngle(self.xAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(value,0,0).applyAxisAngle(self.yAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(-value,0,0).applyAxisAngle(self.yAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(value,0,0).applyAxisAngle(self.zAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(-value,0,0).applyAxisAngle(self.zAxisVector, angle));
+	//Y AXIS RELATIED
+	self.gridVectors.push( new THREE.Vector3(0,value,0));
+	self.gridVectors.push( new THREE.Vector3(0,-value,0));
+	self.gridVectors.push( new THREE.Vector3(0,value,0).applyAxisAngle(self.xAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,-value,0).applyAxisAngle(self.xAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,value,0).applyAxisAngle(self.yAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,-value,0).applyAxisAngle(self.yAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,value,0).applyAxisAngle(self.zAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,-value,0).applyAxisAngle(self.zAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,-value,0).applyAxisAngle(self.zAxisVector, angle).applyAxisAngle(self.xAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,value,0).applyAxisAngle(self.zAxisVector, angle).applyAxisAngle(self.xAxisVector, angle));
+	//Z AXIS RELATIED
+	self.gridVectors.push( new THREE.Vector3(0,0,value));
+	self.gridVectors.push( new THREE.Vector3(0,0,-value));
+	self.gridVectors.push( new THREE.Vector3(0,0,value).applyAxisAngle(self.zAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,0,-value).applyAxisAngle(self.zAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,0,value).applyAxisAngle(self.yAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,0,-value).applyAxisAngle(self.yAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,0,value).applyAxisAngle(self.xAxisVector, angle));
+	self.gridVectors.push( new THREE.Vector3(0,0,-value).applyAxisAngle(self.xAxisVector, angle));
+
+	if(settings.showGrid){
+		var material = new THREE.LineBasicMaterial({ color: 0x0000ff });
+		for(var i=0; i<self.gridVectors.length; i++){
+
+			var geometry = new THREE.Geometry();
+			geometry.vertices.push(
+				new THREE.Vector3( 0, 0, 0 ),
+				self.gridVectors[i]);
+			var line = new THREE.Line( geometry, material );
+			self.app.scene.add( line );
+		}
+	}
+}
+
+Camera.prototype.checkDistancesToGridVectors = function(vector){
+	var self = this;
+	if(self.gridVectors == null){
+		return;
+	}
+	var distance=0;
+	var vec = new THREE.Vector3();
+	for(var i=0; i< self.gridVectors.length; i++){
+		var gridVector = self.gridVectors[i];
+		var gridDistance = vector.distanceTo(gridVector);
+		if(i==0 || gridDistance <= distance){
+			distance = gridDistance;
+			vec.copy(gridVector);
+		}
+	}
+	self.position.copy(vec);
+	self.lookAt(self.target);
 }
 
 Camera.prototype.rotateAroundScene = function(){
@@ -75,6 +156,38 @@ Camera.prototype.userRotation = function(){
 	}
 }
 
+Camera.prototype.rotateAxisVectorsTowardsTargetLocation = function() {
+	var self=this;
+	self.currentUpAngle+=settings.rotationSpeed;
+	self.applyRotationToPositionVector(self.up, self.rotationAxisForCameraAxises, settings.rotationSpeed);
+	self.applyRotationToPositionVector(self.xAxisVector, self.rotationAxisForCameraAxises, settings.rotationSpeed);
+
+	var axisesAtTargetLocation = self.currentUpAngle>self.angleToTargetVerticalAxis;
+	if(axisesAtTargetLocation==true){
+		self.up.copy(self.targetVerticalAxis);
+		self.xAxisVector.copy(self.targetHorizontalAxis);
+	}
+};
+
+Camera.prototype.rotateCameraTowardsTargetLocation = function() {
+	var self = this;
+	var cAngle = settings.rotationSpeed;
+	self.currentAngle += self.angle;
+	if (self.currentAngle > self.angleToTargetPosition){
+		cAngle -= self.currentAngle-self.angleToTargetPosition;
+	}
+	self.applyRotationToPositionVector(self.position, self.rotationAxis, cAngle);
+	self.lookAt( self.target );
+};
+
+Camera.prototype.setPositionVectorsToTargetPosition = function() {
+	var self=this;
+	self.up.copy(self.targetVerticalAxis);
+	self.xAxisVector.copy(self.targetHorizontalAxis);
+	self.position.copy(self.targetPosition);
+};
+
+//GETS CALLED BY KEY DOWN EVENT
 Camera.prototype.calculateTargetLocationForCameraAndAxises = function(){
 	var self = this;
 
@@ -156,37 +269,6 @@ Camera.prototype.updateRotationVariables = function() {
 	self.angleToTargetVerticalAxis = self.up.angleTo(self.targetVerticalAxis);
 };
 
-Camera.prototype.rotateCameraTowardsTargetLocation = function() {
-	var self = this;
-	var cAngle = settings.rotationSpeed;
-	self.currentAngle += self.angle;
-	if (self.currentAngle > self.angleToTargetPosition){
-		cAngle -= self.currentAngle-self.angleToTargetPosition;
-	}
-	self.applyRotationToPositionVector(self.position, self.rotationAxis, cAngle);
-	self.lookAt( self.target );
-};
-
-Camera.prototype.rotateAxisVectorsTowardsTargetLocation = function() {
-	var self=this;
-	self.currentUpAngle+=settings.rotationSpeed;
-	self.applyRotationToPositionVector(self.up, self.rotationAxisForCameraAxises, settings.rotationSpeed);
-	self.applyRotationToPositionVector(self.xAxisVector, self.rotationAxisForCameraAxises, settings.rotationSpeed);
-
-	var axisesAtTargetLocation = self.currentUpAngle>self.angleToTargetVerticalAxis;
-	if(axisesAtTargetLocation==true){
-		self.up.copy(self.targetVerticalAxis);
-		self.xAxisVector.copy(self.targetHorizontalAxis);
-	}
-};
-
-Camera.prototype.setPositionVectorsToTargetPosition = function() {
-	var self=this;
-	self.up.copy(self.targetVerticalAxis);
-	self.xAxisVector.copy(self.targetHorizontalAxis);
-	self.position.copy(self.targetPosition);
-};
-
 Camera.prototype.applyRotationToVector = function(axis, angle) {
 	var self = this;
 	self.applyRotationToPositionVector(self.position, axis, angle);
@@ -205,15 +287,11 @@ Camera.prototype.resize = function(){
 	self.updateProjectionMatrix();
 }
 
-Camera.prototype.lockToGridFromVector = function(vector){
+Camera.prototype.lockToGrid = function(start, end){
 	var self = this;
 	
 	if(self.isLockActive == false){
-		var angle = Math.acos( self.up.dot(vector) );
-		var quaternion = new THREE.Quaternion();
-		quaternion.setFromAxisAngle(self.up, angle);
-		self.position.applyQuaternion(quaternion);
-		self.lookAt( self.target );
+		self.checkDistancesToGridVectors(self.position);
 	}
 	//USED TO PREVENT 2 TIMES CALL -> TRACKBALL.JS IS SENDING FEEDBACK TWICE BUT IT SHOULD BE ONLY 1 TIME
 	self.isLockActive = self.isLockActive ? false : true;

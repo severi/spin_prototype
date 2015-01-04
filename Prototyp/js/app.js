@@ -81,7 +81,7 @@ App.prototype.initCamera = function(){
 	var self = this;
 	//self.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight * self.hScale), 0.1, parseInt(100));
 	self.camera = new Camera(self, self.hScale);
-	self.camera.position.z =  self.cubeSize * 8;
+	self.camera.position.z =  self.cubeSize * settings.cameraZOffeset;
 	//ADD CONTROLLS ATTENTION THAT CONTROLLS WORK PROPERLY YOU NEED TO CALL controls.update() WITHIN RENDER METHOD
 	self.controls = new THREE.TrackballControls(self ,self.camera, self.renderer.domElement );
 	//DEACTIVATE USER ZOOM
