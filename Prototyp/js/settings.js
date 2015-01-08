@@ -50,3 +50,9 @@ var ROTATION = {
 	DOWN : 3
 }
 
+var DIRECTION = {
+	VERTICAL : 2,
+	HORIZONTAL: 1,
+	UNDEFINED: 0
+}
+

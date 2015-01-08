@@ -101,16 +101,16 @@ App.prototype.addEventListener = function(){
 	window.addEventListener( 'keydown', 	function ( event ) {
 		if (self.startUpMenuOpen==false && !self.camera.rotationOngoing){
 			if (event.keyCode==65){ //a
-				self.camera.rotationDirection = ROTATION.LEFT;
+				self.camera.direction.rotationDirection = ROTATION.LEFT;
 			}
 			else if (event.keyCode==68){ //d
-				self.camera.rotationDirection = ROTATION.RIGHT;
+				self.camera.direction.rotationDirection = ROTATION.RIGHT;
 			}
 			else if (event.keyCode==83){ //s
-				self.camera.rotationDirection = ROTATION.DOWN;
+				self.camera.direction.rotationDirection = ROTATION.DOWN;
 			}
 			else if (event.keyCode==87){ //w
-				self.camera.rotationDirection = ROTATION.UP;
+				self.camera.direction.rotationDirection = ROTATION.UP;
 			} else {
 				return;
 			}
