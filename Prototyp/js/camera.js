@@ -23,8 +23,8 @@ function Camera(app, hScale){
 	//ANIMATION REQUIRED VARIABLES
 	self.haveAxisVectorsReachedTargetLocation = false;
 	self.cameraHasReachedTargetPosition = false;
-	self.verticalPositionIsOblique=false;
-	self.horizontalPositionIsOblique=false;
+
+	self.positionInformation = new PositionInformation();
 
 	self.direction = new Direction();
 
@@ -247,11 +247,10 @@ Camera.prototype.verticalRotationFromCornerTowardsNewCubeSide = function(directi
  */
 Camera.prototype.calculateTargetLocation = function(direction, startPosition, angle){
 		var self = this;
-		if (self.direction.verticalPositionIsOblique() && isHorizontalRotation(direction.getRotationDirection())==true ){
+		if (self.positionInformation.verticalPositionIsOblique() && isHorizontalRotation(direction.getRotationDirection())==true ){
 			var target= self.horizontalRotationFromObliqueVerticalPosition(direction, startPosition, angle);
 			return target;
-		} else if (isVerticalRotation(direction.getRotationDirection())==true && self.direction.positionChangesFromCornerToNewSide(direction.getRotationDirection())==true){
-			self.horizontalPositionIsOblique = false;
+		} else if (isVerticalRotation(direction.getRotationDirection())==true && self.positionInformation.positionChangesFromCornerToNewSide(direction.getRotationDirection())==true){
 			var target = self.verticalRotationFromCornerTowardsNewCubeSide(direction, startPosition, angle);
 			return target;
 		} else {
@@ -284,7 +283,7 @@ Camera.prototype.setRotationDirection = function(direction){
 Camera.prototype.updateRotationVariables = function() {
 	var self = this;
 
-	self.direction.updateCounters(self.direction.getRotationDirection());
+	self.positionInformation.update(self.direction.getRotationDirection());
 
 	self.rotationAxis.crossVectors(self.position,self.targetPosition).normalize().negate();
 	self.rotationAxisForCameraAxises.crossVectors(self.up, self.targetVerticalAxis).normalize().negate();
