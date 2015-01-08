@@ -12,9 +12,8 @@ Direction.prototype.init = function() {
     self.horizontalCounter = 0;
 };
 
-Direction.prototype.updateCounters = function() {
+Direction.prototype.updateCounters = function(direction) {
 	var self = this;
-	var direction = self.getRotationDirection()
 	if (self.lastDirection==DIRECTION.VERTICAL){
 		self.updateVerticalCounter(direction)
 	} else if (self.lastDirection==DIRECTION.HORIZONTAL){

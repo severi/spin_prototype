@@ -284,7 +284,7 @@ Camera.prototype.setRotationDirection = function(direction){
 Camera.prototype.updateRotationVariables = function() {
 	var self = this;
 
-	self.direction.updateCounters();
+	self.direction.updateCounters(self.direction.getRotationDirection());
 
 	self.rotationAxis.crossVectors(self.position,self.targetPosition).normalize().negate();
 	self.rotationAxisForCameraAxises.crossVectors(self.up, self.targetVerticalAxis).normalize().negate();
