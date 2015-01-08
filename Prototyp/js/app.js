@@ -100,22 +100,12 @@ App.prototype.addEventListener = function(){
 
 	window.addEventListener( 'keydown', 	function ( event ) {
 		if (self.startUpMenuOpen==false && !self.camera.rotationOngoing){
-			if (event.keyCode==65){ //a
-				self.camera.direction.rotationDirection = ROTATION.LEFT;
+			var rotationDirection = convertKeyCodeToDirection(event.keyCode);
+			if (rotationDirection!=undefined){
+				self.camera.setRotationDirection(rotationDirection);
+				self.camera.rotationOngoing = true;
+				self.camera.calculateTargetLocationForCameraAndAxises();
 			}
-			else if (event.keyCode==68){ //d
-				self.camera.direction.rotationDirection = ROTATION.RIGHT;
-			}
-			else if (event.keyCode==83){ //s
-				self.camera.direction.rotationDirection = ROTATION.DOWN;
-			}
-			else if (event.keyCode==87){ //w
-				self.camera.direction.rotationDirection = ROTATION.UP;
-			} else {
-				return;
-			}
-			self.camera.rotationOngoing = true;
-			self.camera.calculateTargetLocationForCameraAndAxises();
 		}
 	}, false );
 

@@ -18,3 +18,20 @@ function isVerticalRotation(rotation){
 function isHorizontalRotation(rotation){
 	return rotation==ROTATION.LEFT || rotation==ROTATION.RIGHT;
 }
+
+function convertKeyCodeToDirection(code){
+	if (code==65){ //a
+		return ROTATION.LEFT;
+	}
+	else if (code==68){ //d
+		return ROTATION.RIGHT;
+	}
+	else if (code==83){ //s
+		return ROTATION.DOWN;
+	}
+	else if (code==87){ //w
+		return ROTATION.UP;
+	} else {
+		return undefined;
+	}
+}
