@@ -3,7 +3,7 @@ var settings = {
 	rows : 1,
 	cubeSize : 1,
 	debug: false,
-	showGrid : true,
+	showGrid : false,
 	alwaysWin: true,
 	colors: 1,
 	maxColors: 4,
@@ -21,7 +21,7 @@ var settings = {
 	helpColor : 0x9b59b6,
 	rotationSpeed : 0.25,
 	outlineColor: 0xecf0f1,
-	introRotationSpeed : 0.005,
+	introRotationSpeed : 0.01,
 	cameraZOffeset : 8,
 };
 

@@ -1,7 +1,24 @@
-function Direction(){
+function Direction(a){
 	var self = this;
 	self.init();
+	if (a instanceof Direction){
+		self._constructWithDirection(a);
+	}
 }
+
+Direction.prototype._constructWithDirection = function(direction) {
+	var self=this;
+	self.copy(direction);
+};
+
+Direction.prototype.copy = function(direction) {
+	var self=this;
+	self.lastDirection = direction.lastDirection;
+    self.lastVerticalDirection = direction.lastVerticalDirection;
+    self.lastHorizontalDirection = direction.lastHorizontalDirection;
+    self.verticalCounter = direction.verticalCounter;
+    self.horizontalCounter = direction.horizontalCounter;
+};
 
 Direction.prototype.init = function() {
 	var self = this;

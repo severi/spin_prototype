@@ -99,12 +99,10 @@ App.prototype.addEventListener = function(){
 	var self = this;
 
 	window.addEventListener( 'keydown', 	function ( event ) {
-		if (self.startUpMenuOpen==false && !self.camera.rotationOngoing){
+		if (self.startUpMenuOpen==false && !self.camera.isRotationActive()){
 			var rotationDirection = convertKeyCodeToDirection(event.keyCode);
 			if (rotationDirection!=undefined){
-				self.camera.setRotationDirection(rotationDirection);
-				self.camera.rotationOngoing = true;
-				self.camera.calculateTargetLocationForCameraAndAxises();
+				self.camera.activateRotation(rotationDirection);
 			}
 		}
 	}, false );
@@ -175,6 +173,8 @@ App.prototype.removeIntro = function(){
 App.prototype.introLevel = function(){
 	var self = this;
 	self.introCube = new Level(settings.introRows, self.scene, settings.introColors, self.debug, 0);
+	self.camera.activateRotation(ROTATION.UP);
+	self.camera.finishRotation();
 	self.startUpMenuOpen=true;
 }
 
@@ -239,7 +239,7 @@ App.prototype.renderScene = function(){
 		if(self.startUpMenuOpen==true) {
 			self.camera.rotateAroundScene();
 		}
-		else if(self.camera.rotationOngoing==true){
+		else if(self.camera.isRotationActive()==true){
 			self.camera.userRotation();
 		}
 		if(self.levelCubes[0] != null && self.levelCubes[0].cubes != null && self.logic.gameStarted){

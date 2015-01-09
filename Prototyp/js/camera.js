@@ -10,25 +10,11 @@ function Camera(app, hScale){
 	//UTILITY VECTORS
 	self.target = new THREE.Vector3(0, 0, 0);
 	self.zero = new THREE.Vector3();
-	self.rotationAxis = new THREE.Vector3();
-	self.rotationAxisForCameraAxises = new THREE.Vector3();
-	self.angleToTargetPosition = new THREE.Vector3();
-	self.angleToTargetVerticalAxis = new THREE.Vector3();
-	self.targetPosition = new THREE.Vector3();
-	self.targetVerticalAxis = new THREE.Vector3();
-	self.targetHorizontalAxis = new THREE.Vector3();
+	self.currentRotation = new Rotation();
+
 	//GRID
 	self.gridVectors = new Array();
 
-	//ANIMATION REQUIRED VARIABLES
-	self.haveAxisVectorsReachedTargetLocation = false;
-	self.cameraHasReachedTargetPosition = false;
-
-	self.positionInformation = new PositionInformation();
-
-	self.direction = new Direction();
-
-	self.angle = settings.rotationSpeed;
 	self.isLockActive = false;
 	//SETUP CAMERA SETTINGS
 	self.fov = 75;
@@ -36,21 +22,11 @@ function Camera(app, hScale){
 	self.near = 0.1;
 	self.far = parseInt(100);
 	self.updateProjectionMatrix();
-	//RESET ROTATION VARIABLES
-	self.resetRotationVariables();
 	self.initGrid();
 }
 
 Camera.prototype.constructor = Camera;
 Camera.prototype = new THREE.PerspectiveCamera();
-
-Camera.prototype.resetRotationVariables = function(){
-	var self = this;
-	self.rotationOngoing=false;
-	self.currentAngle=0;
-	self.currentUpAngle=0;
-	self.haveAxisVectorsReachedTargetLocation=false;
-}
 
 Camera.prototype.initGrid = function(){
 	var self = this;
@@ -136,173 +112,6 @@ Camera.prototype.checkDistancesToGridVectors = function(vector){
 	self.lookAt(self.target);
 }
 
-Camera.prototype.rotateAroundScene = function(){
-	var self = this;
-	var angle = settings.introRotationSpeed;
-	var axis = new THREE.Vector3();
-	var quaternion = new THREE.Quaternion();
-
-	axis.copy(self.up);
-	self.applyRotationToVector(self.xAxisVector, angle);
-	self.applyRotationToVector(axis, angle);
-	self.lookAt( self.target );
-}
-
-Camera.prototype.userRotation = function(){
-	var self = this;
-
-	if (self.haveAxisVectorsReachedTargetLocation==false ){
-		self.rotateAxisVectorsTowardsTargetLocation();
-		self.haveAxisVectorsReachedTargetLocation = self.currentUpAngle > self.angleToTargetVerticalAxis;
-	}
-	self.rotateCameraTowardsTargetLocation();
-	self.cameraHasReachedTargetPosition = this.currentAngle >= self.angleToTargetPosition;
-	if (self.cameraHasReachedTargetPosition==true){
-		self.setPositionVectorsToTargetPosition();
-		self.resetRotationVariables();
-	}
-}
-
-Camera.prototype.rotateAxisVectorsTowardsTargetLocation = function() {
-	var self=this;
-	self.currentUpAngle+=settings.rotationSpeed;
-	self.applyRotationToPositionVector(self.up, self.rotationAxisForCameraAxises, settings.rotationSpeed);
-	self.applyRotationToPositionVector(self.xAxisVector, self.rotationAxisForCameraAxises, settings.rotationSpeed);
-
-	var axisesAtTargetLocation = self.currentUpAngle>self.angleToTargetVerticalAxis;
-	if(axisesAtTargetLocation==true){
-		self.up.copy(self.targetVerticalAxis);
-		self.xAxisVector.copy(self.targetHorizontalAxis);
-	}
-};
-
-Camera.prototype.rotateCameraTowardsTargetLocation = function() {
-	var self = this;
-	var cAngle = settings.rotationSpeed;
-	self.currentAngle += self.angle;
-	if (self.currentAngle > self.angleToTargetPosition){
-		cAngle -= self.currentAngle-self.angleToTargetPosition;
-	}
-	self.applyRotationToPositionVector(self.position, self.rotationAxis, cAngle);
-	self.lookAt( self.target );
-};
-
-Camera.prototype.setPositionVectorsToTargetPosition = function() {
-	var self=this;
-	self.up.copy(self.targetVerticalAxis);
-	self.xAxisVector.copy(self.targetHorizontalAxis);
-	self.position.copy(self.targetPosition);
-};
-
-/*
-		dont confuse rotationDirection with direction parameter used in functions below.
-		rotationDirection is an enum
-		direction is instance of Direction class (not used in this function)
- */
-Camera.prototype.calculateEndPositionAfterGivenRotation = function(rotationDirection, startPosition, angle) {
-	var self = this;
-	var axis = new THREE.Vector3();
-	var quaternion = new THREE.Quaternion();
-	var targetPosition = new Position(startPosition);
-
-	if (rotationDirection == ROTATION.RIGHT){
-		axis.copy(targetPosition.getVerticalAxis());
-	}
-	else if (rotationDirection == ROTATION.LEFT){
-		axis.copy(targetPosition.getVerticalAxis()).negate();
-	}
-	else if (rotationDirection == ROTATION.DOWN){
-		axis.copy(targetPosition.getHorizontalAxis());
-	}
-	else if (rotationDirection == ROTATION.UP){
-		axis.copy(targetPosition.getHorizontalAxis()).negate();
-	}
-
-	quaternion.setFromAxisAngle( axis.normalize(), -angle );
-	targetPosition.applyQuaternion( quaternion );
-	return targetPosition;
-};
-
-Camera.prototype.horizontalRotationFromObliqueVerticalPosition = function(direction, startPosition, angle){
-		var self = this;
-		var targetPosition = new Position(startPosition);
-		targetPosition = self.calculateEndPositionAfterGivenRotation(invertDirection(direction.getLastVerticalDirection()), targetPosition, angle);
-		targetPosition = self.calculateEndPositionAfterGivenRotation(direction.getLastHorizontalDirection(), targetPosition, angle);
-		targetPosition = self.calculateEndPositionAfterGivenRotation(direction.getLastVerticalDirection(), targetPosition, angle);
-		return targetPosition;
-	}
-
-Camera.prototype.verticalRotationFromCornerTowardsNewCubeSide = function(direction, startPosition, angle){
-		var self = this;
-		var targetPosition = new Position(startPosition);
-		targetPosition = self.horizontalRotationFromObliqueVerticalPosition(direction, targetPosition, angle);
-		targetPosition = self.calculateEndPositionAfterGivenRotation(direction.getLastVerticalDirection(), targetPosition, angle);
-		return targetPosition;
-	}
-
-/*
-	direction: instance of Direction
-	startPosition = instance of Position (includes, horizontal and vertical axises, and also the locations. See position.js)
-	angle = tells how much should be rotated
- */
-Camera.prototype.calculateTargetLocation = function(direction, startPosition, angle){
-		var self = this;
-		if (self.positionInformation.verticalPositionIsOblique() && isHorizontalRotation(direction.getRotationDirection())==true ){
-			var target= self.horizontalRotationFromObliqueVerticalPosition(direction, startPosition, angle);
-			return target;
-		} else if (isVerticalRotation(direction.getRotationDirection())==true && self.positionInformation.positionChangesFromCornerToNewSide(direction.getRotationDirection())==true){
-			var target = self.verticalRotationFromCornerTowardsNewCubeSide(direction, startPosition, angle);
-			return target;
-		} else {
-			var target = self.calculateEndPositionAfterGivenRotation(direction.getRotationDirection(), startPosition, angle);
-			return target;
-		}
-	}
-
-//GETS CALLED BY KEY DOWN EVENT
-Camera.prototype.calculateTargetLocationForCameraAndAxises = function(){
-	var self = this;
-	var angle = Math.PI/4;
-	self.targetVerticalAxis.copy(self.up);
-	self.targetHorizontalAxis.copy(self.xAxisVector);
-
-	var current = new Position(self.position, self.targetVerticalAxis, self.targetHorizontalAxis);
-	var target = self.calculateTargetLocation(self.direction, current, angle);
-
-	self.targetVerticalAxis.copy(target.getVerticalAxis());
-	self.targetHorizontalAxis.copy(target.getHorizontalAxis());
-	self.targetPosition.copy(target.getLocation());
-	self.updateRotationVariables();
-}
-
-Camera.prototype.setRotationDirection = function(direction){
-	var self = this;
-	self.direction.update(direction);
-}
-
-Camera.prototype.updateRotationVariables = function() {
-	var self = this;
-
-	self.positionInformation.update(self.direction.getRotationDirection());
-
-	self.rotationAxis.crossVectors(self.position,self.targetPosition).normalize().negate();
-	self.rotationAxisForCameraAxises.crossVectors(self.up, self.targetVerticalAxis).normalize().negate();
-	self.angleToTargetPosition = self.position.angleTo(self.targetPosition);
-	self.angleToTargetVerticalAxis = self.up.angleTo(self.targetVerticalAxis);
-};
-
-Camera.prototype.applyRotationToVector = function(axis, angle) {
-	var self = this;
-	self.applyRotationToPositionVector(self.position, axis, angle);
-	self.applyRotationToPositionVector(self.up, axis, angle);
-};
-
-Camera.prototype.applyRotationToPositionVector = function(position, axis, angle) {
-	var quaternion = new THREE.Quaternion();
-	quaternion.setFromAxisAngle( axis, -angle );
-	position.applyQuaternion(quaternion);
-};
-
 Camera.prototype.resize = function(){
 	var self = this;
 	self.aspect = window.innerWidth / (window.innerHeight);
@@ -319,4 +128,36 @@ Camera.prototype.lockToGrid = function(start, end){
 	self.isLockActive = self.isLockActive ? false : true;
 }
 
+Camera.prototype.activateRotation = function(direction) {
+	var self=this;
+	var angle = Math.PI/4;
+	var currentPosition = new Position(self.position, self.up, self.xAxisVector);
+	self.currentRotation.activate(direction, currentPosition, angle);
+};
 
+Camera.prototype.userRotation = function(){
+	var self = this;
+	self.currentRotation.rotate(settings.rotationSpeed, self.position,self.up, self.xAxisVector);
+	self.lookAt(self.target);
+}
+
+Camera.prototype.finishRotation = function() {
+	var self=this;
+	self.currentRotation.finish(self.position,self.up, self.xAxisVector);
+};
+
+Camera.prototype.isRotationActive = function() {
+	var self=this;
+	return self.currentRotation.isActive();
+};
+
+Camera.prototype.rotateAroundScene = function(){
+	var self = this;
+	var angle = settings.introRotationSpeed;
+	if(self.currentRotation.isActive()==true){
+		self.currentRotation.rotate(angle, self.position,self.up, self.xAxisVector);
+		self.lookAt(self.target);
+	} else {
+		self.activateRotation(Math.floor((Math.random() * 4))); // random direction
+	}
+};

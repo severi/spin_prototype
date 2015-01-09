@@ -1,8 +1,22 @@
-function PositionInformation(){
+function PositionInformation(a){
 	var self = this;
 	self.verticalCounter=0;
 	self.horizontalCounter=0;
+	if (a instanceof PositionInformation){
+		self._constructWithPositionInformation(a);
+	}
 }
+
+PositionInformation.prototype._constructWithPositionInformation = function(positionInformation){
+	var self=this;
+	self.copy(positionInformation);
+}
+
+PositionInformation.prototype.copy = function(positionInformation) {
+	var self=this;
+	self.verticalCounter=positionInformation.getVerticalCounter();
+	self.horizontalCounter=positionInformation.getHorizontalCounter();
+};
 
 PositionInformation.prototype.update = function(rotation) {
 	var self = this;
@@ -59,4 +73,14 @@ PositionInformation.prototype.positionChangesFromCornerToNewSide = function(rota
 		return false;
 	}
 	return  (self.verticalCounter==1 && rotation==ROTATION.UP) || (self.verticalCounter==-1 && rotation==ROTATION.DOWN);
+};
+
+PositionInformation.prototype.getVerticalCounter = function() {
+	var self = this;
+	return self.verticalCounter;
+};
+
+PositionInformation.prototype.getHorizontalCounter = function() {
+	var self = this;
+	return self.horizontalCounter;
 };
