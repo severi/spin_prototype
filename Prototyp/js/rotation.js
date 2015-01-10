@@ -190,7 +190,7 @@ Rotation.calculateTargetPosition = function(rotationDirection, startPosition, an
 Rotation.applyRotationToVector = function(vector, axis, angle) {
 	var quaternion = new THREE.Quaternion();
 	var rotationAxis = new THREE.Vector3();
-	rotationAxis.copy(axis); //dont want to normalize the axis-parameter directly
+	rotationAxis.copy(axis); // dont want to normalize the axis-parameter directly
 	quaternion.setFromAxisAngle( rotationAxis.normalize(), -angle );
 	vector.applyQuaternion(quaternion);
 };
