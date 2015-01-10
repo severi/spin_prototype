@@ -23,6 +23,7 @@ var settings = {
 	outlineColor: 0xecf0f1,
 	introRotationSpeed : 0.01,
 	cameraZOffeset : 8,
+	staticMovement : false
 };
 
 var faceColors = {
