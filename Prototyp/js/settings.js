@@ -8,22 +8,22 @@ var settings = {
 	colors: 1,
 	maxColors: 4,
 	maxRows: 4,
-	percentage: 0.8,
 	initPlayTime: 60,
 	initPreTime: 30,
 	initScore: 0,
 	stage: 1,
-	defaultColor : 0x607282,
+	defaultColor : 0xffffff,
 	requiredPercentage: 60,
 	scorePerFace : 1,
 	introRows : 3,
 	introColors : 4,
-	helpColor : 0x9b59b6,
+	helpColor : 0xD9DDE1,
 	rotationSpeed : 0.25,
 	outlineColor: 0xecf0f1,
 	introRotationSpeed : 0.01,
 	cameraZOffeset : 8,
-	staticMovement : false
+	staticMovement : false,
+	linewidth: 2
 };
 
 var faceColors = {

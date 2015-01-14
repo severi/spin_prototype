@@ -3,7 +3,6 @@ function Level(rows, scene, colors, debug, helpColors){
 	this.rows = rows;
 	this.cubes = [];
 	self.colors = colors;
-	self.percentage = settings.percentage;
 	self.debug=debug;
 	self.helpColors = helpColors;
 
