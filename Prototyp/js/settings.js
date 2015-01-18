@@ -3,7 +3,7 @@ var settings = {
 	rows : 1,
 	cubeSize : 1,
 	debug: false,
-	showGrid : false,
+	showGrid : true,
 	alwaysWin: true,
 	colors: 1,
 	maxColors: 4,
