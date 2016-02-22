@@ -4,6 +4,31 @@
  *  private variables: self._<variableName>
  */
 
+
+/*
+NOTES about the code:
+Rotation is the class that handles camera movement around the cube. When a movement key (a=left, s=down, d=right, w=up)
+is pressed the Rotation.activate function is called, which activates the rotation towards the given direction with the given angle.
+
+Then to animate the rotation the Rotation.rotate() function is called as long as targetPosition is reached. The rotationSpeed
+parameter specifies the speed of the rotation animation.
+
+Other classes used within this class:
+
+Direction               - bad name, more appropriate would be MovementHistory
+                          Stores information about about the previous rotation directions
+
+PositionInformation:     gives information about the cameras current location ("is the camera at the corner of the cube?" etc)
+
+Position:               includes three vectors
+                        1. location
+          	        2. yAxis
+                        3. xAxis
+
+Three.*                 ThreeJS
+
+*/
+
 function Rotation(){
 	var self = this;
 	self._direction=  new Direction();
@@ -162,7 +187,7 @@ Rotation.prototype._setPositionToTarget = function(location,verticalAxis,horizon
 };
 
 
-// STATIC FUNCTION
+// STATIC FUNCTIONS
 Rotation.calculateTargetPosition = function(rotationDirection, startPosition, angle) {
 	var self = this;
 	var axis = new THREE.Vector3();
